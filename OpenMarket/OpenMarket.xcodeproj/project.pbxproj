@@ -10,17 +10,19 @@
 		C32EDB8426FC904B00F6BC53 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDB8326FC904B00F6BC53 /* AppDelegate.swift */; };
 		C32EDB8626FC904B00F6BC53 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDB8526FC904B00F6BC53 /* SceneDelegate.swift */; };
 		C32EDB8826FC904B00F6BC53 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDB8726FC904B00F6BC53 /* ViewController.swift */; };
-		C32EDB8B26FC904B00F6BC53 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C32EDB8926FC904B00F6BC53 /* Main.storyboard */; };
 		C32EDB8D26FC905100F6BC53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C32EDB8C26FC905100F6BC53 /* Assets.xcassets */; };
 		C32EDB9026FC905100F6BC53 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C32EDB8E26FC905100F6BC53 /* LaunchScreen.storyboard */; };
+		D0D420A34F274896FCE5389A /* Pods_OpenMarket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C1CCCB9FD817E8E78A31D5 /* Pods_OpenMarket.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		01C1CCCB9FD817E8E78A31D5 /* Pods_OpenMarket.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenMarket.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F53E3EC9B88F9C7C7D71BF7 /* Pods-OpenMarket.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenMarket.debug.xcconfig"; path = "Target Support Files/Pods-OpenMarket/Pods-OpenMarket.debug.xcconfig"; sourceTree = "<group>"; };
+		61CDA78FE88213494D028A3D /* Pods-OpenMarket.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenMarket.release.xcconfig"; path = "Target Support Files/Pods-OpenMarket/Pods-OpenMarket.release.xcconfig"; sourceTree = "<group>"; };
 		C32EDB8026FC904B00F6BC53 /* OpenMarket.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenMarket.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C32EDB8326FC904B00F6BC53 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C32EDB8526FC904B00F6BC53 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		C32EDB8726FC904B00F6BC53 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		C32EDB8A26FC904B00F6BC53 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C32EDB8C26FC905100F6BC53 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C32EDB8F26FC905100F6BC53 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C32EDB9126FC905100F6BC53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -31,17 +33,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0D420A34F274896FCE5389A /* Pods_OpenMarket.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9FF08ED109EB61840392B35B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				01C1CCCB9FD817E8E78A31D5 /* Pods_OpenMarket.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C24603AB74E0B4872DDBC291 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1F53E3EC9B88F9C7C7D71BF7 /* Pods-OpenMarket.debug.xcconfig */,
+				61CDA78FE88213494D028A3D /* Pods-OpenMarket.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		C32EDB7726FC904B00F6BC53 = {
 			isa = PBXGroup;
 			children = (
 				C32EDB8226FC904B00F6BC53 /* OpenMarket */,
 				C32EDB8126FC904B00F6BC53 /* Products */,
+				C24603AB74E0B4872DDBC291 /* Pods */,
+				9FF08ED109EB61840392B35B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -59,7 +81,6 @@
 				C32EDB8326FC904B00F6BC53 /* AppDelegate.swift */,
 				C32EDB8526FC904B00F6BC53 /* SceneDelegate.swift */,
 				C32EDB8726FC904B00F6BC53 /* ViewController.swift */,
-				C32EDB8926FC904B00F6BC53 /* Main.storyboard */,
 				C32EDB8C26FC905100F6BC53 /* Assets.xcassets */,
 				C32EDB8E26FC905100F6BC53 /* LaunchScreen.storyboard */,
 				C32EDB9126FC905100F6BC53 /* Info.plist */,
@@ -74,9 +95,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C32EDB9426FC905100F6BC53 /* Build configuration list for PBXNativeTarget "OpenMarket" */;
 			buildPhases = (
+				B4603A0A6A472CF03E9BB071 /* [CP] Check Pods Manifest.lock */,
 				C32EDB7C26FC904B00F6BC53 /* Sources */,
 				C32EDB7D26FC904B00F6BC53 /* Frameworks */,
 				C32EDB7E26FC904B00F6BC53 /* Resources */,
+				C32EDB9726FC90DC00F6BC53 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -126,11 +149,52 @@
 			files = (
 				C32EDB9026FC905100F6BC53 /* LaunchScreen.storyboard in Resources */,
 				C32EDB8D26FC905100F6BC53 /* Assets.xcassets in Resources */,
-				C32EDB8B26FC904B00F6BC53 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		B4603A0A6A472CF03E9BB071 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OpenMarket-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C32EDB9726FC90DC00F6BC53 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${PODS_ROOT}/SwiftLint/swiftlint\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		C32EDB7C26FC904B00F6BC53 /* Sources */ = {
@@ -146,14 +210,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		C32EDB8926FC904B00F6BC53 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C32EDB8A26FC904B00F6BC53 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		C32EDB8E26FC905100F6BC53 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -283,6 +339,7 @@
 		};
 		C32EDB9526FC905100F6BC53 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1F53E3EC9B88F9C7C7D71BF7 /* Pods-OpenMarket.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -302,6 +359,7 @@
 		};
 		C32EDB9626FC905100F6BC53 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 61CDA78FE88213494D028A3D /* Pods-OpenMarket.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
