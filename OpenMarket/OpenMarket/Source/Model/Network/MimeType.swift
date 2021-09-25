@@ -11,7 +11,7 @@ enum MimeType {
     case applicationJson
     case imagePng
     case imageJpeg
-    
+
     var fileExtension: String {
         switch self {
         case .applicationJson:

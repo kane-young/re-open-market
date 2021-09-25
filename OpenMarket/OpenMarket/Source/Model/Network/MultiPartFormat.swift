@@ -12,7 +12,7 @@ enum MultiPartFormat {
     static let contentDisposition = "Content-Disposition: "
     static let contentType = "Content-Type: "
     static let formData = "form-data"
-    
+
     static func name(_ string: String) -> String {
         return "; name=\"\(string)\""
     }
