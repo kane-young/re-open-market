@@ -7,18 +7,26 @@
 
 import Foundation
 
-struct PatchItem: Encodable {
+struct PatchItem: Multipartable {
     let title: String?
     let descriptions: String?
     let price: Int?
     let currency: String?
     let stock: Int?
     let discountedPrice: Int?
-    let images: [String]?
+    let images: [Data]?
     let password: String
-
-    private enum CodingKeys: String, CodingKey {
-        case title, descriptions, price, currency, stock, images, password
-        case discountedPrice = "discounted_price"
+    
+    var dictionary: [String : Any?] {
+        [
+            "title": self.title,
+             "descriptions": self.descriptions,
+             "price": self.price,
+             "currency": self.currency,
+             "stock": self.stock,
+             "discountedPrice": self.discountedPrice,
+             "images": self.images,
+             "password": self.password
+        ]
     }
 }
