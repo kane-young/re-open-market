@@ -4,3 +4,7 @@ disabled_rules:
 excluded:
   - OpenMarketTests/
   - Pods/
+
+identifier_name:
+  excluded:
+    - id

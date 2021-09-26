@@ -16,8 +16,8 @@ struct PatchItem: Multipartable {
     let discountedPrice: Int?
     let images: [Data]?
     let password: String
-    
-    var dictionary: [String : Any?] {
+
+    var dictionary: [String: Any?] {
         [
             "title": self.title,
              "descriptions": self.descriptions,

@@ -21,7 +21,7 @@ struct PostItem: Multipartable {
     let images: [Data]
     let password: String
 
-    var dictionary: [String : Any?] {
+    var dictionary: [String: Any?] {
         [
             "title": self.title,
              "descriptions": self.descriptions,

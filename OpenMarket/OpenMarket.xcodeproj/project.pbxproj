@@ -21,8 +21,11 @@
 		C32EDBC226FC9E9300F6BC53 /* MultiPartGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBC126FC9E9300F6BC53 /* MultiPartGenerator.swift */; };
 		C32EDBC426FD9BF400F6BC53 /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBC326FD9BF400F6BC53 /* Data+Extension.swift */; };
 		C32EDBC626FDB11800F6BC53 /* MimeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBC526FDB11800F6BC53 /* MimeType.swift */; };
-		C32EDBCA26FE25A200F6BC53 /* MultiPartFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBC926FE25A200F6BC53 /* MultiPartFormat.swift */; };
-		C32EDBCC26FE279300F6BC53 /* MultiPartFormBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBCB26FE279300F6BC53 /* MultiPartFormBody.swift */; };
+		C32EDBCE26FEB3DE00F6BC53 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBCD26FEB3DE00F6BC53 /* NetworkManager.swift */; };
+		C32EDBD126FEB64000F6BC53 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBD026FEB64000F6BC53 /* NetworkError.swift */; };
+		C32EDBD326FEB88F00F6BC53 /* OpenMarketAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBD226FEB88F00F6BC53 /* OpenMarketAPI.swift */; };
+		C32EDBD526FEBC0C00F6BC53 /* HttpMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBD426FEBC0C00F6BC53 /* HttpMethod.swift */; };
+		C32EDBD726FF69EA00F6BC53 /* RequestMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBD626FF69EA00F6BC53 /* RequestMaker.swift */; };
 		D0D420A34F274896FCE5389A /* Pods_OpenMarket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C1CCCB9FD817E8E78A31D5 /* Pods_OpenMarket.framework */; };
 /* End PBXBuildFile section */
 
@@ -58,8 +61,11 @@
 		C32EDBC126FC9E9300F6BC53 /* MultiPartGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiPartGenerator.swift; sourceTree = "<group>"; };
 		C32EDBC326FD9BF400F6BC53 /* Data+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extension.swift"; sourceTree = "<group>"; };
 		C32EDBC526FDB11800F6BC53 /* MimeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MimeType.swift; sourceTree = "<group>"; };
-		C32EDBC926FE25A200F6BC53 /* MultiPartFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiPartFormat.swift; sourceTree = "<group>"; };
-		C32EDBCB26FE279300F6BC53 /* MultiPartFormBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiPartFormBody.swift; sourceTree = "<group>"; };
+		C32EDBCD26FEB3DE00F6BC53 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		C32EDBD026FEB64000F6BC53 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
+		C32EDBD226FEB88F00F6BC53 /* OpenMarketAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenMarketAPI.swift; sourceTree = "<group>"; };
+		C32EDBD426FEBC0C00F6BC53 /* HttpMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpMethod.swift; sourceTree = "<group>"; };
+		C32EDBD626FF69EA00F6BC53 /* RequestMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestMaker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,9 +192,12 @@
 		C32EDBA126FC944B00F6BC53 /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				C32EDBCB26FE279300F6BC53 /* MultiPartFormBody.swift */,
+				C32EDBCF26FEB63500F6BC53 /* Error */,
+				C32EDBCD26FEB3DE00F6BC53 /* NetworkManager.swift */,
+				C32EDBD426FEBC0C00F6BC53 /* HttpMethod.swift */,
+				C32EDBD226FEB88F00F6BC53 /* OpenMarketAPI.swift */,
 				C32EDBC126FC9E9300F6BC53 /* MultiPartGenerator.swift */,
-				C32EDBC926FE25A200F6BC53 /* MultiPartFormat.swift */,
+				C32EDBD626FF69EA00F6BC53 /* RequestMaker.swift */,
 				C32EDBC526FDB11800F6BC53 /* MimeType.swift */,
 			);
 			path = Network;
@@ -220,6 +229,14 @@
 				C32EDBBB26FC963A00F6BC53 /* Info.plist */,
 			);
 			path = OpenMarketTests;
+			sourceTree = "<group>";
+		};
+		C32EDBCF26FEB63500F6BC53 /* Error */ = {
+			isa = PBXGroup;
+			children = (
+				C32EDBD026FEB64000F6BC53 /* NetworkError.swift */,
+			);
+			path = Error;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -366,15 +383,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				C32EDBA826FC950000F6BC53 /* PatchItem.swift in Sources */,
-				C32EDBCC26FE279300F6BC53 /* MultiPartFormBody.swift in Sources */,
+				C32EDBD326FEB88F00F6BC53 /* OpenMarketAPI.swift in Sources */,
 				C32EDB8826FC904B00F6BC53 /* ViewController.swift in Sources */,
 				C32EDB8426FC904B00F6BC53 /* AppDelegate.swift in Sources */,
 				C32EDBC226FC9E9300F6BC53 /* MultiPartGenerator.swift in Sources */,
 				C32EDBA626FC94D700F6BC53 /* PostItem.swift in Sources */,
+				C32EDBD726FF69EA00F6BC53 /* RequestMaker.swift in Sources */,
 				C32EDBC626FDB11800F6BC53 /* MimeType.swift in Sources */,
+				C32EDBD526FEBC0C00F6BC53 /* HttpMethod.swift in Sources */,
 				C32EDBAE26FC954500F6BC53 /* ItemList.swift in Sources */,
-				C32EDBCA26FE25A200F6BC53 /* MultiPartFormat.swift in Sources */,
+				C32EDBD126FEB64000F6BC53 /* NetworkError.swift in Sources */,
 				C32EDBAC26FC953E00F6BC53 /* Item.swift in Sources */,
+				C32EDBCE26FEB3DE00F6BC53 /* NetworkManager.swift in Sources */,
 				C32EDBC426FD9BF400F6BC53 /* Data+Extension.swift in Sources */,
 				C32EDB8626FC904B00F6BC53 /* SceneDelegate.swift in Sources */,
 				C32EDBAA26FC951700F6BC53 /* DeleteItem.swift in Sources */,
