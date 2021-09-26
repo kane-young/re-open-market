@@ -26,6 +26,8 @@
 		C32EDBD326FEB88F00F6BC53 /* OpenMarketAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBD226FEB88F00F6BC53 /* OpenMarketAPI.swift */; };
 		C32EDBD526FEBC0C00F6BC53 /* HttpMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBD426FEBC0C00F6BC53 /* HttpMethod.swift */; };
 		C32EDBD726FF69EA00F6BC53 /* RequestMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBD626FF69EA00F6BC53 /* RequestMaker.swift */; };
+		C32EDBD92700023500F6BC53 /* NetworkingTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBD82700023500F6BC53 /* NetworkingTest.swift */; };
+		C32EDBDC2700029400F6BC53 /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBDB2700029400F6BC53 /* MockURLSession.swift */; };
 		D0D420A34F274896FCE5389A /* Pods_OpenMarket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C1CCCB9FD817E8E78A31D5 /* Pods_OpenMarket.framework */; };
 /* End PBXBuildFile section */
 
@@ -66,6 +68,8 @@
 		C32EDBD226FEB88F00F6BC53 /* OpenMarketAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenMarketAPI.swift; sourceTree = "<group>"; };
 		C32EDBD426FEBC0C00F6BC53 /* HttpMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpMethod.swift; sourceTree = "<group>"; };
 		C32EDBD626FF69EA00F6BC53 /* RequestMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestMaker.swift; sourceTree = "<group>"; };
+		C32EDBD82700023500F6BC53 /* NetworkingTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingTest.swift; sourceTree = "<group>"; };
+		C32EDBDB2700029400F6BC53 /* MockURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLSession.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,6 +230,8 @@
 			isa = PBXGroup;
 			children = (
 				C32EDBB926FC963A00F6BC53 /* DecodingTests.swift */,
+				C32EDBD82700023500F6BC53 /* NetworkingTest.swift */,
+				C32EDBDA2700028100F6BC53 /* Mock */,
 				C32EDBBB26FC963A00F6BC53 /* Info.plist */,
 			);
 			path = OpenMarketTests;
@@ -237,6 +243,14 @@
 				C32EDBD026FEB64000F6BC53 /* NetworkError.swift */,
 			);
 			path = Error;
+			sourceTree = "<group>";
+		};
+		C32EDBDA2700028100F6BC53 /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+				C32EDBDB2700029400F6BC53 /* MockURLSession.swift */,
+			);
+			path = Mock;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -405,7 +419,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C32EDBDC2700029400F6BC53 /* MockURLSession.swift in Sources */,
 				C32EDBBA26FC963A00F6BC53 /* DecodingTests.swift in Sources */,
+				C32EDBD92700023500F6BC53 /* NetworkingTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

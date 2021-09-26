@@ -8,19 +8,10 @@
 import Foundation
 
 final class NetworkManager {
-    private enum Format {
-        static let contentType = "Content-Type"
-        static let applicationJson = "application/json"
-
-        static func multiPartContentType(_ boundary: String) -> String {
-            return "multipart/form-data; boundary=\(boundary)"
-        }
-    }
-
     private let urlSession: URLSession
     private let requestMaker: RequestMakable
 
-    init(urlSession: URLSession = .shared, requestMaker: RequestMakable) {
+    init(urlSession: URLSession = .shared, requestMaker: RequestMakable = RequestMaker()) {
         self.urlSession = urlSession
         self.requestMaker = requestMaker
     }
@@ -47,11 +38,7 @@ final class NetworkManager {
         }.resume()
     }
 
-    func request(urlString: String, with item: Any, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) {
-        guard let url: URL = URL(string: urlString) else {
-            completion(.failure(.invalidURL))
-            return
-        }
+    func request(url: URL, with item: Any, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) {
         guard let request = requestMaker.request(url: url, httpMethod: httpMethod, with: item) else {
             completion(.failure(.invalidRequest))
             return
@@ -59,11 +46,7 @@ final class NetworkManager {
         retrieveData(with: request, completion: completion)
     }
 
-    func fetch(urlString: String, completion: @escaping (Result<Data, NetworkError>) -> Void) {
-        guard let url: URL = URL(string: urlString) else {
-            completion(.failure(.invalidURL))
-            return
-        }
+    func fetch(url: URL, completion: @escaping (Result<Data, NetworkError>) -> Void) {
         let urlRequest = URLRequest(url: url)
         retrieveData(with: urlRequest, completion: completion)
     }

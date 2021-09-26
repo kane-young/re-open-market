@@ -9,15 +9,12 @@ import Foundation
 
 enum MimeType {
     case applicationJson
-    case imagePng
     case imageJpeg
 
     var fileExtension: String {
         switch self {
         case .applicationJson:
             return ".json"
-        case .imagePng:
-            return ".png"
         case .imageJpeg:
             return ".jpeg"
         }
@@ -29,8 +26,6 @@ extension MimeType: CustomStringConvertible {
         switch self {
         case .applicationJson:
             return "application/json"
-        case .imagePng:
-            return "image/png"
         case .imageJpeg:
             return "image/jpeg"
         }
