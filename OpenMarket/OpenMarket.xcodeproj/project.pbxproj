@@ -18,7 +18,7 @@
 		C32EDBAC26FC953E00F6BC53 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBAB26FC953E00F6BC53 /* Item.swift */; };
 		C32EDBAE26FC954500F6BC53 /* ItemList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBAD26FC954500F6BC53 /* ItemList.swift */; };
 		C32EDBBA26FC963A00F6BC53 /* DecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBB926FC963A00F6BC53 /* DecodingTests.swift */; };
-		C32EDBC226FC9E9300F6BC53 /* MultiPartGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBC126FC9E9300F6BC53 /* MultiPartGenerator.swift */; };
+		C32EDBC226FC9E9300F6BC53 /* MultiPartForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBC126FC9E9300F6BC53 /* MultiPartForm.swift */; };
 		C32EDBC426FD9BF400F6BC53 /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBC326FD9BF400F6BC53 /* Data+Extension.swift */; };
 		C32EDBC626FDB11800F6BC53 /* MimeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBC526FDB11800F6BC53 /* MimeType.swift */; };
 		C32EDBCE26FEB3DE00F6BC53 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBCD26FEB3DE00F6BC53 /* NetworkManager.swift */; };
@@ -28,6 +28,7 @@
 		C32EDBD726FF69EA00F6BC53 /* RequestMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBD626FF69EA00F6BC53 /* RequestMaker.swift */; };
 		C32EDBD92700023500F6BC53 /* NetworkingTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBD82700023500F6BC53 /* NetworkingTest.swift */; };
 		C32EDBDC2700029400F6BC53 /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBDB2700029400F6BC53 /* MockURLSession.swift */; };
+		C32EDBE027002B4600F6BC53 /* RequestMakerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBDF27002B4600F6BC53 /* RequestMakerTest.swift */; };
 		D0D420A34F274896FCE5389A /* Pods_OpenMarket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C1CCCB9FD817E8E78A31D5 /* Pods_OpenMarket.framework */; };
 /* End PBXBuildFile section */
 
@@ -60,7 +61,7 @@
 		C32EDBB726FC963A00F6BC53 /* OpenMarketTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenMarketTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C32EDBB926FC963A00F6BC53 /* DecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodingTests.swift; sourceTree = "<group>"; };
 		C32EDBBB26FC963A00F6BC53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C32EDBC126FC9E9300F6BC53 /* MultiPartGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiPartGenerator.swift; sourceTree = "<group>"; };
+		C32EDBC126FC9E9300F6BC53 /* MultiPartForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiPartForm.swift; sourceTree = "<group>"; };
 		C32EDBC326FD9BF400F6BC53 /* Data+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extension.swift"; sourceTree = "<group>"; };
 		C32EDBC526FDB11800F6BC53 /* MimeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MimeType.swift; sourceTree = "<group>"; };
 		C32EDBCD26FEB3DE00F6BC53 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
@@ -70,6 +71,7 @@
 		C32EDBD626FF69EA00F6BC53 /* RequestMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestMaker.swift; sourceTree = "<group>"; };
 		C32EDBD82700023500F6BC53 /* NetworkingTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingTest.swift; sourceTree = "<group>"; };
 		C32EDBDB2700029400F6BC53 /* MockURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLSession.swift; sourceTree = "<group>"; };
+		C32EDBDF27002B4600F6BC53 /* RequestMakerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestMakerTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,7 +202,7 @@
 				C32EDBCD26FEB3DE00F6BC53 /* NetworkManager.swift */,
 				C32EDBD426FEBC0C00F6BC53 /* HttpMethod.swift */,
 				C32EDBD226FEB88F00F6BC53 /* OpenMarketAPI.swift */,
-				C32EDBC126FC9E9300F6BC53 /* MultiPartGenerator.swift */,
+				C32EDBC126FC9E9300F6BC53 /* MultiPartForm.swift */,
 				C32EDBD626FF69EA00F6BC53 /* RequestMaker.swift */,
 				C32EDBC526FDB11800F6BC53 /* MimeType.swift */,
 			);
@@ -231,6 +233,7 @@
 			children = (
 				C32EDBB926FC963A00F6BC53 /* DecodingTests.swift */,
 				C32EDBD82700023500F6BC53 /* NetworkingTest.swift */,
+				C32EDBDF27002B4600F6BC53 /* RequestMakerTest.swift */,
 				C32EDBDA2700028100F6BC53 /* Mock */,
 				C32EDBBB26FC963A00F6BC53 /* Info.plist */,
 			);
@@ -400,7 +403,7 @@
 				C32EDBD326FEB88F00F6BC53 /* OpenMarketAPI.swift in Sources */,
 				C32EDB8826FC904B00F6BC53 /* ViewController.swift in Sources */,
 				C32EDB8426FC904B00F6BC53 /* AppDelegate.swift in Sources */,
-				C32EDBC226FC9E9300F6BC53 /* MultiPartGenerator.swift in Sources */,
+				C32EDBC226FC9E9300F6BC53 /* MultiPartForm.swift in Sources */,
 				C32EDBA626FC94D700F6BC53 /* PostItem.swift in Sources */,
 				C32EDBD726FF69EA00F6BC53 /* RequestMaker.swift in Sources */,
 				C32EDBC626FDB11800F6BC53 /* MimeType.swift in Sources */,
@@ -421,6 +424,7 @@
 			files = (
 				C32EDBDC2700029400F6BC53 /* MockURLSession.swift in Sources */,
 				C32EDBBA26FC963A00F6BC53 /* DecodingTests.swift in Sources */,
+				C32EDBE027002B4600F6BC53 /* RequestMakerTest.swift in Sources */,
 				C32EDBD92700023500F6BC53 /* NetworkingTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
