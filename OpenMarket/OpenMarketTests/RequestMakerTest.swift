@@ -11,25 +11,6 @@ import XCTest
 class RequestMakerTest: XCTestCase {
     private var requestMaker: RequestMaker!
     private var dummyURL: URL!
-    private enum Format {
-        static let contentDisposition = "Content-Disposition: "
-        static let contentType = "Content-Type"
-        static let formData = "form-data"
-        static let crlf = "\r\n"
-        
-        static func name(_ string: String) -> String {
-            return "; name=\"\(string)\""
-        }
-        static func fileName(_ string: String) -> String {
-            return "; fileName=\"\(string)\""
-        }
-        static func starting(_ boundary: String) -> String {
-            return "--\(boundary)\(crlf)"
-        }
-        static func ending(_ boundary: String) -> String {
-            return "--\(boundary)--\r\n"
-        }
-    }
     
     override func setUpWithError() throws {
         requestMaker = RequestMaker()
