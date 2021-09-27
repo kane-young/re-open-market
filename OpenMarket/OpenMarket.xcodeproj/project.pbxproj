@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		C32EDB8426FC904B00F6BC53 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDB8326FC904B00F6BC53 /* AppDelegate.swift */; };
 		C32EDB8626FC904B00F6BC53 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDB8526FC904B00F6BC53 /* SceneDelegate.swift */; };
-		C32EDB8826FC904B00F6BC53 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDB8726FC904B00F6BC53 /* ViewController.swift */; };
+		C32EDB8826FC904B00F6BC53 /* ItemListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDB8726FC904B00F6BC53 /* ItemListViewController.swift */; };
 		C32EDB8D26FC905100F6BC53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C32EDB8C26FC905100F6BC53 /* Assets.xcassets */; };
 		C32EDB9026FC905100F6BC53 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C32EDB8E26FC905100F6BC53 /* LaunchScreen.storyboard */; };
 		C32EDBA626FC94D700F6BC53 /* PostItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBA526FC94D700F6BC53 /* PostItem.swift */; };
@@ -49,7 +49,7 @@
 		C32EDB8026FC904B00F6BC53 /* OpenMarket.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenMarket.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C32EDB8326FC904B00F6BC53 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C32EDB8526FC904B00F6BC53 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		C32EDB8726FC904B00F6BC53 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		C32EDB8726FC904B00F6BC53 /* ItemListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListViewController.swift; sourceTree = "<group>"; };
 		C32EDB8C26FC905100F6BC53 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C32EDB8F26FC905100F6BC53 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C32EDB9126FC905100F6BC53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -182,7 +182,7 @@
 		C32EDB9C26FC92C500F6BC53 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
-				C32EDB8726FC904B00F6BC53 /* ViewController.swift */,
+				C32EDB8726FC904B00F6BC53 /* ItemListViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -401,7 +401,7 @@
 			files = (
 				C32EDBA826FC950000F6BC53 /* PatchItem.swift in Sources */,
 				C32EDBD326FEB88F00F6BC53 /* OpenMarketAPI.swift in Sources */,
-				C32EDB8826FC904B00F6BC53 /* ViewController.swift in Sources */,
+				C32EDB8826FC904B00F6BC53 /* ItemListViewController.swift in Sources */,
 				C32EDB8426FC904B00F6BC53 /* AppDelegate.swift in Sources */,
 				C32EDBC226FC9E9300F6BC53 /* MultiPartForm.swift in Sources */,
 				C32EDBA626FC94D700F6BC53 /* PostItem.swift in Sources */,
