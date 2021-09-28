@@ -7,7 +7,12 @@
 
 import Foundation
 
-final class NetworkManager {
+protocol NetworkManagable {
+    func request(url: URL, with item: Any, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void)
+    func fetch(url: URL, completion: @escaping (Result<Data, NetworkError>) -> Void)
+}
+
+final class NetworkManager: NetworkManagable {
     private let urlSession: URLSession
     private let requestMaker: RequestMakable
 

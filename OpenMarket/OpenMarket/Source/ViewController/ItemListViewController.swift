@@ -13,21 +13,22 @@ final class ItemListViewController: UIViewController {
         static let plusImage = "plus"
         static let listImage = "list.dash"
     }
-
-    private var gridBarButtonItem: UIBarButtonItem = UIBarButtonItem()
-    private var listBarButtonItem: UIBarButtonItem = UIBarButtonItem()
-    private var plusBarButtonItem: UIBarButtonItem = UIBarButtonItem()
-    private var collectionView: UICollectionView = UICollectionView()
+    private var gridBarButtonItem: UIBarButtonItem = .init()
+    private var listBarButtonItem: UIBarButtonItem = .init()
+    private var plusBarButtonItem: UIBarButtonItem = .init()
+    private var collectionView: UICollectionView = .init()
+    private let viewModel: ItemListViewModel = .init()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
         configureNavigationBar()
         addSubViews()
+        viewModelBind()
         configureCollectionView()
         configureCollectionViewConstraints()
     }
-    
+
     private func addSubViews() {
         view.addSubview(collectionView)
     }
@@ -45,13 +46,36 @@ final class ItemListViewController: UIViewController {
         listBarButtonItem.action = #selector(touchListButton(_:))
         navigationItem.rightBarButtonItems = [plusBarButtonItem, gridBarButtonItem]
     }
+    
+    private func viewModelBind() {
+        viewModel.bind { state in
+            switch state {
+            case .update(let indexPaths):
+                DispatchQueue.main.async { [weak self] in
+                    self?.collectionView.insertItems(at: indexPaths)
+                }
+            case .error(let error):
+                DispatchQueue.main.async { [weak self] in
+                    let alertController = UIAlertController(title: "에러", message: error.localizedDescription, preferredStyle: .alert)
+                    let ok = UIAlertAction(title: "Ok", style: .default, handler: nil)
+                    alertController.addAction(ok)
+                    self?.present(alertController, animated: true, completion: nil)
+                }
+            default:
+                break
+            }
+        }
+        viewModel.loadPage()
+    }
 
     private func configureView() {
         self.view.backgroundColor = .white
     }
-    
+
     private func configureCollectionView() {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.delegate = self
+        collectionView.dataSource = self
     }
 
     private func configureCollectionViewConstraints() {
@@ -70,5 +94,19 @@ final class ItemListViewController: UIViewController {
 
     @objc private func touchListButton(_ sender: UIBarButtonItem) {
         navigationItem.rightBarButtonItems = [plusBarButtonItem, gridBarButtonItem]
+    }
+}
+
+extension ItemListViewController: UICollectionViewDelegate {
+    
+}
+
+extension ItemListViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return viewModel.items.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        return UICollectionViewCell()
     }
 }
