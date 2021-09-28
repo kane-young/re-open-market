@@ -29,8 +29,12 @@
 		C32EDBD92700023500F6BC53 /* NetworkingTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBD82700023500F6BC53 /* NetworkingTest.swift */; };
 		C32EDBDC2700029400F6BC53 /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBDB2700029400F6BC53 /* MockURLSession.swift */; };
 		C32EDBE027002B4600F6BC53 /* RequestMakerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBDF27002B4600F6BC53 /* RequestMakerTest.swift */; };
-		C37EA628270179C3000518A0 /* MarketItemsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37EA627270179C3000518A0 /* MarketItemsViewModel.swift */; };
+		C37EA628270179C3000518A0 /* ItemListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37EA627270179C3000518A0 /* ItemListViewModel.swift */; };
 		C37EA62A2702FA64000518A0 /* ItemListNetworkUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37EA6292702FA64000518A0 /* ItemListNetworkUseCase.swift */; };
+		C37EA62C2702FD6A000518A0 /* ItemListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37EA62B2702FD6A000518A0 /* ItemListCell.swift */; };
+		C37EA62E2702FE91000518A0 /* ItemListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37EA62D2702FE91000518A0 /* ItemListCellViewModel.swift */; };
+		C37EA63027033E0A000518A0 /* ThumbnailUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37EA62F27033E0A000518A0 /* ThumbnailUseCase.swift */; };
+		C37EA632270341C3000518A0 /* NSAttributedString+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37EA631270341C3000518A0 /* NSAttributedString+Extension.swift */; };
 		D0D420A34F274896FCE5389A /* Pods_OpenMarket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C1CCCB9FD817E8E78A31D5 /* Pods_OpenMarket.framework */; };
 /* End PBXBuildFile section */
 
@@ -74,8 +78,12 @@
 		C32EDBD82700023500F6BC53 /* NetworkingTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingTest.swift; sourceTree = "<group>"; };
 		C32EDBDB2700029400F6BC53 /* MockURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLSession.swift; sourceTree = "<group>"; };
 		C32EDBDF27002B4600F6BC53 /* RequestMakerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestMakerTest.swift; sourceTree = "<group>"; };
-		C37EA627270179C3000518A0 /* MarketItemsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketItemsViewModel.swift; sourceTree = "<group>"; };
+		C37EA627270179C3000518A0 /* ItemListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListViewModel.swift; sourceTree = "<group>"; };
 		C37EA6292702FA64000518A0 /* ItemListNetworkUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListNetworkUseCase.swift; sourceTree = "<group>"; };
+		C37EA62B2702FD6A000518A0 /* ItemListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListCell.swift; sourceTree = "<group>"; };
+		C37EA62D2702FE91000518A0 /* ItemListCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListCellViewModel.swift; sourceTree = "<group>"; };
+		C37EA62F27033E0A000518A0 /* ThumbnailUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailUseCase.swift; sourceTree = "<group>"; };
+		C37EA631270341C3000518A0 /* NSAttributedString+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +188,7 @@
 		C32EDB9B26FC92C000F6BC53 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				C37EA62B2702FD6A000518A0 /* ItemListCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -196,6 +205,7 @@
 			isa = PBXGroup;
 			children = (
 				C32EDBC326FD9BF400F6BC53 /* Data+Extension.swift */,
+				C37EA631270341C3000518A0 /* NSAttributedString+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -264,8 +274,10 @@
 		C37EA624270179A3000518A0 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				C37EA627270179C3000518A0 /* MarketItemsViewModel.swift */,
+				C37EA627270179C3000518A0 /* ItemListViewModel.swift */,
 				C37EA6292702FA64000518A0 /* ItemListNetworkUseCase.swift */,
+				C37EA62D2702FE91000518A0 /* ItemListCellViewModel.swift */,
+				C37EA62F27033E0A000518A0 /* ThumbnailUseCase.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -414,19 +426,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				C32EDBA826FC950000F6BC53 /* PatchItem.swift in Sources */,
+				C37EA62E2702FE91000518A0 /* ItemListCellViewModel.swift in Sources */,
 				C32EDBD326FEB88F00F6BC53 /* OpenMarketAPI.swift in Sources */,
+				C37EA63027033E0A000518A0 /* ThumbnailUseCase.swift in Sources */,
 				C32EDB8826FC904B00F6BC53 /* ItemListViewController.swift in Sources */,
 				C32EDB8426FC904B00F6BC53 /* AppDelegate.swift in Sources */,
+				C37EA62C2702FD6A000518A0 /* ItemListCell.swift in Sources */,
 				C32EDBC226FC9E9300F6BC53 /* MultiPartForm.swift in Sources */,
 				C32EDBA626FC94D700F6BC53 /* PostItem.swift in Sources */,
 				C37EA62A2702FA64000518A0 /* ItemListNetworkUseCase.swift in Sources */,
 				C32EDBD726FF69EA00F6BC53 /* RequestMaker.swift in Sources */,
 				C32EDBC626FDB11800F6BC53 /* MimeType.swift in Sources */,
 				C32EDBD526FEBC0C00F6BC53 /* HttpMethod.swift in Sources */,
+				C37EA632270341C3000518A0 /* NSAttributedString+Extension.swift in Sources */,
 				C32EDBAE26FC954500F6BC53 /* ItemList.swift in Sources */,
 				C32EDBD126FEB64000F6BC53 /* NetworkError.swift in Sources */,
 				C32EDBAC26FC953E00F6BC53 /* Item.swift in Sources */,
-				C37EA628270179C3000518A0 /* MarketItemsViewModel.swift in Sources */,
+				C37EA628270179C3000518A0 /* ItemListViewModel.swift in Sources */,
 				C32EDBCE26FEB3DE00F6BC53 /* NetworkManager.swift in Sources */,
 				C32EDBC426FD9BF400F6BC53 /* Data+Extension.swift in Sources */,
 				C32EDB8626FC904B00F6BC53 /* SceneDelegate.swift in Sources */,
