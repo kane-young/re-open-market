@@ -8,8 +8,8 @@
 import Foundation
 
 protocol NetworkManagable {
-    func request(url: URL, with item: Any, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void)
-    func fetch(url: URL, completion: @escaping (Result<Data, NetworkError>) -> Void)
+    func request(url: URL, with item: Any, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask?
+    func fetch(url: URL, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask?
 }
 
 final class NetworkManager: NetworkManagable {
@@ -21,8 +21,8 @@ final class NetworkManager: NetworkManagable {
         self.requestMaker = requestMaker
     }
 
-    private func retrieveData(with request: URLRequest, completion: @escaping (Result<Data, NetworkError>) -> Void) {
-        urlSession.dataTask(with: request) { data, response, error in
+    private func retrieveData(with request: URLRequest, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
+        let task = urlSession.dataTask(with: request) { data, response, error in
             if error != nil {
                 completion(.failure(.connectionProblem))
                 return
@@ -40,19 +40,21 @@ final class NetworkManager: NetworkManagable {
             }
 
             completion(.success(data))
-        }.resume()
+        }
+        task.resume()
+        return task
     }
 
-    func request(url: URL, with item: Any, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) {
+    func request(url: URL, with item: Any, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
         guard let request = requestMaker.request(url: url, httpMethod: httpMethod, with: item) else {
             completion(.failure(.invalidRequest))
-            return
+            return nil
         }
-        retrieveData(with: request, completion: completion)
+        return retrieveData(with: request, completion: completion)
     }
 
-    func fetch(url: URL, completion: @escaping (Result<Data, NetworkError>) -> Void) {
+    func fetch(url: URL, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
         let urlRequest = URLRequest(url: url)
-        retrieveData(with: urlRequest, completion: completion)
+        return retrieveData(with: urlRequest, completion: completion)
     }
 }

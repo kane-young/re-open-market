@@ -88,11 +88,41 @@ final class ItemListCellViewModel {
 
     private func updateText() {
         let isneededDiscountedLabel = marketItem.discountedPrice == nil
-        let discountedPrice: NSAttributedString = isneededDiscountedLabel ? .init() : "\(marketItem.currency) \(marketItem.price)".strikeThrough()
-        let originalPrice = marketItem.currency + " " + (isneededDiscountedLabel ? String(marketItem.price) : String(marketItem.discountedPrice ?? 0))
+        let discountedPrice: NSAttributedString = discountedPriceText(isneededDiscountedLabel, marketItem.currency, marketItem.price)
+        let originalPrice = originalPriceText(isneededDiscountedLabel, marketItem.currency, marketItem.price , marketItem.discountedPrice)
         let stockLabelTextColor: UIColor = marketItem.stock == 0 ? .systemYellow : .black
-        let stock = marketItem.stock == 0 ? "품절" : "\(marketItem.stock)"
+        let stock = stockText(marketItem.stock)
         let metaData = MetaData(image: nil, title: marketItem.title, isneededDiscountedLabel: isneededDiscountedLabel, discountedPrice: discountedPrice, originalPrice: originalPrice, stockLabelTextColor: stockLabelTextColor, stock: stock)
         state = .update(metaData)
+    }
+
+    private func stockText(_ count: Int) -> String {
+        if count == 0 {
+            return "품절"
+        } else if count >= 1000 {
+            return "수량 : 999+"
+        } else {
+            return "수량 : \(count)"
+        }
+    }
+
+    private func originalPriceText(_ isneeded: Bool, _ currency: String, _ price: Int, _ discountedPrice: Int?) -> String {
+        let text = currency + " " + (isneeded ? converToMoneyType(price) : converToMoneyType(discountedPrice ?? 0))
+        return text
+    }
+
+    private func discountedPriceText(_ isneeded: Bool, _ currency: String, _ price: Int) -> NSAttributedString {
+        let price = converToMoneyType(price)
+        return isneeded ? .init() : "\(currency) \(price)".strikeThrough()
+    }
+
+    private func converToMoneyType(_ price: Int) -> String {
+        let price = NSNumber(value: price)
+        let formatter: NumberFormatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        guard let text = formatter.string(from: price) else {
+            return .init()
+        }
+        return text
     }
 }

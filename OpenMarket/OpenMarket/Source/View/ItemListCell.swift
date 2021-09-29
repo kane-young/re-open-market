@@ -10,12 +10,53 @@ import UIKit
 class ItemListCell: UICollectionViewCell {
     static let identifier: String = "ItemListCellViewCell"
 
-    private var imageView: UIImageView = .init()
-    private var titleLabel: UILabel = .init()
-    private var priceLabel: UILabel = .init()
-    private var discountedPriceLabel: UILabel = .init()
-    private var stockLabel: UILabel = .init()
-    private lazy var stackView: UIStackView = .init(arrangedSubviews: [priceLabel, discountedPriceLabel])
+    private var imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    private var titleLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .preferredFont(forTextStyle: .title2)
+        return label
+    }()
+    private var priceLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .preferredFont(forTextStyle: .body)
+        label.textColor = .systemRed
+        return label
+    }()
+    private var discountedPriceLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .preferredFont(forTextStyle: .body)
+        return label
+    }()
+    private var stockLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .preferredFont(forTextStyle: .body)
+        label.textAlignment = .left
+        return label
+    }()
+    private lazy var priceLabelsStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [priceLabel, discountedPriceLabel])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.distribution = .fill
+        stackView.spacing = 5
+        return stackView
+    }()
+    private lazy var itemInfoStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, priceLabelsStackView])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.distribution = .fillEqually
+        stackView.spacing = 5
+        return stackView
+    }()
 
     private var viewModel: ItemListCellViewModel?
 
@@ -65,21 +106,11 @@ class ItemListCell: UICollectionViewCell {
     func configureViews() {
         contentView.addSubview(imageView)
         contentView.addSubview(titleLabel)
-        contentView.addSubview(stackView)
         contentView.addSubview(stockLabel)
+        contentView.addSubview(itemInfoStackView)
         contentView.backgroundColor = .white
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        priceLabel.translatesAutoresizingMaskIntoConstraints = false
-        discountedPriceLabel.translatesAutoresizingMaskIntoConstraints = false
-        stockLabel.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .horizontal
-        stackView.spacing = 10
-        titleLabel.font = .preferredFont(forTextStyle: .title1)
-        priceLabel.font = .preferredFont(forTextStyle: .body)
-        discountedPriceLabel.font = .preferredFont(forTextStyle: .body)
     }
-    
+
     func configureConstraints() {
         let safeArea = self.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
@@ -88,11 +119,16 @@ class ItemListCell: UICollectionViewCell {
             imageView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10),
             imageView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -10),
             imageView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -10),
-            titleLabel.topAnchor.constraint(equalTo: imageView.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: imageView.bottomAnchor),
-            stackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor),
-            stockLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: 10),
-            stockLabel.topAnchor.constraint(equalTo: imageView.topAnchor),
+            itemInfoStackView.topAnchor.constraint(equalTo: imageView.topAnchor),
+            itemInfoStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 10),
+            itemInfoStackView.bottomAnchor.constraint(equalTo: imageView.bottomAnchor),
+            itemInfoStackView.trailingAnchor.constraint(equalTo: stockLabel.leadingAnchor, constant: -10),
+            stockLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -10),
+            stockLabel.topAnchor.constraint(equalTo: imageView.topAnchor)
         ])
+        stockLabel.setContentHuggingPriority(UILayoutPriority(1000), for: .horizontal)
+        stockLabel.setContentCompressionResistancePriority(UILayoutPriority(1000), for: .horizontal)
+        priceLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        priceLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
     }
 }
