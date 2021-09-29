@@ -54,12 +54,12 @@ final class ItemListCellViewModel {
         self.handler = handler
     }
 
-    func fire() {
+    func configureCell() {
         retrieveImage()
         updateText()
     }
 
-    func retrieveImage() {
+    private func retrieveImage() {
         guard let urlString = marketItem.thumbnails.first else {
             state = .error(.emptyPath)
             return
@@ -71,9 +71,7 @@ final class ItemListCellViewModel {
         imageTask = useCase.retrieveImage(with: url, completionHandler: { [weak self] result in
             switch result {
             case .success(let image):
-                guard case var .update(metaData) = self?.state else {
-                    return
-                }
+                guard case var .update(metaData) = self?.state else { return }
                 metaData.image = image
                 self?.state = .update(metaData)
             case .failure(let error):
@@ -88,11 +86,17 @@ final class ItemListCellViewModel {
 
     private func updateText() {
         let isneededDiscountedLabel = marketItem.discountedPrice == nil
-        let discountedPrice: NSAttributedString = discountedPriceText(isneededDiscountedLabel, marketItem.currency, marketItem.price)
-        let originalPrice = originalPriceText(isneededDiscountedLabel, marketItem.currency, marketItem.price , marketItem.discountedPrice)
+        let discountedPrice = discountedPriceText(isneededDiscountedLabel)
+        let originalPrice = originalPriceText(isneededDiscountedLabel)
         let stockLabelTextColor: UIColor = marketItem.stock == 0 ? .systemYellow : .black
         let stock = stockText(marketItem.stock)
-        let metaData = MetaData(image: nil, title: marketItem.title, isneededDiscountedLabel: isneededDiscountedLabel, discountedPrice: discountedPrice, originalPrice: originalPrice, stockLabelTextColor: stockLabelTextColor, stock: stock)
+        let metaData = MetaData(image: nil,
+                                title: marketItem.title,
+                                isneededDiscountedLabel: isneededDiscountedLabel,
+                                discountedPrice: discountedPrice,
+                                originalPrice: originalPrice,
+                                stockLabelTextColor: stockLabelTextColor,
+                                stock: stock)
         state = .update(metaData)
     }
 
@@ -106,14 +110,15 @@ final class ItemListCellViewModel {
         }
     }
 
-    private func originalPriceText(_ isneeded: Bool, _ currency: String, _ price: Int, _ discountedPrice: Int?) -> String {
-        let text = currency + " " + (isneeded ? converToMoneyType(price) : converToMoneyType(discountedPrice ?? 0))
+    private func originalPriceText(_ isneededDiscountedLabel: Bool) -> String {
+        let price = isneededDiscountedLabel ? converToMoneyType(marketItem.price) : converToMoneyType(marketItem.discountedPrice ?? 0)
+        let text = marketItem.currency + " " + price
         return text
     }
 
-    private func discountedPriceText(_ isneeded: Bool, _ currency: String, _ price: Int) -> NSAttributedString {
-        let price = converToMoneyType(price)
-        return isneeded ? .init() : "\(currency) \(price)".strikeThrough()
+    private func discountedPriceText(_ isneededDiscountedLabel: Bool) -> NSAttributedString {
+        let price = converToMoneyType(marketItem.price)
+        return isneededDiscountedLabel ? .init() : "\(marketItem.currency) \(price)".strikeThrough()
     }
 
     private func converToMoneyType(_ price: Int) -> String {
