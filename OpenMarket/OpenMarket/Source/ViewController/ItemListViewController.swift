@@ -9,37 +9,33 @@ import UIKit
 
 final class ItemListViewController: UIViewController {
     private enum Style {
-        static let gridImage = "square.grid.2x2"
-        static let plusImage = "plus"
-        static let listImage = "list.dash"
+        enum BarButtonItemImage {
+            static let gridImage = UIImage(systemName: "square.grid.2x2")
+            static let plusImage = UIImage(systemName: "plus")
+            static let listImage = UIImage(systemName: "list.dash")
+        }
+    }
+
+    private enum CellStyle {
+        case list
+        case grid
     }
 
     // MARK: UI Properties
-    private var gridBarButtonItem: UIBarButtonItem = {
-        let image = UIImage(systemName: Style.gridImage)?.withTintColor(.black)
-        let barButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(touchGridButton(_:)))
-        return barButtonItem
-    }()
-    private var listBarButtonItem: UIBarButtonItem = {
-        let image = UIImage(systemName: Style.listImage)?.withTintColor(.black)
-        let barButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(touchListButton(_:)))
-        return barButtonItem
-    }()
-    private var plusBarButtonItem: UIBarButtonItem = {
-        let image = UIImage(systemName: Style.plusImage)?.withTintColor(.black)
-        let barButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(touchPlusButton(_:)))
-        return barButtonItem
-    }()
+    private var changeCellLayoutButton: UIBarButtonItem = UIBarButtonItem()
+    private var addItemBarButtonItem: UIBarButtonItem = UIBarButtonItem()
     private var collectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         collectionView.backgroundColor = .white
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.register(ItemListCell.self, forCellWithReuseIdentifier: ItemListCell.identifier)
+        collectionView.register(ItemGridCell.self, forCellWithReuseIdentifier: ItemGridCell.identifier)
         return collectionView
     }()
 
     private let viewModel: ItemListViewModel = .init()
+    private var cellStyle: CellStyle = .list
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,7 +52,15 @@ final class ItemListViewController: UIViewController {
     }
 
     private func configureNavigationBar() {
-        navigationItem.rightBarButtonItems = [plusBarButtonItem, gridBarButtonItem]
+        changeCellLayoutButton.action = #selector(touchChangeCellLayoutButton(_:))
+        addItemBarButtonItem.action = #selector(touchAddItemBarButtonItem(_:))
+        changeCellLayoutButton.image = Style.BarButtonItemImage.gridImage
+        addItemBarButtonItem.image = Style.BarButtonItemImage.plusImage
+        changeCellLayoutButton.tintColor = .black
+        addItemBarButtonItem.tintColor = .black
+        changeCellLayoutButton.target = self
+        addItemBarButtonItem.target = self
+        navigationItem.rightBarButtonItems = [changeCellLayoutButton, addItemBarButtonItem]
     }
 
     private func viewModelBind() {
@@ -99,20 +103,37 @@ final class ItemListViewController: UIViewController {
         ])
     }
 
-    @objc private func touchGridButton(_ sender: UIBarButtonItem) {
-        navigationItem.rightBarButtonItems = [plusBarButtonItem, listBarButtonItem]
+    @objc private func touchChangeCellLayoutButton(_ sender: UIBarButtonItem) {
+        changeRightBarButtonItemImage()
+        changeCellStyle()
+        collectionView.reloadData()
     }
 
-    @objc private func touchListButton(_ sender: UIBarButtonItem) {
-        navigationItem.rightBarButtonItems = [plusBarButtonItem, gridBarButtonItem]
+    @objc private func touchAddItemBarButtonItem(_ sender: UIBarButtonItem) {
     }
 
-    @objc private func touchPlusButton(_ sender: UIBarButtonItem) {
+    private func changeCellStyle() {
+        switch cellStyle {
+        case .list:
+            cellStyle = .grid
+        case .grid:
+            cellStyle = .list
+        }
+    }
 
+    private func changeRightBarButtonItemImage() {
+        switch cellStyle {
+        case .list:
+            changeCellLayoutButton.image = Style.BarButtonItemImage.gridImage
+        case .grid:
+            changeCellLayoutButton.image = Style.BarButtonItemImage.listImage
+        }
     }
 }
 
 extension ItemListViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    }
 }
 
 extension ItemListViewController: UICollectionViewDataSource {
@@ -121,8 +142,18 @@ extension ItemListViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemListCell.identifier, for: indexPath) as? ItemListCell else {
-            return UICollectionViewCell()
+        let cell: ItemsCellDisplayable
+        switch cellStyle {
+        case .list:
+            guard let listCell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemListCell.identifier, for: indexPath) as? ItemListCell else {
+                return UICollectionViewCell()
+            }
+            cell = listCell
+        case .grid:
+            guard let gridCell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemGridCell.identifier, for: indexPath) as? ItemGridCell else {
+                return UICollectionViewCell()
+            }
+            cell = gridCell
         }
         let item = viewModel.items[indexPath.item]
         let itemListCellViewModel = ItemListCellViewModel(marketItem: item)
@@ -133,13 +164,44 @@ extension ItemListViewController: UICollectionViewDataSource {
 }
 
 extension ItemListViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return .init(width: collectionView.bounds.width, height: collectionView.bounds.height / 6)
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        switch cellStyle {
+        case .list:
+            return .init(width: collectionView.bounds.width, height: collectionView.bounds.height / 6)
+        case .grid:
+            return .init(width: collectionView.bounds.width/2 - 20, height: collectionView.bounds.height / 2 - 20)
+        }
     }
 
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView,
+                        willDisplay cell: UICollectionViewCell,
+                        forItemAt indexPath: IndexPath) {
         if viewModel.items.count == indexPath.item + 2 {
             viewModel.loadPage()
+        }
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        switch cellStyle {
+        case .list:
+            return .zero
+        case .grid:
+            return 10
+        }
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
+        switch cellStyle {
+        case .list:
+            return .zero
+        case .grid:
+            return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         }
     }
 }

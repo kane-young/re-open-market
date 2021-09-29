@@ -1,14 +1,19 @@
 //
-//  ItemListCellViewModel.swift
+//  ItemGridCell.swift
 //  OpenMarket
 //
-//  Created by 이영우 on 2021/09/28.
+//  Created by 이영우 on 2021/09/29.
 //
 
 import UIKit
 
-class ItemListCell: UICollectionViewCell, ItemsCellDisplayable {
-    static let identifier: String = "ItemListCell"
+protocol ItemsCellDisplayable: UICollectionViewCell {
+    func bind(_ viewModel: ItemListCellViewModel)
+    func fire()
+}
+
+class ItemGridCell: UICollectionViewCell, ItemsCellDisplayable {
+    static let identifier: String = "ItemGridCell"
 
     private var imageView: UIImageView = {
         let imageView = UIImageView()
@@ -18,6 +23,7 @@ class ItemListCell: UICollectionViewCell, ItemsCellDisplayable {
     private var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
         label.font = .preferredFont(forTextStyle: .title2)
         return label
     }()
@@ -25,6 +31,7 @@ class ItemListCell: UICollectionViewCell, ItemsCellDisplayable {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .preferredFont(forTextStyle: .body)
+        label.textAlignment = .center
         label.textColor = .systemRed
         return label
     }()
@@ -32,25 +39,18 @@ class ItemListCell: UICollectionViewCell, ItemsCellDisplayable {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .preferredFont(forTextStyle: .body)
+        label.textAlignment = .center
         return label
     }()
     private var stockLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .preferredFont(forTextStyle: .body)
-        label.textAlignment = .left
+        label.textAlignment = .center
         return label
     }()
     private lazy var priceLabelsStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [priceLabel, discountedPriceLabel])
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .horizontal
-        stackView.distribution = .fill
-        stackView.spacing = 5
-        return stackView
-    }()
-    private lazy var itemInfoStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, priceLabelsStackView])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
@@ -105,30 +105,32 @@ class ItemListCell: UICollectionViewCell, ItemsCellDisplayable {
 
     private func configureViews() {
         contentView.addSubview(imageView)
+        contentView.addSubview(priceLabelsStackView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(stockLabel)
-        contentView.addSubview(itemInfoStackView)
         contentView.backgroundColor = .white
     }
 
     private func configureConstraints() {
         let safeArea = self.safeAreaLayoutGuide
+        let contentView = self.contentView
         NSLayoutConstraint.activate([
+            imageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.5),
             imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor),
-            imageView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 10),
+            imageView.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
             imageView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10),
-            imageView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -10),
-            imageView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -10),
-            itemInfoStackView.topAnchor.constraint(equalTo: imageView.topAnchor),
-            itemInfoStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 10),
-            itemInfoStackView.bottomAnchor.constraint(equalTo: imageView.bottomAnchor),
-            itemInfoStackView.trailingAnchor.constraint(equalTo: stockLabel.leadingAnchor, constant: -10),
-            stockLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -10),
-            stockLabel.topAnchor.constraint(equalTo: imageView.topAnchor)
+            imageView.bottomAnchor.constraint(equalTo: titleLabel.topAnchor, constant: -10),
+            titleLabel.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 10),
+            priceLabelsStackView.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
+            priceLabelsStackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
+            priceLabelsStackView.bottomAnchor.constraint(equalTo: stockLabel.topAnchor, constant: -10),
+            priceLabelsStackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 10),
+            stockLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 10),
+            stockLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -10),
+            stockLabel.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor)
         ])
-        stockLabel.setContentHuggingPriority(UILayoutPriority(1000), for: .horizontal)
-        stockLabel.setContentCompressionResistancePriority(UILayoutPriority(1000), for: .horizontal)
-        priceLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-        priceLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        stockLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
 }

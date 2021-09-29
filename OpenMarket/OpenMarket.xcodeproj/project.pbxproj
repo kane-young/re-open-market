@@ -35,6 +35,7 @@
 		C37EA62E2702FE91000518A0 /* ItemListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37EA62D2702FE91000518A0 /* ItemListCellViewModel.swift */; };
 		C37EA63027033E0A000518A0 /* ThumbnailUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37EA62F27033E0A000518A0 /* ThumbnailUseCase.swift */; };
 		C37EA632270341C3000518A0 /* NSAttributedString+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37EA631270341C3000518A0 /* NSAttributedString+Extension.swift */; };
+		C37EA6342704444C000518A0 /* ItemGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37EA6332704444C000518A0 /* ItemGridCell.swift */; };
 		D0D420A34F274896FCE5389A /* Pods_OpenMarket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C1CCCB9FD817E8E78A31D5 /* Pods_OpenMarket.framework */; };
 /* End PBXBuildFile section */
 
@@ -84,6 +85,7 @@
 		C37EA62D2702FE91000518A0 /* ItemListCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListCellViewModel.swift; sourceTree = "<group>"; };
 		C37EA62F27033E0A000518A0 /* ThumbnailUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailUseCase.swift; sourceTree = "<group>"; };
 		C37EA631270341C3000518A0 /* NSAttributedString+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Extension.swift"; sourceTree = "<group>"; };
+		C37EA6332704444C000518A0 /* ItemGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemGridCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -189,6 +191,7 @@
 			isa = PBXGroup;
 			children = (
 				C37EA62B2702FD6A000518A0 /* ItemListCell.swift */,
+				C37EA6332704444C000518A0 /* ItemGridCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -441,6 +444,7 @@
 				C37EA632270341C3000518A0 /* NSAttributedString+Extension.swift in Sources */,
 				C32EDBAE26FC954500F6BC53 /* ItemList.swift in Sources */,
 				C32EDBD126FEB64000F6BC53 /* NetworkError.swift in Sources */,
+				C37EA6342704444C000518A0 /* ItemGridCell.swift in Sources */,
 				C32EDBAC26FC953E00F6BC53 /* Item.swift in Sources */,
 				C37EA628270179C3000518A0 /* ItemListViewModel.swift in Sources */,
 				C32EDBCE26FEB3DE00F6BC53 /* NetworkManager.swift in Sources */,
