@@ -8,7 +8,7 @@
 import UIKit
 
 class ItemListCell: UICollectionViewCell {
-    static let identifier: String = "ItemListCellViewCell"
+    static let identifier: String = "ItemListCell"
 
     private var imageView: UIImageView = {
         let imageView = UIImageView()
@@ -100,7 +100,7 @@ class ItemListCell: UICollectionViewCell {
     }
 
     func fire() {
-        viewModel?.fire()
+        viewModel?.configureCell()
     }
 
     func configureViews() {
