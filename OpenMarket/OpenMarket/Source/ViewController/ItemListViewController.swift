@@ -70,25 +70,19 @@ final class ItemListViewController: UIViewController {
     }
 
     private func viewModelBind() {
-        viewModel.bind { state in
+        viewModel.bind { [weak self] state in
             switch state {
             case .initial(let indexPaths):
-                DispatchQueue.main.async { [weak self] in
-                    self?.activityIndicator.stopAnimating()
-                    self?.collectionView.isHidden = false
-                    self?.collectionView.insertItems(at: indexPaths)
-                }
+                self?.activityIndicator.stopAnimating()
+                self?.collectionView.isHidden = false
+                self?.collectionView.insertItems(at: indexPaths)
             case .update(let indexPaths):
-                DispatchQueue.main.async { [weak self] in
-                    self?.collectionView.insertItems(at: indexPaths)
-                }
+                self?.collectionView.insertItems(at: indexPaths)
             case .error(let error):
-                DispatchQueue.main.async { [weak self] in
-                    let alertController = UIAlertController(title: "에러", message: error.localizedDescription, preferredStyle: .alert)
-                    let okay = UIAlertAction(title: "Ok", style: .default, handler: nil)
-                    alertController.addAction(okay)
-                    self?.present(alertController, animated: true, completion: nil)
-                }
+                let alertController = UIAlertController(title: "에러", message: error.localizedDescription, preferredStyle: .alert)
+                let okay = UIAlertAction(title: "Ok", style: .default, handler: nil)
+                alertController.addAction(okay)
+                self?.present(alertController, animated: true, completion: nil)
             default:
                 break
             }

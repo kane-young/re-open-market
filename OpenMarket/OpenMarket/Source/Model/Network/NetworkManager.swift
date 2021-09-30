@@ -8,8 +8,8 @@
 import Foundation
 
 protocol NetworkManagable {
-    func request(url: URL, with item: Any, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask?
-    func fetch(url: URL, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask?
+    func request(with urlString: String, with item: Any, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask?
+    func fetch(with urlString: String, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask?
 }
 
 final class NetworkManager: NetworkManagable {
@@ -45,7 +45,11 @@ final class NetworkManager: NetworkManagable {
         return task
     }
 
-    func request(url: URL, with item: Any, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
+    func request(with urlString: String, with item: Any, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
+        guard let url = URL(string: urlString) else {
+            completion(.failure(.invalidURL))
+            return nil
+        }
         guard let request = requestMaker.request(url: url, httpMethod: httpMethod, with: item) else {
             completion(.failure(.invalidRequest))
             return nil
@@ -53,7 +57,11 @@ final class NetworkManager: NetworkManagable {
         return retrieveData(with: request, completion: completion)
     }
 
-    func fetch(url: URL, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
+    func fetch(with urlString: String, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
+        guard let url = URL(string: urlString) else {
+            completion(.failure(.invalidURL))
+            return nil
+        }
         let urlRequest = URLRequest(url: url)
         return retrieveData(with: urlRequest, completion: completion)
     }

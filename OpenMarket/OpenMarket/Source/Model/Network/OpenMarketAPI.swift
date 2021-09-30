@@ -16,38 +16,19 @@ enum OpenMarketAPI {
     case patchProduct(id: Int)
     case deleteProduct(id: Int)
 
-    private var urlPath: String {
+    var path: String {
+        let baseURL: String = "https://camp-open-market-2.herokuapp.com"
         switch self {
         case .load(let page):
-            return "/items/\(page)"
+            return "\(baseURL)/items/\(page)"
         case .loadProduct(let id):
-            return "/item/\(id)"
+            return "\(baseURL)/item/\(id)"
         case .postProduct:
-            return "/item/"
+            return "\(baseURL)/item/"
         case .patchProduct(let id):
-            return "/item/\(id)"
+            return "\(baseURL)/item/\(id)"
         case .deleteProduct(let id):
-            return "/item/\(id)"
-        }
-    }
-
-    var url: URL? {
-        let baseURL: String = "https://camp-open-market-2.herokuapp.com"
-        return URL(string: "\(baseURL)\(urlPath)")
-    }
-
-    var httpMethod: HttpMethod {
-        switch self {
-        case .load:
-            return .get
-        case .loadProduct:
-            return .get
-        case .postProduct:
-            return .post
-        case .patchProduct:
-            return .patch
-        case .deleteProduct:
-            return .delete
+            return "\(baseURL)/item/\(id)"
         }
     }
 }

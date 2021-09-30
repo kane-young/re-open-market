@@ -15,7 +15,6 @@ enum ItemListCellViewModelState {
 
 enum ItemListCellViewModelError {
     case emptyPath
-    case invalidURL
     case useCaseError(ThumbnailUseCaseError)
 }
 
@@ -55,8 +54,8 @@ final class ItemListCellViewModel {
     }
 
     func configureCell() {
-        retrieveImage()
         updateText()
+        retrieveImage()
     }
 
     private func retrieveImage() {
@@ -64,11 +63,7 @@ final class ItemListCellViewModel {
             state = .error(.emptyPath)
             return
         }
-        guard let url = URL(string: urlString) else {
-            state = .error(.invalidURL)
-            return
-        }
-        imageTask = useCase.retrieveImage(with: url, completionHandler: { [weak self] result in
+        imageTask = useCase.retrieveImage(with: urlString, completionHandler: { [weak self] result in
             switch result {
             case .success(let image):
                 guard case var .update(metaData) = self?.state else { return }

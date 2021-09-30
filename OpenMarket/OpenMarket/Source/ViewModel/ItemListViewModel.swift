@@ -33,7 +33,10 @@ final class ItemListViewModel {
     private var handler: ((ItemListViewModelState) -> Void)?
     private var state: ItemListViewModelState = .empty {
         didSet {
-            handler?(state)
+            DispatchQueue.main.async { [weak self] in
+                guard let state = self?.state else { return }
+                self?.handler?(state)
+            }
         }
     }
 
