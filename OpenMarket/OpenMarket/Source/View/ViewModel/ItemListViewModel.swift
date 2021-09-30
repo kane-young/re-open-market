@@ -37,7 +37,7 @@ final class ItemListViewModel {
         self.handler = handler
     }
 
-    func loadPage() {
+    func loadItems() {
         useCase.retrieveItems { [weak self] result in
             switch result {
             case .success(let marketItems):

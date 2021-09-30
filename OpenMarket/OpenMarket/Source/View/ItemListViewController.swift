@@ -88,7 +88,7 @@ final class ItemListViewController: UIViewController {
         }
         collectionView.isHidden = true
         activityIndicator.startAnimating()
-        viewModel.loadPage()
+        viewModel.loadItems()
     }
 
     private func configureView() {
@@ -149,7 +149,7 @@ extension ItemListViewController: UICollectionViewDelegate {
                         willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
         if viewModel.items.count == indexPath.item + 2 {
-            viewModel.loadPage()
+            viewModel.loadItems()
         }
     }
 }
