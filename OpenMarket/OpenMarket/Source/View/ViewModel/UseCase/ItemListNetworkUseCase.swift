@@ -7,17 +7,7 @@
 
 import Foundation
 
-enum ItemListUseCaseError: Error {
-    case networkError(NetworkError)
-    case decodingError
-    case referenceCountingZero
-}
-
-protocol ItemListUseCaseType {
-    func retrieveItems(completionHandler: @escaping (Result<[ItemList.Item], ItemListUseCaseError>) -> Void)
-}
-
-final class ItemListNetworkUseCase: ItemListUseCaseType {
+final class ItemListNetworkUseCase: ItemListNetworkUseCaseProtocol {
     private let networkManager: NetworkManagable
     private let decoder: JSONDecoder = JSONDecoder()
     private var page: Int = 1

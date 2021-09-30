@@ -7,17 +7,6 @@
 
 import UIKit
 
-enum ItemListCellViewModelState {
-    case empty
-    case update(ItemListCellViewModel.MetaData)
-    case error(ItemListCellViewModelError)
-}
-
-enum ItemListCellViewModelError {
-    case emptyPath
-    case useCaseError(ThumbnailUseCaseError)
-}
-
 final class ItemListCellViewModel {
     struct MetaData {
         var image: UIImage?
@@ -30,7 +19,7 @@ final class ItemListCellViewModel {
     }
 
     private let marketItem: ItemList.Item
-    private let useCase: ThumbnailUseCaseType
+    private let useCase: ThumbnailUseCaseProtocol
     private var imageTask: URLSessionDataTask?
     private var handler: ((ItemListCellViewModelState) -> Void)?
     private var state: ItemListCellViewModelState = .empty {
@@ -44,7 +33,7 @@ final class ItemListCellViewModel {
         }
     }
 
-    init(marketItem: ItemList.Item, useCase: ThumbnailUseCaseType = ThumbnailUseCase()) {
+    init(marketItem: ItemList.Item, useCase: ThumbnailUseCaseProtocol = ThumbnailUseCase()) {
         self.marketItem = marketItem
         self.useCase = useCase
     }

@@ -7,17 +7,7 @@
 
 import UIKit
 
-protocol ThumbnailUseCaseType {
-    func retrieveImage(with urlString: String, completionHandler: @escaping (Result<UIImage, ThumbnailUseCaseError>) -> Void) -> URLSessionDataTask?
-}
-
-enum ThumbnailUseCaseError: Error {
-    case networkError(NetworkError)
-    case convertDataToImageError
-    case invalidURL
-}
-
-class ThumbnailUseCase: ThumbnailUseCaseType {
+class ThumbnailUseCase: ThumbnailUseCaseProtocol {
     private let networkManager: NetworkManagable
     static var cache: NSCache = NSCache<NSURL, UIImage>()
 

@@ -7,19 +7,8 @@
 
 import UIKit
 
-enum ItemListViewModelState {
-    case empty
-    case initial([IndexPath])
-    case update([IndexPath])
-    case error(ItemListViewModelError)
-}
-
-enum ItemListViewModelError: Error {
-    case useCaseError(ItemListUseCaseError)
-}
-
 final class ItemListViewModel {
-    private let useCase: ItemListUseCaseType
+    private let useCase: ItemListNetworkUseCaseProtocol
     private(set) var items: [ItemList.Item] = [] {
         didSet {
             let indexPath = (oldValue.count..<items.count).map { IndexPath(item: $0, section: 0) }
@@ -40,7 +29,7 @@ final class ItemListViewModel {
         }
     }
 
-    init(useCase: ItemListUseCaseType = ItemListNetworkUseCase()) {
+    init(useCase: ItemListNetworkUseCaseProtocol = ItemListNetworkUseCase()) {
         self.useCase = useCase
     }
 

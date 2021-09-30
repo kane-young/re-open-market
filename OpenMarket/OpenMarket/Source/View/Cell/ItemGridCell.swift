@@ -7,11 +7,6 @@
 
 import UIKit
 
-protocol ItemsCellDisplayable: UICollectionViewCell {
-    func bind(_ viewModel: ItemListCellViewModel)
-    func fire()
-}
-
 class ItemGridCell: UICollectionViewCell, ItemsCellDisplayable {
     static let identifier: String = "ItemGridCell"
 
