@@ -8,7 +8,8 @@
 import UIKit
 
 enum ItemListViewModelState {
-    case initial
+    case empty
+    case initial([IndexPath])
     case update([IndexPath])
     case error(ItemListViewModelError)
 }
@@ -22,11 +23,15 @@ final class ItemListViewModel {
     private(set) var items: [ItemList.Item] = [] {
         didSet {
             let indexPath = (oldValue.count..<items.count).map { IndexPath(item: $0, section: 0) }
-            state = .update(indexPath)
+            if oldValue.count == 0 {
+                state = .initial(indexPath)
+            } else {
+                state = .update(indexPath)
+            }
         }
     }
     private var handler: ((ItemListViewModelState) -> Void)?
-    private var state: ItemListViewModelState = .initial {
+    private var state: ItemListViewModelState = .empty {
         didSet {
             handler?(state)
         }

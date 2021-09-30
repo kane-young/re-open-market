@@ -24,6 +24,11 @@ final class ItemListViewController: UIViewController {
     // MARK: UI Properties
     private var changeCellLayoutButton: UIBarButtonItem = UIBarButtonItem()
     private var addItemBarButtonItem: UIBarButtonItem = UIBarButtonItem()
+    private var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
     private var collectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
@@ -49,6 +54,7 @@ final class ItemListViewController: UIViewController {
 
     private func addSubViews() {
         view.addSubview(collectionView)
+        view.addSubview(activityIndicator)
     }
 
     private func configureNavigationBar() {
@@ -66,6 +72,12 @@ final class ItemListViewController: UIViewController {
     private func viewModelBind() {
         viewModel.bind { state in
             switch state {
+            case .initial(let indexPaths):
+                DispatchQueue.main.async { [weak self] in
+                    self?.activityIndicator.stopAnimating()
+                    self?.collectionView.isHidden = false
+                    self?.collectionView.insertItems(at: indexPaths)
+                }
             case .update(let indexPaths):
                 DispatchQueue.main.async { [weak self] in
                     self?.collectionView.insertItems(at: indexPaths)
@@ -81,6 +93,8 @@ final class ItemListViewController: UIViewController {
                 break
             }
         }
+        collectionView.isHidden = true
+        activityIndicator.startAnimating()
         viewModel.loadPage()
     }
 
@@ -99,7 +113,9 @@ final class ItemListViewController: UIViewController {
             collectionView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             collectionView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            activityIndicator.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor)
         ])
     }
 
