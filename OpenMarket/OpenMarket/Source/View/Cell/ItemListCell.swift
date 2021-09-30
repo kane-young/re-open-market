@@ -7,10 +7,10 @@
 
 import UIKit
 
-class ItemListCell: UICollectionViewCell, ItemsCellDisplayable {
+class ItemListCell: UICollectionViewCell, ItemCellDisplayable {
     static let identifier: String = "ItemListCell"
 
-    private var imageView: UIImageView = {
+    private var thumbnailImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -46,7 +46,7 @@ class ItemListCell: UICollectionViewCell, ItemsCellDisplayable {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
         stackView.distribution = .fill
-        stackView.spacing = 5
+        stackView.spacing = Style.StackView.defaultSpacing
         return stackView
     }()
     private lazy var itemInfoStackView: UIStackView = {
@@ -54,7 +54,7 @@ class ItemListCell: UICollectionViewCell, ItemsCellDisplayable {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
-        stackView.spacing = 5
+        stackView.spacing = Style.StackView.defaultSpacing
         return stackView
     }()
 
@@ -72,7 +72,7 @@ class ItemListCell: UICollectionViewCell, ItemsCellDisplayable {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        imageView.image = nil
+        thumbnailImageView.image = nil
         titleLabel.text = nil
         priceLabel.text = nil
         stockLabel.text = nil
@@ -84,7 +84,7 @@ class ItemListCell: UICollectionViewCell, ItemsCellDisplayable {
         viewModel.bind { [weak self] state in
             switch state {
             case .update(let metaData):
-                self?.imageView.image = metaData.image
+                self?.thumbnailImageView.image = metaData.thumbnail
                 self?.titleLabel.text = metaData.title
                 self?.priceLabel.text = metaData.originalPrice
                 self?.stockLabel.text = metaData.stock
@@ -92,7 +92,7 @@ class ItemListCell: UICollectionViewCell, ItemsCellDisplayable {
                 self?.discountedPriceLabel.isHidden = metaData.isneededDiscountedLabel
                 self?.discountedPriceLabel.attributedText = metaData.discountedPrice
             case .error(_):
-                self?.imageView.image = nil
+                self?.thumbnailImageView.image = nil
             default:
                 break
             }
@@ -104,31 +104,53 @@ class ItemListCell: UICollectionViewCell, ItemsCellDisplayable {
     }
 
     private func configureViews() {
-        contentView.addSubview(imageView)
+        contentView.addSubview(thumbnailImageView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(stockLabel)
         contentView.addSubview(itemInfoStackView)
-        contentView.backgroundColor = .white
+        contentView.backgroundColor = Style.backgroundColor
     }
 
     private func configureConstraints() {
         let safeArea = self.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
-            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor),
-            imageView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 10),
-            imageView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10),
-            imageView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -10),
-            imageView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -10),
-            itemInfoStackView.topAnchor.constraint(equalTo: imageView.topAnchor),
-            itemInfoStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 10),
-            itemInfoStackView.bottomAnchor.constraint(equalTo: imageView.bottomAnchor),
-            itemInfoStackView.trailingAnchor.constraint(equalTo: stockLabel.leadingAnchor, constant: -10),
-            stockLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -10),
-            stockLabel.topAnchor.constraint(equalTo: imageView.topAnchor)
+            thumbnailImageView.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor),
+            thumbnailImageView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,
+                                                        constant: Style.Views.defaultMargin),
+            thumbnailImageView.topAnchor.constraint(equalTo: safeArea.topAnchor,
+                                                    constant: Style.Views.defaultMargin),
+            thumbnailImageView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor,
+                                                       constant: -Style.Views.defaultMargin),
+            thumbnailImageView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor,
+                                                         constant: -Style.Views.defaultMargin),
+            itemInfoStackView.topAnchor.constraint(equalTo: thumbnailImageView.topAnchor),
+            itemInfoStackView.leadingAnchor.constraint(equalTo: thumbnailImageView.trailingAnchor,
+                                                       constant: Style.Views.defaultMargin),
+            itemInfoStackView.bottomAnchor.constraint(equalTo: thumbnailImageView.bottomAnchor),
+            itemInfoStackView.trailingAnchor.constraint(equalTo: stockLabel.leadingAnchor,
+                                                        constant: -Style.Views.defaultMargin),
+            stockLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,
+                                                 constant: -Style.Views.defaultMargin),
+            stockLabel.topAnchor.constraint(equalTo: thumbnailImageView.topAnchor)
         ])
-        stockLabel.setContentHuggingPriority(UILayoutPriority(1000), for: .horizontal)
-        stockLabel.setContentCompressionResistancePriority(UILayoutPriority(1000), for: .horizontal)
+        stockLabel.setContentHuggingPriority(Style.Priority.veryHigh, for: .horizontal)
+        stockLabel.setContentCompressionResistancePriority(Style.Priority.veryHigh, for: .horizontal)
         priceLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         priceLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+    }
+}
+
+extension ItemListCell {
+    private enum Style {
+        static let backgroundColor = UIColor.white
+        enum StackView {
+            static let defaultSpacing: CGFloat = 5
+        }
+        enum Views {
+            static let defaultMargin: CGFloat = 10
+        }
+        enum Priority {
+            static let veryHigh: UILayoutPriority = UILayoutPriority(1000)
+        }
     }
 }

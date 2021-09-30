@@ -7,10 +7,10 @@
 
 import UIKit
 
-class ItemGridCell: UICollectionViewCell, ItemsCellDisplayable {
+class ItemGridCell: UICollectionViewCell, ItemCellDisplayable {
     static let identifier: String = "ItemGridCell"
 
-    private var imageView: UIImageView = {
+    private var thumbnailImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -49,7 +49,7 @@ class ItemGridCell: UICollectionViewCell, ItemsCellDisplayable {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
-        stackView.spacing = 5
+        stackView.spacing = Style.StackView.defaultSpacing
         return stackView
     }()
 
@@ -67,7 +67,7 @@ class ItemGridCell: UICollectionViewCell, ItemsCellDisplayable {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        imageView.image = nil
+        thumbnailImageView.image = nil
         titleLabel.text = nil
         priceLabel.text = nil
         stockLabel.text = nil
@@ -79,7 +79,7 @@ class ItemGridCell: UICollectionViewCell, ItemsCellDisplayable {
         viewModel.bind { [weak self] state in
             switch state {
             case .update(let metaData):
-                self?.imageView.image = metaData.image
+                self?.thumbnailImageView.image = metaData.thumbnail
                 self?.titleLabel.text = metaData.title
                 self?.priceLabel.text = metaData.originalPrice
                 self?.stockLabel.text = metaData.stock
@@ -87,7 +87,7 @@ class ItemGridCell: UICollectionViewCell, ItemsCellDisplayable {
                 self?.discountedPriceLabel.isHidden = metaData.isneededDiscountedLabel
                 self?.discountedPriceLabel.attributedText = metaData.discountedPrice
             case .error(_):
-                self?.imageView.image = nil
+                self?.thumbnailImageView.image = nil
             default:
                 break
             }
@@ -99,33 +99,59 @@ class ItemGridCell: UICollectionViewCell, ItemsCellDisplayable {
     }
 
     private func configureViews() {
-        contentView.addSubview(imageView)
+        contentView.addSubview(thumbnailImageView)
         contentView.addSubview(priceLabelsStackView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(stockLabel)
         contentView.backgroundColor = .white
+        layer.borderColor = UIColor.systemGray3.cgColor
+        layer.borderWidth = Style.borderWidth
     }
 
     private func configureConstraints() {
         let safeArea = self.safeAreaLayoutGuide
         let contentView = self.contentView
         NSLayoutConstraint.activate([
-            imageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.5),
-            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor),
-            imageView.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
-            imageView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10),
-            imageView.bottomAnchor.constraint(equalTo: titleLabel.topAnchor, constant: -10),
+            thumbnailImageView.heightAnchor.constraint(equalTo: contentView.heightAnchor,
+                                                       multiplier: Style.ImageView.sizeRatio),
+            thumbnailImageView.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor),
+            thumbnailImageView.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
+            thumbnailImageView.topAnchor.constraint(equalTo: safeArea.topAnchor,
+                                                    constant: Style.Views.defaultMargin),
+            thumbnailImageView.bottomAnchor.constraint(equalTo: titleLabel.topAnchor,
+                                                       constant: -Style.Views.defaultMargin),
             titleLabel.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 10),
+            titleLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,
+                                                constant: Style.Views.defaultMargin),
             priceLabelsStackView.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
-            priceLabelsStackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
-            priceLabelsStackView.bottomAnchor.constraint(equalTo: stockLabel.topAnchor, constant: -10),
-            priceLabelsStackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 10),
-            stockLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 10),
-            stockLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -10),
+            priceLabelsStackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor,
+                                                      constant: Style.Views.defaultMargin),
+            priceLabelsStackView.bottomAnchor.constraint(equalTo: stockLabel.topAnchor,
+                                                         constant: -Style.Views.defaultMargin),
+            priceLabelsStackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,
+                                                          constant: Style.Views.defaultMargin),
+            stockLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,
+                                                constant: Style.Views.defaultMargin),
+            stockLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor,
+                                               constant: -Style.Views.defaultMargin),
             stockLabel.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor)
         ])
         titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         stockLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+    }
+}
+
+extension ItemGridCell {
+    enum Style {
+        static let borderWidth: CGFloat = 1.0
+        enum StackView {
+            static let defaultSpacing: CGFloat = 5
+        }
+        enum Views {
+            static let defaultMargin: CGFloat = 10
+        }
+        enum ImageView {
+            static let sizeRatio: CGFloat = 0.5
+        }
     }
 }

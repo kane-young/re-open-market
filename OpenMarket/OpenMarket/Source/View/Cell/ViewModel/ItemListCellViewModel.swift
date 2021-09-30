@@ -9,7 +9,7 @@ import UIKit
 
 final class ItemListCellViewModel {
     struct MetaData {
-        var image: UIImage?
+        var thumbnail: UIImage?
         let title: String
         let isneededDiscountedLabel: Bool
         let discountedPrice: NSAttributedString
@@ -18,7 +18,7 @@ final class ItemListCellViewModel {
         let stock: String
     }
 
-    private let marketItem: ItemList.Item
+    private let item: ItemList.Item
     private let useCase: ThumbnailUseCaseProtocol
     private var imageTask: URLSessionDataTask?
     private var handler: ((ItemListCellViewModelState) -> Void)?
@@ -33,8 +33,8 @@ final class ItemListCellViewModel {
         }
     }
 
-    init(marketItem: ItemList.Item, useCase: ThumbnailUseCaseProtocol = ThumbnailUseCase()) {
-        self.marketItem = marketItem
+    init(item: ItemList.Item, useCase: ThumbnailUseCaseProtocol = ThumbnailUseCase()) {
+        self.item = item
         self.useCase = useCase
     }
 
@@ -44,11 +44,11 @@ final class ItemListCellViewModel {
 
     func configureCell() {
         updateText()
-        retrieveImage()
+        loadImage()
     }
 
-    private func retrieveImage() {
-        guard let urlString = marketItem.thumbnails.first else {
+    private func loadImage() {
+        guard let urlString = item.thumbnails.first else {
             state = .error(.emptyPath)
             return
         }
@@ -56,7 +56,7 @@ final class ItemListCellViewModel {
             switch result {
             case .success(let image):
                 guard case var .update(metaData) = self?.state else { return }
-                metaData.image = image
+                metaData.thumbnail = image
                 self?.state = .update(metaData)
             case .failure(let error):
                 self?.state = .error(.useCaseError(error))
@@ -69,13 +69,14 @@ final class ItemListCellViewModel {
     }
 
     private func updateText() {
-        let isneededDiscountedLabel = marketItem.discountedPrice == nil
+        let isneededDiscountedLabel = item.discountedPrice == nil
         let discountedPrice = discountedPriceText(isneededDiscountedLabel)
         let originalPrice = originalPriceText(isneededDiscountedLabel)
-        let stockLabelTextColor: UIColor = marketItem.stock == 0 ? .systemYellow : .black
-        let stock = stockText(marketItem.stock)
-        let metaData = MetaData(image: nil,
-                                title: marketItem.title,
+        let stockLabelTextColor: UIColor = item.stock == 0 ?
+            Style.Stock.outOfStockColor : Style.Stock.defaultStockColor
+        let stock = stockText(item.stock)
+        let metaData = MetaData(thumbnail: nil,
+                                title: item.title,
                                 isneededDiscountedLabel: isneededDiscountedLabel,
                                 discountedPrice: discountedPrice,
                                 originalPrice: originalPrice,
@@ -85,24 +86,24 @@ final class ItemListCellViewModel {
     }
 
     private func stockText(_ count: Int) -> String {
-        if count == 0 {
-            return "품절"
-        } else if count >= 1000 {
-            return "수량 : 999+"
+        if count == .zero {
+            return Style.Stock.outOfStockText
+        } else if count >= Style.Stock.standardCount {
+            return Style.Stock.excessiveStockText
         } else {
-            return "수량 : \(count)"
+            return "\(Style.Stock.format)\(count)"
         }
     }
 
     private func originalPriceText(_ isneededDiscountedLabel: Bool) -> String {
-        let price = isneededDiscountedLabel ? converToMoneyType(marketItem.price) : converToMoneyType(marketItem.discountedPrice ?? 0)
-        let text = marketItem.currency + " " + price
+        let price = isneededDiscountedLabel ? converToMoneyType(item.price) : converToMoneyType(item.discountedPrice ?? .zero)
+        let text = item.currency + " " + price
         return text
     }
 
     private func discountedPriceText(_ isneededDiscountedLabel: Bool) -> NSAttributedString {
-        let price = converToMoneyType(marketItem.price)
-        return isneededDiscountedLabel ? .init() : "\(marketItem.currency) \(price)".strikeThrough()
+        let price = converToMoneyType(item.price)
+        return isneededDiscountedLabel ? .init() : "\(item.currency) \(price)".strikeThrough()
     }
 
     private func converToMoneyType(_ price: Int) -> String {
@@ -113,5 +114,16 @@ final class ItemListCellViewModel {
             return .init()
         }
         return text
+    }
+}
+
+enum Style {
+    enum Stock {
+        static let standardCount: Int = 1000
+        static let outOfStockColor: UIColor = .systemYellow
+        static let defaultStockColor: UIColor = .black
+        static let outOfStockText: String = "품절"
+        static let format: String = "수량 : "
+        static let excessiveStockText: String = "\(format)999+"
     }
 }

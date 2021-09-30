@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol ItemsCellDisplayable: UICollectionViewCell {
+protocol ItemCellDisplayable: UICollectionViewCell {
     func bind(_ viewModel: ItemListCellViewModel)
     func fire()
 }

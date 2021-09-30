@@ -162,7 +162,7 @@ extension ItemListViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell: ItemsCellDisplayable
+        let cell: ItemCellDisplayable
         switch cellStyle {
         case .list:
             guard let listCell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemListCell.identifier,
@@ -178,7 +178,7 @@ extension ItemListViewController: UICollectionViewDataSource {
             cell = gridCell
         }
         let item = viewModel.items[indexPath.item]
-        let itemListCellViewModel = ItemListCellViewModel(marketItem: item)
+        let itemListCellViewModel = ItemListCellViewModel(item: item)
         cell.bind(itemListCellViewModel)
         cell.fire()
         return cell
