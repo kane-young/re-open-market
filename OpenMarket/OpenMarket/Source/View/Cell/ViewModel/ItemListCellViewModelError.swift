@@ -10,4 +10,13 @@ import Foundation
 enum ItemListCellViewModelError {
     case emptyPath
     case useCaseError(ThumbnailUseCaseError)
+
+    var message: String {
+        switch self {
+        case .emptyPath:
+            return "URL 주소 존재하지 않음"
+        case .useCaseError(let error):
+            return "UseCase Error - \(error.message)"
+        }
+    }
 }

@@ -9,4 +9,11 @@ import Foundation
 
 enum ItemListViewModelError: Error {
     case useCaseError(ItemListUseCaseError)
+
+    var message: String {
+        switch self {
+        case .useCaseError(let error):
+            return "ViewModel UseCase \(error.message) 발생"
+        }
+    }
 }

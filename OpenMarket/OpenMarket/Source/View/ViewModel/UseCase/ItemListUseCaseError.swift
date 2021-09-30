@@ -11,4 +11,15 @@ enum ItemListUseCaseError: Error {
     case networkError(NetworkError)
     case decodingError
     case referenceCountingZero
+
+    var message: String {
+        switch self {
+        case .networkError(let error):
+            return "Networking Error - \(error)"
+        case .decodingError:
+            return "Decoding Error"
+        case .referenceCountingZero:
+            return "Reference Counting zero - 메모리 해제"
+        }
+    }
 }

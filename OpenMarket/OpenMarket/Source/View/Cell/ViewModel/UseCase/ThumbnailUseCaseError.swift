@@ -11,4 +11,15 @@ enum ThumbnailUseCaseError: Error {
     case networkError(NetworkError)
     case convertDataToImageError
     case invalidURL
+
+    var message: String {
+        switch self {
+        case .networkError(let error):
+            return "Networking Error - \(error.message)"
+        case .convertDataToImageError:
+            return "Can't convert Data to Image error"
+        case .invalidURL:
+            return "Invalid URL 주소"
+        }
+    }
 }

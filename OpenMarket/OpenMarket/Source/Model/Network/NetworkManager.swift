@@ -28,9 +28,9 @@ final class NetworkManager: NetworkManagable {
                 return
             }
 
-            guard let response = response as? HTTPURLResponse,
-                  OpenMarketAPI.successStatusCode.contains(response.statusCode) else {
-                completion(.failure(.invalidResponseStatuscode))
+            if let response = response as? HTTPURLResponse,
+                  OpenMarketAPI.successStatusCode.contains(response.statusCode) == false {
+                completion(.failure(.invalidResponseStatuscode(response.statusCode)))
                 return
             }
 

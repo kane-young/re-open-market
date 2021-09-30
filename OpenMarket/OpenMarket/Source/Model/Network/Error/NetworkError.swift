@@ -9,9 +9,23 @@ import Foundation
 
 enum NetworkError: Error {
     case connectionProblem
-    case invalidResponseStatuscode
+    case invalidResponseStatuscode(Int)
     case invalidData
     case invalidURL
     case invalidRequest
-    case encodingError
+
+    var message: String {
+        switch self {
+        case .connectionProblem:
+            return "dataTask작업 error 존재"
+        case .invalidResponseStatuscode(let code):
+            return "Response StatusCode \(code)"
+        case .invalidData:
+            return "dataTask작업 Data 미반환"
+        case .invalidURL:
+            return "유효하지 않는 URL"
+        case .invalidRequest:
+            return "유효하지 않는 Request"
+        }
+    }
 }
