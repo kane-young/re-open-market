@@ -24,7 +24,7 @@ class ThumbnailUseCase: ThumbnailUseCaseProtocol {
             completionHandler(.success(cachedImaged))
             return nil
         }
-        let task = networkManager.fetch(with: urlString) { result in
+        let task = networkManager.fetch(urlString: urlString) { result in
             let result = result.flatMapError { .failure(ThumbnailUseCaseError.networkError($0)) }
                 .flatMap { data -> Result<UIImage, ThumbnailUseCaseError> in
                     guard let image = UIImage(data: data) else {

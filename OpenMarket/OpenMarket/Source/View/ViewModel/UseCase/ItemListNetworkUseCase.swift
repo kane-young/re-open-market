@@ -23,7 +23,7 @@ final class ItemListNetworkUseCase: ItemListNetworkUseCaseProtocol {
             return
         }
         isLoading = true
-        _ = networkManager.fetch(with: urlString) { [weak self] result in
+        networkManager.fetch(urlString: urlString) { [weak self] result in
             let result = result.flatMapError { .failure(ItemListUseCaseError.networkError($0)) }
                 .flatMap { data -> Result<[ItemList.Item], ItemListUseCaseError> in
                     do {
