@@ -17,6 +17,7 @@ class ItemGridCell: UICollectionViewCell, ItemCellDisplayable {
     }()
     private var titleLabel: UILabel = {
         let label = UILabel()
+        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
         label.font = .preferredFont(forTextStyle: .title2)
@@ -32,6 +33,7 @@ class ItemGridCell: UICollectionViewCell, ItemCellDisplayable {
     }()
     private var discountedPriceLabel: UILabel = {
         let label = UILabel()
+        label.textColor = .label
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .preferredFont(forTextStyle: .body)
         label.textAlignment = .center
@@ -106,6 +108,7 @@ class ItemGridCell: UICollectionViewCell, ItemCellDisplayable {
         contentView.backgroundColor = .white
         layer.borderColor = UIColor.systemGray3.cgColor
         layer.borderWidth = Style.borderWidth
+        contentView.backgroundColor = .systemBackground
     }
 
     private func configureConstraints() {

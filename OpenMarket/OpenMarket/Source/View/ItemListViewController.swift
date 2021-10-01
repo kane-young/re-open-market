@@ -18,13 +18,14 @@ final class ItemListViewController: UIViewController {
     private var addItemBarButtonItem: UIBarButtonItem = .init()
     private var activityIndicator: UIActivityIndicatorView = {
         let indicator: UIActivityIndicatorView = .init()
+        indicator.color = .black
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
     }()
     private var collectionView: UICollectionView = {
         let flowLayout: UICollectionViewFlowLayout = .init()
         let collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: flowLayout)
-        collectionView.backgroundColor = Style.CollectionView.backgroundColor
+        collectionView.backgroundColor = .systemBackground
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.register(ItemListCell.self, forCellWithReuseIdentifier: ItemListCell.identifier)
         collectionView.register(ItemGridCell.self, forCellWithReuseIdentifier: ItemGridCell.identifier)
@@ -61,6 +62,7 @@ final class ItemListViewController: UIViewController {
         addItemBarButtonItem.tintColor = Style.BarButtonItem.tintColor
         changeCellLayoutButton.target = self
         addItemBarButtonItem.target = self
+        navigationController?.navigationBar.backgroundColor = .white
         navigationItem.rightBarButtonItems = [changeCellLayoutButton, addItemBarButtonItem]
     }
 
@@ -148,7 +150,7 @@ extension ItemListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
-        if viewModel.items.count == indexPath.item + 2 {
+        if viewModel.items.count == indexPath.item + 5 {
             viewModel.loadItems()
         }
     }

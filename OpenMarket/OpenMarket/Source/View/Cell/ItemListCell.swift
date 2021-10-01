@@ -18,6 +18,7 @@ class ItemListCell: UICollectionViewCell, ItemCellDisplayable {
     private var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .label
         label.font = .preferredFont(forTextStyle: .title2)
         return label
     }()
@@ -30,6 +31,7 @@ class ItemListCell: UICollectionViewCell, ItemCellDisplayable {
     }()
     private var discountedPriceLabel: UILabel = {
         let label = UILabel()
+        label.textColor = .label
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .preferredFont(forTextStyle: .body)
         return label
@@ -108,7 +110,7 @@ class ItemListCell: UICollectionViewCell, ItemCellDisplayable {
         contentView.addSubview(titleLabel)
         contentView.addSubview(stockLabel)
         contentView.addSubview(itemInfoStackView)
-        contentView.backgroundColor = Style.backgroundColor
+        contentView.backgroundColor = .systemBackground
     }
 
     private func configureConstraints() {
@@ -142,7 +144,6 @@ class ItemListCell: UICollectionViewCell, ItemCellDisplayable {
 
 extension ItemListCell {
     private enum Style {
-        static let backgroundColor = UIColor.white
         enum StackView {
             static let defaultSpacing: CGFloat = 5
         }

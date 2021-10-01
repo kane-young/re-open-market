@@ -122,7 +122,7 @@ extension ItemListCellViewModel {
         enum Stock {
             static let standardCount: Int = 1000
             static let outOfStockColor: UIColor = .systemYellow
-            static let defaultStockColor: UIColor = .black
+            static let defaultStockColor: UIColor = .label
             static let outOfStockText: String = "품절"
             static let format: String = "수량 : "
             static let excessiveStockText: String = "\(format)999+"
