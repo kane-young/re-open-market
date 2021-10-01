@@ -8,6 +8,7 @@
 import UIKit
 
 protocol ThumbnailUseCaseProtocol {
+    @discardableResult
     func retrieveImage(with urlString: String,
                        completionHandler: @escaping (Result<UIImage, ThumbnailUseCaseError>) -> Void) -> URLSessionDataTask?
 }

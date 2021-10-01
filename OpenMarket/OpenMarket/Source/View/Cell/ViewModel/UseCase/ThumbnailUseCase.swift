@@ -15,6 +15,7 @@ class ThumbnailUseCase: ThumbnailUseCaseProtocol {
         self.networkManager = networkManager
     }
 
+    @discardableResult
     func retrieveImage(with urlString: String, completionHandler: @escaping (Result<UIImage, ThumbnailUseCaseError>) -> Void) -> URLSessionDataTask? {
         guard let keyForCaching = NSURL(string: urlString) else {
             completionHandler(.failure(.invalidURL))
