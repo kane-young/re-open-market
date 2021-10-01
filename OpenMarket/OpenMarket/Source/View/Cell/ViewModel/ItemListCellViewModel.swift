@@ -73,7 +73,7 @@ final class ItemListCellViewModel {
         let discountedPrice = discountedPriceText(isneededDiscountedLabel)
         let originalPrice = originalPriceText(isneededDiscountedLabel)
         let stockLabelTextColor: UIColor = item.stock == 0 ?
-            Style.Stock.outOfStockColor : Style.Stock.defaultStockColor
+            Format.Stock.outOfStockColor : Format.Stock.defaultStockColor
         let stock = stockText(item.stock)
         let metaData = MetaData(thumbnail: nil,
                                 title: item.title,
@@ -87,11 +87,11 @@ final class ItemListCellViewModel {
 
     private func stockText(_ count: Int) -> String {
         if count == .zero {
-            return Style.Stock.outOfStockText
-        } else if count >= Style.Stock.standardCount {
-            return Style.Stock.excessiveStockText
+            return Format.Stock.outOfStockText
+        } else if count >= Format.Stock.standardCount {
+            return Format.Stock.excessiveStockText
         } else {
-            return "\(Style.Stock.format)\(count)"
+            return "\(Format.Stock.format)\(count)"
         }
     }
 
@@ -117,13 +117,15 @@ final class ItemListCellViewModel {
     }
 }
 
-enum Style {
-    enum Stock {
-        static let standardCount: Int = 1000
-        static let outOfStockColor: UIColor = .systemYellow
-        static let defaultStockColor: UIColor = .black
-        static let outOfStockText: String = "품절"
-        static let format: String = "수량 : "
-        static let excessiveStockText: String = "\(format)999+"
+extension ItemListCellViewModel {
+    private enum Format {
+        enum Stock {
+            static let standardCount: Int = 1000
+            static let outOfStockColor: UIColor = .systemYellow
+            static let defaultStockColor: UIColor = .black
+            static let outOfStockText: String = "품절"
+            static let format: String = "수량 : "
+            static let excessiveStockText: String = "\(format)999+"
+        }
     }
 }
