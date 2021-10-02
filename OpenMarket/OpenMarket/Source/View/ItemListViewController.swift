@@ -153,7 +153,7 @@ extension ItemListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
-        if viewModel.items.count == indexPath.item + 5 {
+        if viewModel.items.count <= indexPath.item + 8 {
             viewModel.loadItems()
         }
     }
