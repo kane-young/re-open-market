@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ItemGridCell: UICollectionViewCell, ItemCellDisplayable {
+final class ItemGridCell: UICollectionViewCell, ItemCellDisplayable {
     static let identifier: String = "ItemGridCell"
 
     private var thumbnailImageView: UIImageView = {
@@ -17,7 +17,6 @@ class ItemGridCell: UICollectionViewCell, ItemCellDisplayable {
     }()
     private var titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
         label.font = .preferredFont(forTextStyle: .title2)
@@ -33,7 +32,6 @@ class ItemGridCell: UICollectionViewCell, ItemCellDisplayable {
     }()
     private var discountedPriceLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .label
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .preferredFont(forTextStyle: .body)
         label.textAlignment = .center
@@ -105,9 +103,9 @@ class ItemGridCell: UICollectionViewCell, ItemCellDisplayable {
         contentView.addSubview(priceLabelsStackView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(stockLabel)
-        contentView.backgroundColor = .white
         layer.borderColor = UIColor.systemGray3.cgColor
         layer.borderWidth = Style.borderWidth
+        layer.cornerRadius = Style.cornerRadius
         contentView.backgroundColor = .systemBackground
     }
 
@@ -147,6 +145,7 @@ class ItemGridCell: UICollectionViewCell, ItemCellDisplayable {
 extension ItemGridCell {
     enum Style {
         static let borderWidth: CGFloat = 1.0
+        static let cornerRadius: CGFloat = 15
         enum StackView {
             static let defaultSpacing: CGFloat = 5
         }

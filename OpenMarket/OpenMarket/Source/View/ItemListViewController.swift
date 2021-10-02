@@ -18,14 +18,15 @@ final class ItemListViewController: UIViewController {
     private var addItemBarButtonItem: UIBarButtonItem = .init()
     private var activityIndicator: UIActivityIndicatorView = {
         let indicator: UIActivityIndicatorView = .init()
-        indicator.color = .black
+        indicator.color = Style.reverseDefaultColor
+        indicator.style = .large
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
     }()
     private var collectionView: UICollectionView = {
         let flowLayout: UICollectionViewFlowLayout = .init()
         let collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: flowLayout)
-        collectionView.backgroundColor = .systemBackground
+        collectionView.backgroundColor = Style.defaultColor
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.register(ItemListCell.self, forCellWithReuseIdentifier: ItemListCell.identifier)
         collectionView.register(ItemGridCell.self, forCellWithReuseIdentifier: ItemGridCell.identifier)
@@ -58,12 +59,14 @@ final class ItemListViewController: UIViewController {
         addItemBarButtonItem.action = #selector(touchAddItemBarButtonItem(_:))
         changeCellLayoutButton.image = Style.BarButtonItem.gridImage
         addItemBarButtonItem.image = Style.BarButtonItem.plusImage
-        changeCellLayoutButton.tintColor = Style.BarButtonItem.tintColor
-        addItemBarButtonItem.tintColor = Style.BarButtonItem.tintColor
+        changeCellLayoutButton.tintColor = Style.reverseDefaultColor
+        addItemBarButtonItem.tintColor = Style.reverseDefaultColor
         changeCellLayoutButton.target = self
         addItemBarButtonItem.target = self
-        navigationController?.navigationBar.backgroundColor = .white
-        navigationItem.rightBarButtonItems = [changeCellLayoutButton, addItemBarButtonItem]
+        navigationItem.title = Style.NavigationBar.title
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.barTintColor = Style.defaultColor
+        navigationItem.rightBarButtonItems = [addItemBarButtonItem, changeCellLayoutButton]
     }
 
     private func viewModelBind() {
@@ -94,7 +97,7 @@ final class ItemListViewController: UIViewController {
     }
 
     private func configureView() {
-        self.view.backgroundColor = .white
+        self.view.backgroundColor = Style.defaultColor
     }
 
     private func configureCollectionView() {
@@ -135,9 +138,9 @@ final class ItemListViewController: UIViewController {
     private func changeRightBarButtonItemImage() {
         switch cellStyle {
         case .list:
-            changeCellLayoutButton.image = Style.BarButtonItem.gridImage
-        case .grid:
             changeCellLayoutButton.image = Style.BarButtonItem.listImage
+        case .grid:
+            changeCellLayoutButton.image = Style.BarButtonItem.gridImage
         }
     }
 }
@@ -227,6 +230,11 @@ extension ItemListViewController: UICollectionViewDelegateFlowLayout {
 
 extension ItemListViewController {
     private enum Style {
+        static let defaultColor: UIColor = .systemBackground
+        static let reverseDefaultColor: UIColor = .label
+        enum NavigationBar {
+            static let title = "오픈마켓"
+        }
         enum BarButtonItem {
             static let gridImage = UIImage(systemName: "square.grid.2x2")
             static let plusImage = UIImage(systemName: "plus")

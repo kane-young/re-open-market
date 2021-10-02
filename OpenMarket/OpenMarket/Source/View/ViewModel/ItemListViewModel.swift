@@ -12,7 +12,7 @@ final class ItemListViewModel {
     private(set) var items: [ItemList.Item] = [] {
         didSet {
             let indexPath = (oldValue.count..<items.count).map { IndexPath(item: $0, section: 0) }
-            if oldValue.count == 0 {
+            if oldValue.count == .zero {
                 state = .initial(indexPath)
             } else {
                 state = .update(indexPath)

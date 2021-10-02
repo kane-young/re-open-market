@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ItemListCell: UICollectionViewCell, ItemCellDisplayable {
+final class ItemListCell: UICollectionViewCell, ItemCellDisplayable {
     static let identifier: String = "ItemListCell"
 
     private var thumbnailImageView: UIImageView = {
@@ -18,7 +18,6 @@ class ItemListCell: UICollectionViewCell, ItemCellDisplayable {
     private var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .label
         label.font = .preferredFont(forTextStyle: .title2)
         return label
     }()
@@ -31,7 +30,6 @@ class ItemListCell: UICollectionViewCell, ItemCellDisplayable {
     }()
     private var discountedPriceLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .label
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .preferredFont(forTextStyle: .body)
         return label

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ThumbnailUseCase: ThumbnailUseCaseProtocol {
+final class ThumbnailUseCase: ThumbnailUseCaseProtocol {
     private let networkManager: NetworkManagable
     static var cache: NSCache = NSCache<NSURL, UIImage>()
 
