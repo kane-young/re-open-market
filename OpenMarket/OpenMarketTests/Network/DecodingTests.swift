@@ -8,7 +8,7 @@
 import XCTest
 @testable import OpenMarket
 
-class DecodingTests: XCTestCase {
+final class DecodingTests: XCTestCase {
     var decoder: JSONDecoder!
 
     override func setUpWithError() throws {
@@ -27,7 +27,7 @@ class DecodingTests: XCTestCase {
         }
         //when
         do {
-            let item = try decoder.decode(Item.self, from: asset.data)
+            let item = try decoder.decode(ItemDetail.self, from: asset.data)
             //then
             XCTAssertEqual(item.title, "MacBook Pro")
         } catch {

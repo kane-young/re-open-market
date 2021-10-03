@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ItemListCell: UICollectionViewCell, ItemCellDisplayable {
+final class ItemListCollectionViewCell: UICollectionViewCell, ItemCellDisplayable {
     static let identifier: String = "ItemListCell"
 
     private var thumbnailImageView: UIImageView = {

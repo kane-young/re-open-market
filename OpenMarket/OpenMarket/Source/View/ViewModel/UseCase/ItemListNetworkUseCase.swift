@@ -18,7 +18,7 @@ final class ItemListNetworkUseCase: ItemListNetworkUseCaseProtocol {
     }
 
     func retrieveItems(completionHandler: @escaping (Result<[ItemList.Item], ItemListUseCaseError>) -> Void) {
-        let urlString = OpenMarketAPI.load(page: page).path
+        let urlString = OpenMarketAPI.load(page: page).urlString
         if isLoading {
             return
         }

@@ -16,7 +16,7 @@ enum OpenMarketAPI {
     case patchProduct(id: Int)
     case deleteProduct(id: Int)
 
-    var path: String {
+    var urlString: String {
         let baseURL: String = "https://camp-open-market-2.herokuapp.com"
         switch self {
         case .load(let page):
@@ -30,5 +30,9 @@ enum OpenMarketAPI {
         case .deleteProduct(let id):
             return "\(baseURL)/item/\(id)"
         }
+    }
+
+    var path: URL? {
+        return URL(string: self.urlString)
     }
 }

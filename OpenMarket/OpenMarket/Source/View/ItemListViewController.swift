@@ -153,7 +153,7 @@ extension ItemListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
-        if viewModel.items.count <= indexPath.item + 8 {
+        if viewModel.items.count <= indexPath.item + Style.CollectionView.remainCellCount {
             viewModel.loadItems()
         }
     }
@@ -251,6 +251,7 @@ extension ItemListViewController {
             static let gridLayoutMinimumLineSpacing: CGFloat = 0
             static let listLayoutInsets: UIEdgeInsets = .zero
             static let gridLayoutInsets: UIEdgeInsets = .init(top: 10, left: 10, bottom: 10, right: 10)
+            static let remainCellCount: Int = 10
         }
         enum Cell {
             static let listWidthRatio: CGFloat = 1

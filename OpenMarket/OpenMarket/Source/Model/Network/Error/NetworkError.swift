@@ -29,3 +29,9 @@ enum NetworkError: Error {
         }
     }
 }
+
+extension NetworkError: Equatable {
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.localizedDescription == rhs.localizedDescription
+    }
+}

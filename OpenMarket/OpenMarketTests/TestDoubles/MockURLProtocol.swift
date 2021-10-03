@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import XCTest
 
-class MockURLSession: URLProtocol {
+final class MockURLProtocol: URLProtocol {
     static var requestHandler: ((URLRequest) -> (HTTPURLResponse?, Data?, Error?))?
     
     override class func canInit(with request: URLRequest) -> Bool {
@@ -19,7 +20,7 @@ class MockURLSession: URLProtocol {
     }
     
     override func startLoading() {
-        guard let handler = MockURLSession.requestHandler else {
+        guard let handler = MockURLProtocol.requestHandler else {
             fatalError()
         }
         
@@ -39,6 +40,6 @@ class MockURLSession: URLProtocol {
         
         client?.urlProtocolDidFinishLoading(self)
     }
-    
+
     override func stopLoading() { }
 }
