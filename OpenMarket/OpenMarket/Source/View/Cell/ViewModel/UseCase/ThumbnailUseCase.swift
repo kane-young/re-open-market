@@ -8,8 +8,10 @@
 import UIKit
 
 final class ThumbnailUseCase: ThumbnailUseCaseProtocol {
+    static let shared: ThumbnailUseCase = ThumbnailUseCase()
+
     private let networkManager: NetworkManagable
-    static var cache: NSCache = NSCache<NSURL, UIImage>()
+    private let cache: NSCache = NSCache<NSURL, UIImage>()
 
     init(networkManager: NetworkManagable = NetworkManager()) {
         self.networkManager = networkManager
@@ -21,7 +23,7 @@ final class ThumbnailUseCase: ThumbnailUseCaseProtocol {
             completionHandler(.failure(.invalidURL))
             return nil
         }
-        if let cachedImaged = ThumbnailUseCase.cache.object(forKey: keyForCaching) {
+        if let cachedImaged = cache.object(forKey: keyForCaching) {
             completionHandler(.success(cachedImaged))
             return nil
         }
@@ -31,7 +33,7 @@ final class ThumbnailUseCase: ThumbnailUseCaseProtocol {
                     guard let image = UIImage(data: data) else {
                         return .failure(ThumbnailUseCaseError.convertDataToImageError)
                     }
-                    ThumbnailUseCase.cache.setObject(image, forKey: keyForCaching)
+                    self.cache.setObject(image, forKey: keyForCaching)
                     return .success(image)
                 }
             completionHandler(result)

@@ -142,7 +142,7 @@ final class ItemGridCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
     }
 }
 
-extension ItemGridCell {
+extension ItemGridCollectionViewCell {
     enum Style {
         static let borderWidth: CGFloat = 1.0
         static let cornerRadius: CGFloat = 15

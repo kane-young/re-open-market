@@ -140,7 +140,7 @@ final class ItemListCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
     }
 }
 
-extension ItemListCell {
+extension ItemListCollectionViewCell {
     private enum Style {
         enum StackView {
             static let defaultSpacing: CGFloat = 5

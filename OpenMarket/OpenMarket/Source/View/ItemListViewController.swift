@@ -28,8 +28,8 @@ final class ItemListViewController: UIViewController {
         let collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: flowLayout)
         collectionView.backgroundColor = Style.defaultColor
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.register(ItemListCell.self, forCellWithReuseIdentifier: ItemListCell.identifier)
-        collectionView.register(ItemGridCell.self, forCellWithReuseIdentifier: ItemGridCell.identifier)
+        collectionView.register(ItemListCollectionViewCell.self, forCellWithReuseIdentifier: ItemListCollectionViewCell.identifier)
+        collectionView.register(ItemGridCollectionViewCell.self, forCellWithReuseIdentifier: ItemGridCollectionViewCell.identifier)
         return collectionView
     }()
 
@@ -170,14 +170,14 @@ extension ItemListViewController: UICollectionViewDataSource {
         let cell: ItemCellDisplayable
         switch cellStyle {
         case .list:
-            guard let listCell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemListCell.identifier,
-                                                                    for: indexPath) as? ItemListCell else {
+            guard let listCell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemListCollectionViewCell.identifier,
+                                                                    for: indexPath) as? ItemListCollectionViewCell else {
                 return UICollectionViewCell()
             }
             cell = listCell
         case .grid:
-            guard let gridCell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemGridCell.identifier,
-                                                                    for: indexPath) as? ItemGridCell else {
+            guard let gridCell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemGridCollectionViewCell.identifier,
+                                                                    for: indexPath) as? ItemGridCollectionViewCell else {
                 return UICollectionViewCell()
             }
             cell = gridCell
