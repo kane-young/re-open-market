@@ -19,4 +19,7 @@ enum Dummy {
     static var itemDetail: ItemDetail = .init(id: 10, title: "MacBookPro", descriptions: "노트북",
                                               price: 123, currency: "KRw", stock: 33, discountedPrice: nil,
                                               thumbnails: ["www.kane.com"], images: ["www.kane.com"], registrationDate: 3.0)
+    static let items = [ItemList.Item(id: 1, title: "12", price: 33, currency: "KRW", stock: 12,
+                                      discountedPrice: nil, thumbnails: ["naver.com"],
+                                      registrationDate: 33123)]
 }

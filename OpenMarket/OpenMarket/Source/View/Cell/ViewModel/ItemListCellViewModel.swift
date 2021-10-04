@@ -33,7 +33,7 @@ final class ItemListCellViewModel {
         }
     }
 
-    init(item: ItemList.Item, useCase: ThumbnailUseCaseProtocol = ThumbnailUseCase()) {
+    init(item: ItemList.Item, useCase: ThumbnailUseCaseProtocol = ThumbnailUseCase.shared) {
         self.item = item
         self.useCase = useCase
     }
