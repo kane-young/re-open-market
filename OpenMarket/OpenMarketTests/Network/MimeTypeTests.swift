@@ -8,7 +8,7 @@
 import XCTest
 @testable import OpenMarket
 
-class MimeTypeTests: XCTestCase {
+final class MimeTypeTests: XCTestCase {
     func test_MimeTypeDescription() {
         var expectedDescription: String
 

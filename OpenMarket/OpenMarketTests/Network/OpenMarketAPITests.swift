@@ -8,7 +8,7 @@
 import XCTest
 @testable import OpenMarket
 
-class OpenMarketAPITests: XCTestCase {
+final class OpenMarketAPITests: XCTestCase {
     func test_OpenMarketAPI_urlString() {
         var expectedUrlString: String
 

@@ -8,7 +8,7 @@
 import UIKit
 @testable import OpenMarket
 
-final class StubSuccessNetworkManager: NetworkManagable {
+final class StubSuccessItemListNetworkManager: NetworkManagable {
     func request(urlString: String, with item: Any, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
         return nil
     }
@@ -29,6 +29,20 @@ final class StubFailureNetworkManager: NetworkManagable {
 
     func fetch(urlString: String, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
         completion(.failure(.connectionProblem))
+        return nil
+    }
+}
+
+final class StubSuccessItemDetailNetworkManager: NetworkManagable {
+    func request(urlString: String, with item: Any, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
+        return nil
+    }
+
+    func fetch(urlString: String, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
+        guard let data = NSDataAsset(name: "MockItem")?.data else {
+            return nil
+        }
+        completion(.success(data))
         return nil
     }
 }

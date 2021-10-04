@@ -8,7 +8,7 @@
 import XCTest
 @testable import OpenMarket
 
-class ItemListViewModelErrorTests: XCTestCase {
+final class ItemListViewModelErrorTests: XCTestCase {
     func testErrorMessage() {
         var expectedMessage: String
         

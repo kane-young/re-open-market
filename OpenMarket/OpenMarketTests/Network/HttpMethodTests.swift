@@ -8,7 +8,7 @@
 import XCTest
 @testable import OpenMarket
 
-class HttpMethodTests: XCTestCase {
+final class HttpMethodTests: XCTestCase {
     func test_HttpMethodDescription() {
         var expectedDescription: String
 
