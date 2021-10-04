@@ -9,30 +9,65 @@ import XCTest
 @testable import OpenMarket
 
 final class ItemListViewModelTests: XCTestCase {
-    private var itemListViewModel: ItemListViewModel!
+    private var expectation: XCTestExpectation!
 
     override func setUpWithError() throws {
-        let stubItemListNetworkUseCase = StubItemListNetworkUseCase()
-        itemListViewModel = ItemListViewModel(useCase: stubItemListNetworkUseCase)
+        expectation = XCTestExpectation(description: "bindSuccess")
     }
 
     override func tearDownWithError() throws {
-        itemListViewModel = nil
+        expectation = nil
     }
 
-    func testBind() {
-        let expectation = XCTestExpectation(description: "bindSuccess")
-        itemListViewModel.bind { state in
-            XCTAssertNotNil(state)
-            expectation.fulfill()
+    func test_when_성공적loadItems시_then_state_initial로변경() {
+        //given
+        let itemListViewModel = ItemListViewModel(useCase: StubSuccessItemListNetworkUseCase())
+        itemListViewModel.bind { [weak self] state in
+            switch state {
+            case .initial(_):
+                //then
+                self?.expectation.fulfill()
+            default:
+                XCTFail()
+            }
         }
         itemListViewModel.loadItems()
         wait(for: [expectation], timeout: 2.0)
     }
-}
 
-final class StubItemListNetworkUseCase: ItemListNetworkUseCaseProtocol {
-    func retrieveItems(completionHandler: @escaping (Result<[ItemList.Item], ItemListUseCaseError>) -> Void) {
-        completionHandler(.success(Dummy.items))
+    func test_when_useCaseError시_then_state_error로변경() {
+        //given
+        let itemListViewModel = ItemListViewModel(useCase: StubFailureItemListNetworkUseCase())
+        itemListViewModel.bind { [weak self] state in
+            switch state {
+            case .error(_):
+                //then
+                self?.expectation.fulfill()
+            default:
+                XCTFail()
+            }
+        }
+        //when
+        itemListViewModel.loadItems()
+        wait(for: [expectation], timeout: 2.0)
+    }
+
+    func test_when_loadItems호출성공두번째_then_state_update로변경() {
+        //given
+        let itemListViewModel = ItemListViewModel(useCase: StubSuccessItemListNetworkUseCase())
+        itemListViewModel.loadItems()
+        //when
+        itemListViewModel.bind { [weak self] state in
+            switch state {
+            case .update(_):
+                //then
+                self?.expectation.fulfill()
+            default:
+                XCTFail()
+            }
+        }
+        //when
+        itemListViewModel.loadItems()
+        wait(for: [expectation], timeout: 2.0)
     }
 }

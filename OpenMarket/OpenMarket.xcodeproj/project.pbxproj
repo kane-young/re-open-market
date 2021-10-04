@@ -47,6 +47,7 @@
 		C37EA6342704444C000518A0 /* ItemGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37EA6332704444C000518A0 /* ItemGridCell.swift */; };
 		C3916AA62709F066005E5C24 /* Dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3916AA52709F066005E5C24 /* Dummy.swift */; };
 		C3916AAA270A03FB005E5C24 /* ItemListViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3916AA9270A03FB005E5C24 /* ItemListViewModelTests.swift */; };
+		C3916AAE270AA2AD005E5C24 /* StubItemListNetworkUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3916AAD270AA2AD005E5C24 /* StubItemListNetworkUseCase.swift */; };
 		D0D420A34F274896FCE5389A /* Pods_OpenMarket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C1CCCB9FD817E8E78A31D5 /* Pods_OpenMarket.framework */; };
 /* End PBXBuildFile section */
 
@@ -108,6 +109,7 @@
 		C37EA6332704444C000518A0 /* ItemGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemGridCell.swift; sourceTree = "<group>"; };
 		C3916AA52709F066005E5C24 /* Dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dummy.swift; sourceTree = "<group>"; };
 		C3916AA9270A03FB005E5C24 /* ItemListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListViewModelTests.swift; sourceTree = "<group>"; };
+		C3916AAD270AA2AD005E5C24 /* StubItemListNetworkUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubItemListNetworkUseCase.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -280,6 +282,7 @@
 			isa = PBXGroup;
 			children = (
 				C32EDBDB2700029400F6BC53 /* MockURLProtocol.swift */,
+				C3916AAD270AA2AD005E5C24 /* StubItemListNetworkUseCase.swift */,
 				C3916AA52709F066005E5C24 /* Dummy.swift */,
 			);
 			path = TestDoubles;
@@ -549,6 +552,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C32EDBDC2700029400F6BC53 /* MockURLProtocol.swift in Sources */,
+				C3916AAE270AA2AD005E5C24 /* StubItemListNetworkUseCase.swift in Sources */,
 				C32EDBBA26FC963A00F6BC53 /* DecodingTests.swift in Sources */,
 				C32EDBE027002B4600F6BC53 /* RequestMakerTest.swift in Sources */,
 				C3916AAA270A03FB005E5C24 /* ItemListViewModelTests.swift in Sources */,
