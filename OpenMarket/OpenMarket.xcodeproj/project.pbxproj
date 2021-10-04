@@ -53,6 +53,9 @@
 		C3916AB4270AE441005E5C24 /* ItemListViewModelErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3916AB3270AE441005E5C24 /* ItemListViewModelErrorTests.swift */; };
 		C3916AB6270AE823005E5C24 /* NetworkErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3916AB5270AE823005E5C24 /* NetworkErrorTests.swift */; };
 		C3916AB8270AE950005E5C24 /* ItemListCellViewModelErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3916AB7270AE950005E5C24 /* ItemListCellViewModelErrorTests.swift */; };
+		C3916ABA270AEB2C005E5C24 /* HttpMethodTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3916AB9270AEB2C005E5C24 /* HttpMethodTests.swift */; };
+		C3916ABC270AEE0A005E5C24 /* MimeTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3916ABB270AEE0A005E5C24 /* MimeTypeTests.swift */; };
+		C3916ABE270AF154005E5C24 /* OpenMarketAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3916ABD270AF154005E5C24 /* OpenMarketAPITests.swift */; };
 		D0D420A34F274896FCE5389A /* Pods_OpenMarket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C1CCCB9FD817E8E78A31D5 /* Pods_OpenMarket.framework */; };
 /* End PBXBuildFile section */
 
@@ -120,6 +123,9 @@
 		C3916AB3270AE441005E5C24 /* ItemListViewModelErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListViewModelErrorTests.swift; sourceTree = "<group>"; };
 		C3916AB5270AE823005E5C24 /* NetworkErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkErrorTests.swift; sourceTree = "<group>"; };
 		C3916AB7270AE950005E5C24 /* ItemListCellViewModelErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListCellViewModelErrorTests.swift; sourceTree = "<group>"; };
+		C3916AB9270AEB2C005E5C24 /* HttpMethodTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpMethodTests.swift; sourceTree = "<group>"; };
+		C3916ABB270AEE0A005E5C24 /* MimeTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MimeTypeTests.swift; sourceTree = "<group>"; };
+		C3916ABD270AF154005E5C24 /* OpenMarketAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenMarketAPITests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -366,6 +372,9 @@
 			isa = PBXGroup;
 			children = (
 				C32EDBB926FC963A00F6BC53 /* DecodingTests.swift */,
+				C3916AB9270AEB2C005E5C24 /* HttpMethodTests.swift */,
+				C3916ABB270AEE0A005E5C24 /* MimeTypeTests.swift */,
+				C3916ABD270AF154005E5C24 /* OpenMarketAPITests.swift */,
 				C3916AB5270AE823005E5C24 /* NetworkErrorTests.swift */,
 				C32EDBD82700023500F6BC53 /* NetworkManagerTest.swift */,
 				C32EDBDF27002B4600F6BC53 /* RequestMakerTest.swift */,
@@ -378,10 +387,18 @@
 			children = (
 				C3916AA9270A03FB005E5C24 /* ItemListViewModelTests.swift */,
 				C3916AB3270AE441005E5C24 /* ItemListViewModelErrorTests.swift */,
+				C3916ABF270AFB48005E5C24 /* CellViewModel */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		C3916ABF270AFB48005E5C24 /* CellViewModel */ = {
+			isa = PBXGroup;
+			children = (
 				C3916AB7270AE950005E5C24 /* ItemListCellViewModelErrorTests.swift */,
 				C3916AAF270ABE41005E5C24 /* ItemListCellViewModelTests.swift */,
 			);
-			path = ViewModel;
+			path = CellViewModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -572,8 +589,11 @@
 				C3916AB6270AE823005E5C24 /* NetworkErrorTests.swift in Sources */,
 				C3916AB2270ACE90005E5C24 /* StubItemListCellViewModel.swift in Sources */,
 				C3916AB0270ABE41005E5C24 /* ItemListCellViewModelTests.swift in Sources */,
+				C3916ABA270AEB2C005E5C24 /* HttpMethodTests.swift in Sources */,
 				C32EDBBA26FC963A00F6BC53 /* DecodingTests.swift in Sources */,
+				C3916ABE270AF154005E5C24 /* OpenMarketAPITests.swift in Sources */,
 				C32EDBE027002B4600F6BC53 /* RequestMakerTest.swift in Sources */,
+				C3916ABC270AEE0A005E5C24 /* MimeTypeTests.swift in Sources */,
 				C3916AB4270AE441005E5C24 /* ItemListViewModelErrorTests.swift in Sources */,
 				C3916AAA270A03FB005E5C24 /* ItemListViewModelTests.swift in Sources */,
 				C3916AA62709F066005E5C24 /* Dummy.swift in Sources */,
