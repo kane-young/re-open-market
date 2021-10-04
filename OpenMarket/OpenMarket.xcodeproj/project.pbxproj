@@ -56,6 +56,8 @@
 		C3916ABA270AEB2C005E5C24 /* HttpMethodTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3916AB9270AEB2C005E5C24 /* HttpMethodTests.swift */; };
 		C3916ABC270AEE0A005E5C24 /* MimeTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3916ABB270AEE0A005E5C24 /* MimeTypeTests.swift */; };
 		C3916ABE270AF154005E5C24 /* OpenMarketAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3916ABD270AF154005E5C24 /* OpenMarketAPITests.swift */; };
+		C3916AC3270B04F6005E5C24 /* ItemListNetworkUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3916AC2270B04F6005E5C24 /* ItemListNetworkUseCaseTests.swift */; };
+		C3916AC5270B29CA005E5C24 /* StubNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3916AC4270B29CA005E5C24 /* StubNetworkManager.swift */; };
 		D0D420A34F274896FCE5389A /* Pods_OpenMarket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C1CCCB9FD817E8E78A31D5 /* Pods_OpenMarket.framework */; };
 /* End PBXBuildFile section */
 
@@ -126,6 +128,8 @@
 		C3916AB9270AEB2C005E5C24 /* HttpMethodTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpMethodTests.swift; sourceTree = "<group>"; };
 		C3916ABB270AEE0A005E5C24 /* MimeTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MimeTypeTests.swift; sourceTree = "<group>"; };
 		C3916ABD270AF154005E5C24 /* OpenMarketAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenMarketAPITests.swift; sourceTree = "<group>"; };
+		C3916AC2270B04F6005E5C24 /* ItemListNetworkUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListNetworkUseCaseTests.swift; sourceTree = "<group>"; };
+		C3916AC4270B29CA005E5C24 /* StubNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubNetworkManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -299,8 +303,9 @@
 			children = (
 				C32EDBDB2700029400F6BC53 /* MockURLProtocol.swift */,
 				C3916AAD270AA2AD005E5C24 /* StubItemListNetworkUseCase.swift */,
-				C3916AA52709F066005E5C24 /* Dummy.swift */,
 				C3916AB1270ACE90005E5C24 /* StubItemListCellViewModel.swift */,
+				C3916AC4270B29CA005E5C24 /* StubNetworkManager.swift */,
+				C3916AA52709F066005E5C24 /* Dummy.swift */,
 			);
 			path = TestDoubles;
 			sourceTree = "<group>";
@@ -387,6 +392,7 @@
 			children = (
 				C3916AA9270A03FB005E5C24 /* ItemListViewModelTests.swift */,
 				C3916AB3270AE441005E5C24 /* ItemListViewModelErrorTests.swift */,
+				C3916AC2270B04F6005E5C24 /* ItemListNetworkUseCaseTests.swift */,
 				C3916ABF270AFB48005E5C24 /* CellViewModel */,
 			);
 			path = ViewModel;
@@ -590,6 +596,8 @@
 				C3916AB2270ACE90005E5C24 /* StubItemListCellViewModel.swift in Sources */,
 				C3916AB0270ABE41005E5C24 /* ItemListCellViewModelTests.swift in Sources */,
 				C3916ABA270AEB2C005E5C24 /* HttpMethodTests.swift in Sources */,
+				C3916AC5270B29CA005E5C24 /* StubNetworkManager.swift in Sources */,
+				C3916AC3270B04F6005E5C24 /* ItemListNetworkUseCaseTests.swift in Sources */,
 				C32EDBBA26FC963A00F6BC53 /* DecodingTests.swift in Sources */,
 				C3916ABE270AF154005E5C24 /* OpenMarketAPITests.swift in Sources */,
 				C32EDBE027002B4600F6BC53 /* RequestMakerTest.swift in Sources */,
