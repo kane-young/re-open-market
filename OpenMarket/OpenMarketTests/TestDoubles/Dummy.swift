@@ -22,4 +22,16 @@ enum Dummy {
     static let items = [ItemList.Item(id: 1, title: "12", price: 33, currency: "KRW", stock: 12,
                                       discountedPrice: nil, thumbnails: ["naver.com"],
                                       registrationDate: 33123)]
+    static let normalItem = ItemList.Item(id: 1, title: "12", price: 33, currency: "KRW", stock: 12,
+                                          discountedPrice: nil, thumbnails: ["naver.com"],
+                                          registrationDate: 33123)
+    static let outOfStockItem = ItemList.Item(id: 1, title: "iPad", price: 100000, currency: "KRW",
+                                          stock: 0, discountedPrice: nil, thumbnails: ["www.kane.com"],
+                                          registrationDate: 3.0)
+    static let quantitiousItem = ItemList.Item(id: 1, title: "iPad", price: 100000, currency: "KRW",
+                                           stock: 1000, discountedPrice: nil, thumbnails: ["www.kane.com"],
+                                           registrationDate: 3.0)
+    static let emptyThumbnailItem = ItemList.Item(id: 1, title: "iPad", price: 100000, currency: "KRW",
+                                              stock: 1000, discountedPrice: nil, thumbnails: [],
+                                              registrationDate: 3.0)
 }

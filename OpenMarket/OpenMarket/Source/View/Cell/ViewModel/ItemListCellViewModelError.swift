@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ItemListCellViewModelError {
+enum ItemListCellViewModelError: Error {
     case emptyPath
     case useCaseError(ThumbnailUseCaseError)
 
@@ -18,5 +18,11 @@ enum ItemListCellViewModelError {
         case .useCaseError(let error):
             return "UseCase Error - \(error.message)"
         }
+    }
+}
+
+extension ItemListCellViewModelError: Equatable {
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.localizedDescription == rhs.localizedDescription
     }
 }
