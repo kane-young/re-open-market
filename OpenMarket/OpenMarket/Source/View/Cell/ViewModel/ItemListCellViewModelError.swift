@@ -16,7 +16,7 @@ enum ItemListCellViewModelError: Error {
         case .emptyPath:
             return "URL 주소 존재하지 않음"
         case .useCaseError(let error):
-            return "UseCase Error - \(error.message)"
+            return "UseCase 에러 발생 \(error.message)"
         }
     }
 }
