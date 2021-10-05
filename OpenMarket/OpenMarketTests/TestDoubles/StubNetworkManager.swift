@@ -46,3 +46,19 @@ final class StubSuccessItemDetailNetworkManager: NetworkManagable {
         return nil
     }
 }
+
+final class StubSuccessThumbnailNetworkManager: NetworkManagable {
+    func request(urlString: String, with item: Any, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
+        return nil
+    }
+
+    func fetch(urlString: String, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
+        guard let data = UIImage(systemName: "pencil")?.pngData() else {
+            completion(.failure(.invalidData))
+            return nil
+        }
+        print(data)
+        completion(.success(data))
+        return nil
+    }
+}

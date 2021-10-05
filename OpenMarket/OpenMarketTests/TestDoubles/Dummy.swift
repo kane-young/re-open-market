@@ -34,4 +34,5 @@ enum Dummy {
     static let emptyThumbnailItem = ItemList.Item(id: 1, title: "iPad", price: 100000, currency: "KRW",
                                               stock: 1000, discountedPrice: nil, thumbnails: [],
                                               registrationDate: 3.0)
+    static let thumbnailUrlString = "https://camp-open-market.s3.ap-northeast-2.amazonaws.com/thumbnails/1-1.png"
 }

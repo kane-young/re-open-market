@@ -23,3 +23,9 @@ enum ThumbnailUseCaseError: Error {
         }
     }
 }
+
+extension ThumbnailUseCaseError: Equatable {
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.localizedDescription == rhs.localizedDescription
+    }
+}
