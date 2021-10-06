@@ -14,8 +14,17 @@ final class ItemListViewController: UIViewController {
     }
 
     // MARK: UI Properties
-    private var changeCellLayoutButton: UIBarButtonItem = .init()
     private var addItemBarButtonItem: UIBarButtonItem = .init()
+    private var segmentedControl: UISegmentedControl = {
+        let segmentedControl: UISegmentedControl = .init(items: ["LIST", "GRID"])
+        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.systemBackground], for: .selected)
+        segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.label], for: .normal)
+        segmentedControl.selectedSegmentTintColor = .label
+        segmentedControl.backgroundColor = .systemBackground
+        segmentedControl.selectedSegmentIndex = 0
+        return segmentedControl
+    }()
     private var activityIndicator: UIActivityIndicatorView = {
         let indicator: UIActivityIndicatorView = .init()
         indicator.color = Style.reverseDefaultColor
@@ -55,18 +64,15 @@ final class ItemListViewController: UIViewController {
     }
 
     private func configureNavigationBar() {
-        changeCellLayoutButton.action = #selector(touchChangeCellLayoutButton(_:))
+        segmentedControl.addTarget(self, action: #selector(segmentedControlChangedValue(_:)), for: .valueChanged)
         addItemBarButtonItem.action = #selector(touchAddItemBarButtonItem(_:))
-        changeCellLayoutButton.image = Style.BarButtonItem.gridImage
         addItemBarButtonItem.image = Style.BarButtonItem.plusImage
-        changeCellLayoutButton.tintColor = Style.reverseDefaultColor
         addItemBarButtonItem.tintColor = Style.reverseDefaultColor
-        changeCellLayoutButton.target = self
         addItemBarButtonItem.target = self
-        navigationItem.title = Style.NavigationBar.title
+        navigationItem.titleView = segmentedControl
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.barTintColor = Style.defaultColor
-        navigationItem.rightBarButtonItems = [addItemBarButtonItem, changeCellLayoutButton]
+        navigationItem.rightBarButtonItems = [addItemBarButtonItem]
     }
 
     private func viewModelBind() {
@@ -117,31 +123,20 @@ final class ItemListViewController: UIViewController {
         ])
     }
 
-    @objc private func touchChangeCellLayoutButton(_ sender: UIBarButtonItem) {
-        changeRightBarButtonItemImage()
-        changeCellStyle()
-        collectionView.reloadData()
+    @objc func segmentedControlChangedValue(_ sender: UISegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 0:
+            cellStyle = .list
+            collectionView.reloadData()
+        case 1:
+            cellStyle = .grid
+            collectionView.reloadData()
+        default:
+            return
+        }
     }
 
     @objc private func touchAddItemBarButtonItem(_ sender: UIBarButtonItem) {
-    }
-
-    private func changeCellStyle() {
-        switch cellStyle {
-        case .list:
-            cellStyle = .grid
-        case .grid:
-            cellStyle = .list
-        }
-    }
-
-    private func changeRightBarButtonItemImage() {
-        switch cellStyle {
-        case .list:
-            changeCellLayoutButton.image = Style.BarButtonItem.listImage
-        case .grid:
-            changeCellLayoutButton.image = Style.BarButtonItem.gridImage
-        }
     }
 }
 
