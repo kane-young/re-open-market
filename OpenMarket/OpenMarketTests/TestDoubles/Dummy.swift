@@ -16,23 +16,21 @@ enum Dummy {
                                             currency: "KRW", stock: 10, discountedPrice: 1000000,
                                             images: [Data()], password: "password")
     static let deleteItem: DeleteItem = .init(password: "password")
-    static var itemDetail: ItemDetail = .init(id: 10, title: "MacBookPro", descriptions: "노트북",
-                                              price: 123, currency: "KRw", stock: 33, discountedPrice: nil,
-                                              thumbnails: ["www.kane.com"], images: ["www.kane.com"], registrationDate: 3.0)
-    static let items = [ItemList.Item(id: 1, title: "12", price: 33, currency: "KRW", stock: 12,
-                                      discountedPrice: nil, thumbnails: ["naver.com"],
-                                      registrationDate: 33123)]
-    static let normalItem = ItemList.Item(id: 1, title: "12", price: 33, currency: "KRW", stock: 12,
-                                          discountedPrice: nil, thumbnails: ["naver.com"],
-                                          registrationDate: 33123)
-    static let outOfStockItem = ItemList.Item(id: 1, title: "iPad", price: 100000, currency: "KRW",
-                                          stock: 0, discountedPrice: nil, thumbnails: ["www.kane.com"],
-                                          registrationDate: 3.0)
-    static let quantitiousItem = ItemList.Item(id: 1, title: "iPad", price: 100000, currency: "KRW",
-                                           stock: 1000, discountedPrice: nil, thumbnails: ["www.kane.com"],
-                                           registrationDate: 3.0)
-    static let emptyThumbnailItem = ItemList.Item(id: 1, title: "iPad", price: 100000, currency: "KRW",
-                                              stock: 1000, discountedPrice: nil, thumbnails: [],
-                                              registrationDate: 3.0)
+    static var itemDetail: Item = .init(id: 10, title: "MacBookPro", descriptions: "노트북", price: 123,
+                                        currency: "KRw", stock: 33, discountedPrice: nil,
+                                        thumbnails: ["www.kane.com"], images: ["www.kane.com"], registrationDate: 3.0)
+    static let items = [Item(id: 1, title: "12", descriptions: nil, price: 33, currency: "KRW", stock: 12,
+                             discountedPrice: nil, thumbnails: ["naver.com"], images: nil, registrationDate: 33123)]
+    static let normalItem = Item(id: 1, title: "12", descriptions: nil, price: 33, currency: "KRW", stock: 12,
+                                 discountedPrice: nil, thumbnails: ["naver.com"], images: nil, registrationDate: 33123)
+    static let outOfStockItem = Item(id: 1, title: "iPad", descriptions: nil, price: 100000, currency: "KRW",
+                                     stock: 0, discountedPrice: nil, thumbnails: ["www.kane.com"], images: nil,
+                                     registrationDate: 3.0)
+    static let quantitiousItem = Item(id: 1, title: "iPad", descriptions: nil, price: 100000, currency: "KRW",
+                                      stock: 1000, discountedPrice: nil, thumbnails: ["www.kane.com"], images: nil,
+                                      registrationDate: 3.0)
+    static let emptyThumbnailItem = Item(id: 1, title: "iPad", descriptions: nil, price: 100000, currency: "KRW",
+                                         stock: 1000, discountedPrice: nil, thumbnails: [], images: nil,
+                                         registrationDate: 3.0)
     static let thumbnailUrlString = "https://camp-open-market.s3.ap-northeast-2.amazonaws.com/thumbnails/1-1.png"
 }

@@ -9,13 +9,13 @@ import Foundation
 @testable import OpenMarket
 
 final class StubSuccessItemListNetworkUseCase: ItemListNetworkUseCaseProtocol {
-    func retrieveItems(completionHandler: @escaping (Result<[ItemList.Item], ItemListUseCaseError>) -> Void) {
+    func retrieveItems(completionHandler: @escaping (Result<[Item], ItemListUseCaseError>) -> Void) {
         completionHandler(.success(Dummy.items))
     }
 }
 
 final class StubFailureItemListNetworkUseCase: ItemListNetworkUseCaseProtocol {
-    func retrieveItems(completionHandler: @escaping (Result<[ItemList.Item], ItemListUseCaseError>) -> Void) {
+    func retrieveItems(completionHandler: @escaping (Result<[Item], ItemListUseCaseError>) -> Void) {
         completionHandler(.failure(.decodingError))
     }
 }

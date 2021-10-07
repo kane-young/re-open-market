@@ -17,7 +17,7 @@ final class ItemListNetworkUseCase: ItemListNetworkUseCaseProtocol {
         self.networkManager = networkManager
     }
 
-    func retrieveItems(completionHandler: @escaping (Result<[ItemList.Item], ItemListUseCaseError>) -> Void) {
+    func retrieveItems(completionHandler: @escaping (Result<[Item], ItemListUseCaseError>) -> Void) {
         let urlString = OpenMarketAPI.load(page: page).urlString
         if isLoading {
             return
@@ -25,7 +25,7 @@ final class ItemListNetworkUseCase: ItemListNetworkUseCaseProtocol {
         isLoading = true
         networkManager.fetch(urlString: urlString) { [weak self] result in
             let result = result.flatMapError { .failure(ItemListUseCaseError.networkError($0)) }
-                .flatMap { data -> Result<[ItemList.Item], ItemListUseCaseError> in
+                .flatMap { data -> Result<[Item], ItemListUseCaseError> in
                     do {
                         guard let itemList = try self?.decoder.decode(ItemList.self, from: data) else {
                             return .failure(ItemListUseCaseError.referenceCountingZero)

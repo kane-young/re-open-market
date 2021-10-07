@@ -9,7 +9,7 @@ import UIKit
 
 final class ItemListViewModel {
     private let useCase: ItemListNetworkUseCaseProtocol
-    private(set) var items: [ItemList.Item] = [] {
+    private(set) var items: [Item] = [] {
         didSet {
             let indexPath = (oldValue.count..<items.count).map { IndexPath(item: $0, section: 0) }
             if oldValue.count == .zero {

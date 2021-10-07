@@ -8,5 +8,5 @@
 import Foundation
 
 protocol ItemListNetworkUseCaseProtocol {
-    func retrieveItems(completionHandler: @escaping (Result<[ItemList.Item], ItemListUseCaseError>) -> Void)
+    func retrieveItems(completionHandler: @escaping (Result<[Item], ItemListUseCaseError>) -> Void)
 }

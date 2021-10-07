@@ -22,7 +22,7 @@ final class ItemListNetworkUseCaseTests: XCTestCase {
     func test_useCase_retrieveItems성공() {
         //given
         let useCase: ItemListNetworkUseCase = .init(networkManager: StubSuccessItemListNetworkManager())
-        let expectedItem = ItemList.Item(id: 1, title: "MacBook Pro", price: 1690, currency: "USD", stock: 0, discountedPrice: nil, thumbnails: ["https://camp-open-market.s3.ap-northeast-2.amazonaws.com/thumbnails/1-1.png", "https://camp-open-market.s3.ap-northeast-2.amazonaws.com/thumbnails/1-2.png"], registrationDate: 1611523563.7237701)
+        let expectedItem = Item(id: 1, title: "MacBook Pro", descriptions: nil, price: 1690, currency: "USD", stock: 0, discountedPrice: nil, thumbnails: ["https://camp-open-market.s3.ap-northeast-2.amazonaws.com/thumbnails/1-1.png", "https://camp-open-market.s3.ap-northeast-2.amazonaws.com/thumbnails/1-2.png"], images: nil, registrationDate: 1611523563.7237701)
         //when
         useCase.retrieveItems { [weak self] result in
             switch result {

@@ -15,7 +15,7 @@
 		C32EDBA626FC94D700F6BC53 /* PostItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBA526FC94D700F6BC53 /* PostItem.swift */; };
 		C32EDBA826FC950000F6BC53 /* PatchItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBA726FC950000F6BC53 /* PatchItem.swift */; };
 		C32EDBAA26FC951700F6BC53 /* DeleteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBA926FC951700F6BC53 /* DeleteItem.swift */; };
-		C32EDBAC26FC953E00F6BC53 /* ItemDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBAB26FC953E00F6BC53 /* ItemDetail.swift */; };
+		C32EDBAC26FC953E00F6BC53 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBAB26FC953E00F6BC53 /* Item.swift */; };
 		C32EDBAE26FC954500F6BC53 /* ItemList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBAD26FC954500F6BC53 /* ItemList.swift */; };
 		C32EDBBA26FC963A00F6BC53 /* DecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBB926FC963A00F6BC53 /* DecodingTests.swift */; };
 		C32EDBC226FC9E9300F6BC53 /* MultiPartForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBC126FC9E9300F6BC53 /* MultiPartForm.swift */; };
@@ -86,7 +86,7 @@
 		C32EDBA526FC94D700F6BC53 /* PostItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostItem.swift; sourceTree = "<group>"; };
 		C32EDBA726FC950000F6BC53 /* PatchItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchItem.swift; sourceTree = "<group>"; };
 		C32EDBA926FC951700F6BC53 /* DeleteItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteItem.swift; sourceTree = "<group>"; };
-		C32EDBAB26FC953E00F6BC53 /* ItemDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetail.swift; sourceTree = "<group>"; };
+		C32EDBAB26FC953E00F6BC53 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		C32EDBAD26FC954500F6BC53 /* ItemList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemList.swift; sourceTree = "<group>"; };
 		C32EDBB726FC963A00F6BC53 /* OpenMarketTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenMarketTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C32EDBB926FC963A00F6BC53 /* DecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodingTests.swift; sourceTree = "<group>"; };
@@ -294,7 +294,7 @@
 		C32EDBA426FC949200F6BC53 /* Response */ = {
 			isa = PBXGroup;
 			children = (
-				C32EDBAB26FC953E00F6BC53 /* ItemDetail.swift */,
+				C32EDBAB26FC953E00F6BC53 /* Item.swift */,
 				C32EDBAD26FC954500F6BC53 /* ItemList.swift */,
 			);
 			path = Response;
@@ -586,7 +586,7 @@
 				C32EDBD126FEB64000F6BC53 /* NetworkError.swift in Sources */,
 				C37EA6342704444C000518A0 /* ItemGridCell.swift in Sources */,
 				C35943EF27059FE300146FFC /* ItemListCellViewModelError.swift in Sources */,
-				C32EDBAC26FC953E00F6BC53 /* ItemDetail.swift in Sources */,
+				C32EDBAC26FC953E00F6BC53 /* Item.swift in Sources */,
 				C37EA628270179C3000518A0 /* ItemListViewModel.swift in Sources */,
 				C32EDBCE26FEB3DE00F6BC53 /* NetworkManager.swift in Sources */,
 				C32EDBC426FD9BF400F6BC53 /* Data+Extension.swift in Sources */,

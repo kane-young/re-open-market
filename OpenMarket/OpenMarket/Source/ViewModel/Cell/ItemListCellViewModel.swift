@@ -18,7 +18,7 @@ final class ItemListCellViewModel {
         let stock: String
     }
 
-    private let item: ItemList.Item
+    private let item: Item
     private let useCase: ThumbnailUseCaseProtocol
     private var imageTask: URLSessionDataTask?
     private var handler: ((ItemListCellViewModelState) -> Void)?
@@ -33,7 +33,7 @@ final class ItemListCellViewModel {
         }
     }
 
-    init(item: ItemList.Item, useCase: ThumbnailUseCaseProtocol = ThumbnailUseCase.shared) {
+    init(item: Item, useCase: ThumbnailUseCaseProtocol = ThumbnailUseCase.shared) {
         self.item = item
         self.useCase = useCase
     }
