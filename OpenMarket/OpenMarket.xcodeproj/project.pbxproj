@@ -170,6 +170,25 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		C3107399270F49C700EFFF91 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				C32EDB8C26FC905100F6BC53 /* Assets.xcassets */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		C310739A270F4A7500EFFF91 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				C37EA62D2702FE91000518A0 /* ItemListCellViewModel.swift */,
+				C35943EE27059FE300146FFC /* ItemListCellViewModelError.swift */,
+				C35943EC27059FC600146FFC /* ItemListCellViewModelState.swift */,
+				C35943DD27059BA700146FFC /* UseCase */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
 		C32EDB7726FC904B00F6BC53 = {
 			isa = PBXGroup;
 			children = (
@@ -193,8 +212,8 @@
 		C32EDB8226FC904B00F6BC53 /* OpenMarket */ = {
 			isa = PBXGroup;
 			children = (
+				C3107399270F49C700EFFF91 /* Resource */,
 				C32EDB9826FC929B00F6BC53 /* Source */,
-				C32EDB8C26FC905100F6BC53 /* Assets.xcassets */,
 				C32EDB9926FC92A100F6BC53 /* Storyboard */,
 				C32EDB9126FC905100F6BC53 /* Info.plist */,
 			);
@@ -204,6 +223,7 @@
 		C32EDB9826FC929B00F6BC53 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				C35943DC27059B8900146FFC /* ViewModel */,
 				C32EDB9D26FC92D100F6BC53 /* Extension */,
 				C32EDB9B26FC92C000F6BC53 /* View */,
 				C32EDB9A26FC92BA00F6BC53 /* Model */,
@@ -235,7 +255,6 @@
 			isa = PBXGroup;
 			children = (
 				C32EDB8726FC904B00F6BC53 /* ItemListViewController.swift */,
-				C35943DC27059B8900146FFC /* ViewModel */,
 				C35943D827059AF800146FFC /* Cell */,
 			);
 			path = View;
@@ -318,25 +337,14 @@
 				C37EA62B2702FD6A000518A0 /* ItemListCell.swift */,
 				C37EA6332704444C000518A0 /* ItemGridCell.swift */,
 				C35943D927059B1600146FFC /* ItemCellDisplayable.swift */,
-				C35943DB27059B5F00146FFC /* ViewModel */,
 			);
 			path = Cell;
-			sourceTree = "<group>";
-		};
-		C35943DB27059B5F00146FFC /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				C37EA62D2702FE91000518A0 /* ItemListCellViewModel.swift */,
-				C35943EE27059FE300146FFC /* ItemListCellViewModelError.swift */,
-				C35943EC27059FC600146FFC /* ItemListCellViewModelState.swift */,
-				C35943DD27059BA700146FFC /* UseCase */,
-			);
-			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		C35943DC27059B8900146FFC /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				C310739A270F4A7500EFFF91 /* Cell */,
 				C37EA627270179C3000518A0 /* ItemListViewModel.swift */,
 				C35943EA27059F8000146FFC /* ItemListViewModelError.swift */,
 				C35943E827059F6200146FFC /* ItemListViewModelState.swift */,
