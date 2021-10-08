@@ -14,7 +14,6 @@ final class ItemListViewController: UIViewController {
     }
 
     // MARK: UI Properties
-    private var addItemBarButtonItem: UIBarButtonItem = .init()
     private var segmentedControl: UISegmentedControl = {
         let segmentedControl: UISegmentedControl = .init(items: [Style.SegmentedControl.listItem,
                                                                  Style.SegmentedControl.gridItem])
@@ -66,14 +65,9 @@ final class ItemListViewController: UIViewController {
 
     private func configureNavigationBar() {
         segmentedControl.addTarget(self, action: #selector(segmentedControlChangedValue(_:)), for: .valueChanged)
-        addItemBarButtonItem.action = #selector(touchAddItemBarButtonItem(_:))
-        addItemBarButtonItem.image = Style.BarButtonItem.plusImage
-        addItemBarButtonItem.tintColor = Style.reverseDefaultColor
-        addItemBarButtonItem.target = self
         navigationItem.titleView = segmentedControl
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.barTintColor = Style.defaultColor
-        navigationItem.rightBarButtonItems = [addItemBarButtonItem]
     }
 
     private func viewModelBind() {
@@ -135,9 +129,6 @@ final class ItemListViewController: UIViewController {
         default:
             return
         }
-    }
-
-    @objc private func touchAddItemBarButtonItem(_ sender: UIBarButtonItem) {
     }
 }
 
