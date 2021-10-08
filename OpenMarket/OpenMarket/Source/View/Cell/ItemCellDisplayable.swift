@@ -9,5 +9,5 @@ import UIKit
 
 protocol ItemCellDisplayable: UICollectionViewCell {
     func bind(_ viewModel: ItemListCellViewModel)
-    func fire()
+    func configureCell()
 }

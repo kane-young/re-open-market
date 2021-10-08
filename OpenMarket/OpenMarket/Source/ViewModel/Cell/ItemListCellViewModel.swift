@@ -64,10 +64,6 @@ final class ItemListCellViewModel {
         })
     }
 
-    func cancelImageRequest() {
-        imageTask?.cancel()
-    }
-
     private func updateText() {
         let isneededDiscountedLabel = item.discountedPrice == nil
         let discountedPrice = discountedPriceText(isneededDiscountedLabel)

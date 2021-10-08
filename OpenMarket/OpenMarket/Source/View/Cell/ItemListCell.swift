@@ -99,7 +99,7 @@ final class ItemListCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
         }
     }
 
-    func fire() {
+    func configureCell() {
         viewModel?.configureCell()
     }
 

@@ -346,8 +346,8 @@
 			children = (
 				C310739A270F4A7500EFFF91 /* Cell */,
 				C37EA627270179C3000518A0 /* ItemListViewModel.swift */,
-				C35943EA27059F8000146FFC /* ItemListViewModelError.swift */,
 				C35943E827059F6200146FFC /* ItemListViewModelState.swift */,
+				C35943EA27059F8000146FFC /* ItemListViewModelError.swift */,
 				C35943DE27059BBB00146FFC /* UseCase */,
 			);
 			path = ViewModel;

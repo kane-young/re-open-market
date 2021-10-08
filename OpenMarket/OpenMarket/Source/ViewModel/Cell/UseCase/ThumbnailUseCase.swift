@@ -27,13 +27,13 @@ final class ThumbnailUseCase: ThumbnailUseCaseProtocol {
             completionHandler(.success(cachedImaged))
             return nil
         }
-        let task = networkManager.fetch(urlString: urlString) { result in
+        let task = networkManager.request(urlString: urlString, with: nil, httpMethod: .get) { [weak self] result in
             let result = result.flatMapError { .failure(ThumbnailUseCaseError.networkError($0)) }
                 .flatMap { data -> Result<UIImage, ThumbnailUseCaseError> in
                     guard let image = UIImage(data: data) else {
                         return .failure(ThumbnailUseCaseError.convertDataToImageError)
                     }
-                    self.cache.setObject(image, forKey: keyForCaching)
+                    self?.cache.setObject(image, forKey: keyForCaching)
                     return .success(image)
                 }
             completionHandler(result)

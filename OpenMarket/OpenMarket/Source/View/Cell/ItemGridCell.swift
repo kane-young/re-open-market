@@ -94,7 +94,7 @@ final class ItemGridCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
         }
     }
 
-    func fire() {
+    func configureCell() {
         viewModel?.configureCell()
     }
 

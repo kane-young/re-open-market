@@ -16,7 +16,8 @@ final class ItemListViewController: UIViewController {
     // MARK: UI Properties
     private var addItemBarButtonItem: UIBarButtonItem = .init()
     private var segmentedControl: UISegmentedControl = {
-        let segmentedControl: UISegmentedControl = .init(items: ["LIST", "GRID"])
+        let segmentedControl: UISegmentedControl = .init(items: [Style.SegmentedControl.listItem,
+                                                                 Style.SegmentedControl.gridItem])
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.systemBackground], for: .selected)
         segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.label], for: .normal)
@@ -180,7 +181,7 @@ extension ItemListViewController: UICollectionViewDataSource {
         let item = viewModel.items[indexPath.item]
         let itemListCellViewModel = ItemListCellViewModel(item: item)
         cell.bind(itemListCellViewModel)
-        cell.fire()
+        cell.configureCell()
         return cell
     }
 }
@@ -227,6 +228,10 @@ extension ItemListViewController {
     private enum Style {
         static let defaultColor: UIColor = .systemBackground
         static let reverseDefaultColor: UIColor = .label
+        enum SegmentedControl {
+            static let listItem = "LIST"
+            static let gridItem = "GRID"
+        }
         enum NavigationBar {
             static let title = "오픈마켓"
         }

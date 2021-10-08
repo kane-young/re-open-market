@@ -9,9 +9,8 @@ import Foundation
 
 protocol NetworkManagable {
     @discardableResult
-    func request(urlString: String, with item: Any, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask?
-    @discardableResult
-    func fetch(urlString: String, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask?
+    func request(urlString: String, with item: Any?, httpMethod: HttpMethod,
+                 completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask?
 }
 
 final class NetworkManager: NetworkManagable {
@@ -48,25 +47,22 @@ final class NetworkManager: NetworkManagable {
     }
 
     @discardableResult
-    func request(urlString: String, with item: Any, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
+    func request(urlString: String, with item: Any?, httpMethod: HttpMethod,
+                 completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
         guard let url = URL(string: urlString) else {
             completion(.failure(.invalidURL))
             return nil
         }
-        guard let request = requestMaker.request(url: url, httpMethod: httpMethod, with: item) else {
+        let urlRequest: URLRequest?
+        if let item = item {
+            urlRequest = requestMaker.request(url: url, httpMethod: httpMethod, with: item)
+        } else {
+            urlRequest = URLRequest(url: url)
+        }
+        guard let request = urlRequest else {
             completion(.failure(.invalidRequest))
             return nil
         }
         return retrieveData(with: request, completion: completion)
-    }
-
-    @discardableResult
-    func fetch(urlString: String, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
-        guard let url = URL(string: urlString) else {
-            completion(.failure(.invalidURL))
-            return nil
-        }
-        let urlRequest = URLRequest(url: url)
-        return retrieveData(with: urlRequest, completion: completion)
     }
 }
