@@ -135,7 +135,7 @@ final class NetworkManagerTest: XCTestCase {
             return (response, Data(), nil)
         }
         //when
-        networkManager.fetch(urlString: OpenMarketAPI.load(page: 1).urlString) { [weak self] result in
+        networkManager.request(urlString: OpenMarketAPI.load(page: 1).urlString, with: nil, httpMethod: .get) { [weak self] result in
             switch result {
             case .success(let data):
                 //then

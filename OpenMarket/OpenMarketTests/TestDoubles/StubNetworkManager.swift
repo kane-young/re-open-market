@@ -9,11 +9,7 @@ import UIKit
 @testable import OpenMarket
 
 final class StubSuccessItemListNetworkManager: NetworkManagable {
-    func request(urlString: String, with item: Any, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
-        return nil
-    }
-
-    func fetch(urlString: String, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
+    func request(urlString: String, with item: Any?, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
         guard let data = NSDataAsset(name: "MockItemList")?.data else {
             return nil
         }
@@ -23,22 +19,14 @@ final class StubSuccessItemListNetworkManager: NetworkManagable {
 }
 
 final class StubFailureNetworkManager: NetworkManagable {
-    func request(urlString: String, with item: Any, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
-        return nil
-    }
-
-    func fetch(urlString: String, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
+    func request(urlString: String, with item: Any?, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
         completion(.failure(.connectionProblem))
         return nil
     }
 }
 
 final class StubSuccessItemDetailNetworkManager: NetworkManagable {
-    func request(urlString: String, with item: Any, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
-        return nil
-    }
-
-    func fetch(urlString: String, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
+    func request(urlString: String, with item: Any?, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
         guard let data = NSDataAsset(name: "MockItem")?.data else {
             return nil
         }
@@ -48,11 +36,7 @@ final class StubSuccessItemDetailNetworkManager: NetworkManagable {
 }
 
 final class StubSuccessThumbnailNetworkManager: NetworkManagable {
-    func request(urlString: String, with item: Any, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
-        return nil
-    }
-
-    func fetch(urlString: String, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
+    func request(urlString: String, with item: Any?, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
         guard let data = UIImage(systemName: "pencil")?.pngData() else {
             completion(.failure(.invalidData))
             return nil
