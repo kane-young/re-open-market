@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C310739C27103DF400EFFF91 /* ItemEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C310739B27103DF400EFFF91 /* ItemEditViewController.swift */; };
+		C31073A027115A5800EFFF91 /* BorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C310739F27115A5800EFFF91 /* BorderView.swift */; };
 		C32EDB8426FC904B00F6BC53 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDB8326FC904B00F6BC53 /* AppDelegate.swift */; };
 		C32EDB8626FC904B00F6BC53 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDB8526FC904B00F6BC53 /* SceneDelegate.swift */; };
 		C32EDB8826FC904B00F6BC53 /* ItemListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDB8726FC904B00F6BC53 /* ItemListViewController.swift */; };
@@ -78,6 +79,7 @@
 		1F53E3EC9B88F9C7C7D71BF7 /* Pods-OpenMarket.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenMarket.debug.xcconfig"; path = "Target Support Files/Pods-OpenMarket/Pods-OpenMarket.debug.xcconfig"; sourceTree = "<group>"; };
 		61CDA78FE88213494D028A3D /* Pods-OpenMarket.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenMarket.release.xcconfig"; path = "Target Support Files/Pods-OpenMarket/Pods-OpenMarket.release.xcconfig"; sourceTree = "<group>"; };
 		C310739B27103DF400EFFF91 /* ItemEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditViewController.swift; sourceTree = "<group>"; };
+		C310739F27115A5800EFFF91 /* BorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderView.swift; sourceTree = "<group>"; };
 		C32EDB8026FC904B00F6BC53 /* OpenMarket.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenMarket.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C32EDB8326FC904B00F6BC53 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C32EDB8526FC904B00F6BC53 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -258,6 +260,7 @@
 			children = (
 				C32EDB8726FC904B00F6BC53 /* ItemListViewController.swift */,
 				C310739B27103DF400EFFF91 /* ItemEditViewController.swift */,
+				C310739F27115A5800EFFF91 /* BorderView.swift */,
 				C35943D827059AF800146FFC /* Cell */,
 			);
 			path = View;
@@ -570,6 +573,7 @@
 				C37EA62E2702FE91000518A0 /* ItemListCellViewModel.swift in Sources */,
 				C32EDBD326FEB88F00F6BC53 /* OpenMarketAPI.swift in Sources */,
 				C37EA63027033E0A000518A0 /* ThumbnailUseCase.swift in Sources */,
+				C31073A027115A5800EFFF91 /* BorderView.swift in Sources */,
 				C32EDB8826FC904B00F6BC53 /* ItemListViewController.swift in Sources */,
 				C32EDB8426FC904B00F6BC53 /* AppDelegate.swift in Sources */,
 				C37EA62C2702FD6A000518A0 /* ItemListCollectionViewCell.swift in Sources */,

@@ -35,22 +35,40 @@ class ItemEditViewController: UIViewController {
         collectionView.showsHorizontalScrollIndicator = false
         return collectionView
     }()
+    private let collectionViewBorderView: UIView = {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 1))
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemGray4
+        return view
+    }()
     private let titleTextField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = "제목을 입력하세요"
+        textField.placeholder = "제품명"
         textField.font = .preferredFont(forTextStyle: .body)
         textField.adjustsFontForContentSizeCategory = true
         return textField
     }()
+    private let titleBorderView: UIView = {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 1))
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemGray4
+        return view
+    }()
     private let stockTextField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = "수량을 입력하세요"
+        textField.placeholder = "제품 수량"
         textField.font = .preferredFont(forTextStyle: .body)
         textField.keyboardType = .decimalPad
         textField.adjustsFontForContentSizeCategory = true
         return textField
+    }()
+    private let stockBorderView: UIView = {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 1))
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemGray4
+        return view
     }()
     private let currencyPickerTextField: UITextField = {
         let textField = UITextField()
@@ -66,7 +84,7 @@ class ItemEditViewController: UIViewController {
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.keyboardType = .decimalPad
         textField.font = .preferredFont(forTextStyle: .body)
-        textField.placeholder = "가격을 입력하세요"
+        textField.placeholder = "제품 가격"
         textField.adjustsFontForContentSizeCategory = true
         return textField
     }()
@@ -75,12 +93,22 @@ class ItemEditViewController: UIViewController {
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.keyboardType = .decimalPad
         textField.font = .preferredFont(forTextStyle: .body)
-        textField.placeholder = "할인가격을 입력하세요(선택 사항)"
+        textField.placeholder = "할인 가격(선택 사항)"
         textField.adjustsFontForContentSizeCategory = true
         return textField
     }()
+    private let priceBorderView: UIView = {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 1))
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemGray4
+        return view
+    }()
     private let descriptionsTextView: UITextView = {
         let textView = UITextView()
+        textView.textColor = .lightGray
+        textView.text = "제품 설명을 입력하세요"
+        textView.font = .preferredFont(forTextStyle: .body)
+        textView.adjustsFontForContentSizeCategory = true
         textView.translatesAutoresizingMaskIntoConstraints = false
         return textView
     }()
@@ -89,7 +117,7 @@ class ItemEditViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
-        stackView.spacing = 10
+        stackView.spacing = 40
         return stackView
     }()
     private lazy var stackView: UIStackView = {
@@ -123,14 +151,19 @@ class ItemEditViewController: UIViewController {
 
     private func addSubviews() {
         scrollView.addSubview(photoCollectionView)
+        scrollView.addSubview(collectionViewBorderView)
         scrollView.addSubview(titleTextField)
+        scrollView.addSubview(titleBorderView)
         scrollView.addSubview(stockTextField)
+        scrollView.addSubview(stockBorderView)
         scrollView.addSubview(stackView)
+        scrollView.addSubview(priceBorderView)
         scrollView.addSubview(descriptionsTextView)
         view.addSubview(scrollView)
     }
 
     private func configureConstraints() {
+        borderViewsConstraints()
         configureScrollViewConstraints()
         configurePhotoCollectionViewConstraints()
         configureTitleTextFieldConstraints()
@@ -158,23 +191,44 @@ class ItemEditViewController: UIViewController {
             photoCollectionView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             photoCollectionView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             photoCollectionView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            photoCollectionView.bottomAnchor.constraint(equalTo: titleTextField.topAnchor, constant: -10),
+            photoCollectionView.bottomAnchor.constraint(equalTo: collectionViewBorderView.topAnchor, constant: -20),
             photoCollectionView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.15)
         ])
     }
 
+    private func borderViewsConstraints() {
+        NSLayoutConstraint.activate([
+            collectionViewBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
+            collectionViewBorderView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
+            collectionViewBorderView.bottomAnchor.constraint(equalTo: titleTextField.topAnchor, constant: -20),
+            titleBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
+            titleBorderView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
+            titleBorderView.bottomAnchor.constraint(equalTo: stockTextField.topAnchor, constant: -20),
+            stockBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
+            stockBorderView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
+            stockBorderView.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -20),
+            priceBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
+            priceBorderView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
+            priceBorderView.bottomAnchor.constraint(equalTo: descriptionsTextView.topAnchor, constant: -20),
+            collectionViewBorderView.heightAnchor.constraint(equalToConstant: 1),
+            titleBorderView.heightAnchor.constraint(equalToConstant: 1),
+            stockBorderView.heightAnchor.constraint(equalToConstant: 1),
+            priceBorderView.heightAnchor.constraint(equalToConstant: 1)
+        ])
+    }
     private func configureTitleTextFieldConstraints() {
         NSLayoutConstraint.activate([
             titleTextField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
             titleTextField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
-            titleTextField.bottomAnchor.constraint(equalTo: stockTextField.topAnchor, constant: -20)
+            titleTextField.bottomAnchor.constraint(equalTo: titleBorderView.topAnchor, constant: -20)
         ])
     }
 
     private func configureStockTextFieldConstraints() {
         NSLayoutConstraint.activate([
             stockTextField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
-            stockTextField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10)
+            stockTextField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
+            stockTextField.bottomAnchor.constraint(equalTo: stockBorderView.topAnchor, constant: -20)
         ])
     }
 
@@ -183,16 +237,16 @@ class ItemEditViewController: UIViewController {
             currencyPickerTextField.widthAnchor.constraint(equalToConstant: 80),
             stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
             stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
-            stackView.topAnchor.constraint(equalTo: stockTextField.bottomAnchor, constant: 20)
+            stackView.bottomAnchor.constraint(equalTo: priceBorderView.topAnchor, constant: -20)
         ])
     }
 
     private func configureDescriptionTextViewConstraints() {
         NSLayoutConstraint.activate([
-            descriptionsTextView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 20),
             descriptionsTextView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
             descriptionsTextView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
-            descriptionsTextView.heightAnchor.constraint(equalToConstant: 100)
+            descriptionsTextView.heightAnchor.constraint(equalToConstant: 100),
+            descriptionsTextView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
         ])
     }
 }
@@ -205,6 +259,22 @@ extension ItemEditViewController: UITextViewDelegate {
             if constraint.firstAttribute == .height {
                 constraint.constant = estimatedSize.height
             }
+        }
+        let range = NSMakeRange(textView.text.count - 1, 0)
+        textView.scrollRangeToVisible(range)
+    }
+
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.textColor == UIColor.lightGray {
+            textView.text = nil
+            textView.textColor = .black
+        }
+    }
+
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.isEmpty {
+            textView.text = "제품 설명을 입력하세요"
+            textView.textColor = UIColor.lightGray
         }
     }
 }
