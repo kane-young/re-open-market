@@ -109,6 +109,8 @@ class ItemEditViewController: UIViewController {
         textView.text = "제품 설명을 입력하세요"
         textView.font = .preferredFont(forTextStyle: .body)
         textView.adjustsFontForContentSizeCategory = true
+        textView.showsVerticalScrollIndicator = false
+        textView.isScrollEnabled = false
         textView.translatesAutoresizingMaskIntoConstraints = false
         return textView
     }()
@@ -127,6 +129,7 @@ class ItemEditViewController: UIViewController {
         stackView.spacing = 5
         return stackView
     }()
+    private var scrollViewBottomAnchor: NSLayoutConstraint?
 
     init(mode: Mode) {
         self.mode = mode
@@ -142,6 +145,17 @@ class ItemEditViewController: UIViewController {
         addSubviews()
         configureView()
         configureConstraints()
+        addTapGestureRecognizer()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        configureKeyboardNotification()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        removeKeyboardNotification()
     }
 
     private func configureView() {
@@ -173,12 +187,12 @@ class ItemEditViewController: UIViewController {
     }
 
     private func configureScrollViewConstraints() {
+        scrollViewBottomAnchor = scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        scrollViewBottomAnchor?.isActive = true
         let safeArea = view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             scrollView.widthAnchor.constraint(equalTo: view.widthAnchor),
             scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: view.widthAnchor),
             scrollView.contentLayoutGuide.topAnchor.constraint(equalTo: photoCollectionView.topAnchor),
@@ -245,25 +259,57 @@ class ItemEditViewController: UIViewController {
         NSLayoutConstraint.activate([
             descriptionsTextView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
             descriptionsTextView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
-            descriptionsTextView.heightAnchor.constraint(equalToConstant: 100),
             descriptionsTextView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
         ])
     }
 }
 
-extension ItemEditViewController: UITextViewDelegate {
-    func textViewDidChange(_ textView: UITextView) {
-        let size = CGSize(width: view.frame.width, height: .infinity)
-        let estimatedSize = textView.sizeThatFits(size)
-        textView.constraints.forEach { (constraint) in
-            if constraint.firstAttribute == .height {
-                constraint.constant = estimatedSize.height
-            }
-        }
-        let range = NSMakeRange(textView.text.count - 1, 0)
-        textView.scrollRangeToVisible(range)
+extension ItemEditViewController {
+    private func configureKeyboardNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
 
+    private func removeKeyboardNotification() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
+    @objc private func keyboardWillShow(_ notification: Notification) {
+        guard let userInfo = notification.userInfo, let endFrameValue = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue) else {
+            return
+        }
+        let endFrame = endFrameValue.cgRectValue
+        scrollViewBottomAnchor?.isActive = false
+        scrollViewBottomAnchor = scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -endFrame.height)
+        scrollViewBottomAnchor?.isActive = true
+        scrollView.contentInset.bottom = 30
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        scrollView.contentInset = UIEdgeInsets.zero
+        scrollViewBottomAnchor?.isActive = false
+        scrollViewBottomAnchor = scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        scrollViewBottomAnchor?.isActive = true
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    func addTapGestureRecognizer() {
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(moveDownKeyboard))
+        view.addGestureRecognizer(recognizer)
+    }
+
+    @objc private func moveDownKeyboard() {
+        view.endEditing(true)
+    }
+}
+
+extension ItemEditViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == UIColor.lightGray {
             textView.text = nil
