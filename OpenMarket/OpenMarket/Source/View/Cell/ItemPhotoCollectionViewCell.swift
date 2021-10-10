@@ -68,7 +68,7 @@ final class ItemPhotoCollectionViewCell: UICollectionViewCell {
 
     private func addSubviews() {
         contentView.addSubview(imageView)
-        imageView.addSubview(deleteButton)
+        contentView.addSubview(deleteButton)
     }
 
     private func configureConstraints() {

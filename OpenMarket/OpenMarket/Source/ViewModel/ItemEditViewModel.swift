@@ -42,7 +42,7 @@ final class ItemEditViewModel {
     }
 
     func deleteImage(_ indexPath: IndexPath) {
-        images.remove(at: indexPath.item)
+        images.remove(at: indexPath.item-1)
         state = .delete(indexPath)
     }
 }
