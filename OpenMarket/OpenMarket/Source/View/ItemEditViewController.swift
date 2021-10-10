@@ -31,6 +31,8 @@ class ItemEditViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.isDirectionalLockEnabled = true
+        collectionView.register(ItemPhotoCollectionViewCell.self, forCellWithReuseIdentifier: ItemPhotoCollectionViewCell.identifier)
+        collectionView.register(AddPhotoCollectionViewCell.self, forCellWithReuseIdentifier: AddPhotoCollectionViewCell.identifier)
         collectionView.backgroundColor = .systemBackground
         collectionView.showsHorizontalScrollIndicator = false
         return collectionView
@@ -161,6 +163,8 @@ class ItemEditViewController: UIViewController {
     private func configureView() {
         view.backgroundColor = .systemBackground
         descriptionsTextView.delegate = self
+        photoCollectionView.dataSource = self
+        photoCollectionView.delegate = self
     }
 
     private func addSubviews() {
@@ -175,7 +179,10 @@ class ItemEditViewController: UIViewController {
         scrollView.addSubview(descriptionsTextView)
         view.addSubview(scrollView)
     }
+}
 
+extension ItemEditViewController {
+    // MARK: Set Constraints Method
     private func configureConstraints() {
         borderViewsConstraints()
         configureScrollViewConstraints()
@@ -265,6 +272,7 @@ class ItemEditViewController: UIViewController {
 }
 
 extension ItemEditViewController {
+    // MARK: Set Keyboard associated Method
     private func configureKeyboardNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -322,5 +330,60 @@ extension ItemEditViewController: UITextViewDelegate {
             textView.text = "제품 설명을 입력하세요"
             textView.textColor = UIColor.lightGray
         }
+    }
+}
+
+extension ItemEditViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        1
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        var cell: UICollectionViewCell
+        if indexPath.item == 0 {
+            guard let addPhotoCell = collectionView.dequeueReusableCell(withReuseIdentifier: AddPhotoCollectionViewCell.identifier, for: indexPath) as? AddPhotoCollectionViewCell else {
+                return UICollectionViewCell()
+            }
+            cell = addPhotoCell
+        } else {
+            guard let photoCell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemPhotoCollectionViewCell.identifier, for: indexPath) as? ItemPhotoCollectionViewCell else {
+                return UICollectionViewCell()
+            }
+            photoCell.addDeleteButtonTarget(target: self, action: #selector(touchDeletePhotoButton(_:)), for: .touchUpInside)
+            cell = photoCell
+        }
+        return cell
+    }
+
+    @objc private func touchDeletePhotoButton(_ button: UIButton) {
+        print("remove image")
+    }
+}
+
+extension ItemEditViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        return
+    }
+}
+
+extension ItemEditViewController: UICollectionViewDelegateFlowLayout {
+    // MARK: CollectionViewDelegateFlowLayout Method
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return .init(width: collectionView.bounds.height * 3/4,
+                     height: collectionView.bounds.height * 3/4)
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 20
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
+        return .init(top: 20, left: 20, bottom: 0, right: 20)
     }
 }
