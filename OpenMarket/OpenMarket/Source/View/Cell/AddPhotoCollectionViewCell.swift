@@ -21,7 +21,7 @@ class AddPhotoCollectionViewCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .label
         label.font = UIFont.preferredFont(forTextStyle: .body)
-        label.text = "1/5"
+        label.text = "0/5"
         return label
     }()
     private lazy var stackView: UIStackView = {
@@ -46,7 +46,7 @@ class AddPhotoCollectionViewCell: UICollectionViewCell {
 
     private func configureCellStyle() {
         contentView.layer.borderWidth = 1
-        contentView.layer.borderColor = UIColor.label.cgColor
+        contentView.layer.borderColor = UIColor.lightGray.cgColor
         contentView.layer.cornerRadius = 15
     }
 
@@ -59,5 +59,11 @@ class AddPhotoCollectionViewCell: UICollectionViewCell {
             stackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
+    }
+}
+
+extension AddPhotoCollectionViewCell: ItemEditViewModelDelegate {
+    func imagesCountChanged(_ count: Int) {
+        photoCountLabel.text = "\(count)/5"
     }
 }

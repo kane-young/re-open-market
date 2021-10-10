@@ -63,6 +63,10 @@
 		C3916AC7270B3B36005E5C24 /* ThumbnailUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3916AC6270B3B36005E5C24 /* ThumbnailUseCaseTests.swift */; };
 		C3E76FC12712AFB600755E07 /* ItemPhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FC02712AFB600755E07 /* ItemPhotoCollectionViewCell.swift */; };
 		C3E76FCB2712D2AF00755E07 /* AddPhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FCA2712D2AF00755E07 /* AddPhotoCollectionViewCell.swift */; };
+		C3E76FD12712E79000755E07 /* ItemPhotoCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FD02712E79000755E07 /* ItemPhotoCellViewModel.swift */; };
+		C3E76FD32712F56200755E07 /* ItemEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FD22712F56200755E07 /* ItemEditViewModel.swift */; };
+		C3E76FD52713248B00755E07 /* ItemEditViewModelState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FD42713248B00755E07 /* ItemEditViewModelState.swift */; };
+		C3E76FD7271324B500755E07 /* ItemPhotoCellViewModelState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FD6271324B500755E07 /* ItemPhotoCellViewModelState.swift */; };
 		D0D420A34F274896FCE5389A /* Pods_OpenMarket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C1CCCB9FD817E8E78A31D5 /* Pods_OpenMarket.framework */; };
 /* End PBXBuildFile section */
 
@@ -140,6 +144,10 @@
 		C3916AC6270B3B36005E5C24 /* ThumbnailUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailUseCaseTests.swift; sourceTree = "<group>"; };
 		C3E76FC02712AFB600755E07 /* ItemPhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemPhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3E76FCA2712D2AF00755E07 /* AddPhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPhotoCollectionViewCell.swift; sourceTree = "<group>"; };
+		C3E76FD02712E79000755E07 /* ItemPhotoCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemPhotoCellViewModel.swift; sourceTree = "<group>"; };
+		C3E76FD22712F56200755E07 /* ItemEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditViewModel.swift; sourceTree = "<group>"; };
+		C3E76FD42713248B00755E07 /* ItemEditViewModelState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditViewModelState.swift; sourceTree = "<group>"; };
+		C3E76FD6271324B500755E07 /* ItemPhotoCellViewModelState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemPhotoCellViewModelState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,6 +200,8 @@
 				C37EA62D2702FE91000518A0 /* ItemListCellViewModel.swift */,
 				C35943EE27059FE300146FFC /* ItemListCellViewModelError.swift */,
 				C35943EC27059FC600146FFC /* ItemListCellViewModelState.swift */,
+				C3E76FD02712E79000755E07 /* ItemPhotoCellViewModel.swift */,
+				C3E76FD6271324B500755E07 /* ItemPhotoCellViewModelState.swift */,
 				C35943DD27059BA700146FFC /* UseCase */,
 			);
 			path = Cell;
@@ -344,11 +354,11 @@
 		C35943D827059AF800146FFC /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				C37EA62B2702FD6A000518A0 /* ItemListCollectionViewCell.swift */,
 				C3E76FC02712AFB600755E07 /* ItemPhotoCollectionViewCell.swift */,
+				C3E76FCA2712D2AF00755E07 /* AddPhotoCollectionViewCell.swift */,
+				C37EA62B2702FD6A000518A0 /* ItemListCollectionViewCell.swift */,
 				C37EA6332704444C000518A0 /* ItemGridCollectionViewCell.swift */,
 				C35943D927059B1600146FFC /* ItemCellDisplayable.swift */,
-				C3E76FCA2712D2AF00755E07 /* AddPhotoCollectionViewCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -360,6 +370,8 @@
 				C37EA627270179C3000518A0 /* ItemListViewModel.swift */,
 				C35943E827059F6200146FFC /* ItemListViewModelState.swift */,
 				C35943EA27059F8000146FFC /* ItemListViewModelError.swift */,
+				C3E76FD22712F56200755E07 /* ItemEditViewModel.swift */,
+				C3E76FD42713248B00755E07 /* ItemEditViewModelState.swift */,
 				C35943DE27059BBB00146FFC /* UseCase */,
 			);
 			path = ViewModel;
@@ -575,10 +587,13 @@
 			files = (
 				C35943EB27059F8000146FFC /* ItemListViewModelError.swift in Sources */,
 				C35943E127059C4300146FFC /* ThumbnailUseCaseProtocol.swift in Sources */,
+				C3E76FD12712E79000755E07 /* ItemPhotoCellViewModel.swift in Sources */,
 				C3E76FCB2712D2AF00755E07 /* AddPhotoCollectionViewCell.swift in Sources */,
 				C32EDBA826FC950000F6BC53 /* PatchItem.swift in Sources */,
 				C37EA62E2702FE91000518A0 /* ItemListCellViewModel.swift in Sources */,
+				C3E76FD7271324B500755E07 /* ItemPhotoCellViewModelState.swift in Sources */,
 				C3E76FC12712AFB600755E07 /* ItemPhotoCollectionViewCell.swift in Sources */,
+				C3E76FD52713248B00755E07 /* ItemEditViewModelState.swift in Sources */,
 				C32EDBD326FEB88F00F6BC53 /* OpenMarketAPI.swift in Sources */,
 				C37EA63027033E0A000518A0 /* ThumbnailUseCase.swift in Sources */,
 				C31073A027115A5800EFFF91 /* BorderView.swift in Sources */,
@@ -597,6 +612,7 @@
 				C35943E527059CD900146FFC /* ItemListUseCaseError.swift in Sources */,
 				C35943DA27059B1600146FFC /* ItemCellDisplayable.swift in Sources */,
 				C37EA632270341C3000518A0 /* NSAttributedString+Extension.swift in Sources */,
+				C3E76FD32712F56200755E07 /* ItemEditViewModel.swift in Sources */,
 				C32EDBAE26FC954500F6BC53 /* ItemList.swift in Sources */,
 				C32EDBD126FEB64000F6BC53 /* NetworkError.swift in Sources */,
 				C37EA6342704444C000518A0 /* ItemGridCollectionViewCell.swift in Sources */,

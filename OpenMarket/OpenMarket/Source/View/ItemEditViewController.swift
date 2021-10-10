@@ -15,6 +15,7 @@ class ItemEditViewController: UIViewController {
 
     // MARK: Properties
     private let mode: Mode
+    private let viewModel: ItemEditViewModel = .init()
 
     // MARK: Views Properties
     private let scrollView: UIScrollView = {
@@ -131,6 +132,7 @@ class ItemEditViewController: UIViewController {
         stackView.spacing = 5
         return stackView
     }()
+    private let imagePickerController: UIImagePickerController = .init()
     private var scrollViewBottomAnchor: NSLayoutConstraint?
 
     init(mode: Mode) {
@@ -145,9 +147,10 @@ class ItemEditViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubviews()
-        configureView()
+        configureViews()
         configureConstraints()
         addTapGestureRecognizer()
+        viewModelBind()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -160,11 +163,12 @@ class ItemEditViewController: UIViewController {
         removeKeyboardNotification()
     }
 
-    private func configureView() {
+    private func configureViews() {
         view.backgroundColor = .systemBackground
         descriptionsTextView.delegate = self
         photoCollectionView.dataSource = self
         photoCollectionView.delegate = self
+        imagePickerController.delegate = self
     }
 
     private func addSubviews() {
@@ -178,6 +182,19 @@ class ItemEditViewController: UIViewController {
         scrollView.addSubview(priceBorderView)
         scrollView.addSubview(descriptionsTextView)
         view.addSubview(scrollView)
+    }
+
+    private func viewModelBind() {
+        viewModel.bind { [weak self] state in
+            switch state {
+            case .add(let indexPath):
+                self?.photoCollectionView.insertItems(at: [indexPath])
+            case .delete(let indexPath):
+                self?.photoCollectionView.deleteItems(at: [indexPath])
+            default:
+                break
+            }
+        }
     }
 }
 
@@ -309,6 +326,7 @@ extension ItemEditViewController {
 
     func addTapGestureRecognizer() {
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(moveDownKeyboard))
+        recognizer.cancelsTouchesInView = false
         view.addGestureRecognizer(recognizer)
     }
 
@@ -335,7 +353,7 @@ extension ItemEditViewController: UITextViewDelegate {
 
 extension ItemEditViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        1
+        return viewModel.images.count + 1
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -344,25 +362,52 @@ extension ItemEditViewController: UICollectionViewDataSource {
             guard let addPhotoCell = collectionView.dequeueReusableCell(withReuseIdentifier: AddPhotoCollectionViewCell.identifier, for: indexPath) as? AddPhotoCollectionViewCell else {
                 return UICollectionViewCell()
             }
+            viewModel.delegate = addPhotoCell
             cell = addPhotoCell
         } else {
             guard let photoCell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemPhotoCollectionViewCell.identifier, for: indexPath) as? ItemPhotoCollectionViewCell else {
                 return UICollectionViewCell()
             }
             photoCell.addDeleteButtonTarget(target: self, action: #selector(touchDeletePhotoButton(_:)), for: .touchUpInside)
+            photoCell.bind(ItemPhotoCellViewModel(image: viewModel.images[indexPath.item-1]))
+            photoCell.configureCell()
             cell = photoCell
         }
         return cell
     }
 
-    @objc private func touchDeletePhotoButton(_ button: UIButton) {
-        print("remove image")
+    @objc private func touchDeletePhotoButton(_ sender: UIButton) {
+        for index in 0..<viewModel.images.count {
+            let indexPath = IndexPath(item: index + 1, section: 0)
+            guard let cell = photoCollectionView.cellForItem(at: indexPath) as? ItemPhotoCollectionViewCell else { return }
+            if cell.deleteButton == sender {
+                viewModel.deleteImage(indexPath)
+            }
+        }
     }
 }
 
 extension ItemEditViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        return
+        if indexPath.item == 0 {
+            imagePickerController.sourceType = .photoLibrary
+            imagePickerController.allowsEditing = true
+            present(imagePickerController, animated: true, completion: nil)
+        }
+    }
+}
+
+extension ItemEditViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        var image: UIImage?
+        if let editedImage = info[UIImagePickerController.InfoKey(rawValue: "UIImagePickerControllerEditedImage")] as? UIImage {
+            image = editedImage
+        } else if let originalImage = info[UIImagePickerController.InfoKey(rawValue: "UIImagePickerControllerOriginalImage")] as? UIImage {
+            image = originalImage
+        }
+        viewModel.addImage(image)
+        imagePickerController.dismiss(animated: true, completion: nil)
     }
 }
 
