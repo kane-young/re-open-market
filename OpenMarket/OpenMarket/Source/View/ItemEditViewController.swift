@@ -7,135 +7,72 @@
 
 import UIKit
 
-class ItemEditViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+final class ItemEditViewController: UIViewController {
     enum Mode {
         case register
         case update
     }
 
-    // MARK: Properties
-    private let mode: Mode
-    private let viewModel: ItemEditViewModel = .init()
-
     // MARK: Views Properties
+    private let discountedPriceTextField: UITextField = .init()
+    private let currencyTextField: UITextField = .init()
+    private let titleTextField: UITextField = .init()
+    private let stockTextField: UITextField = .init()
+    private let priceTextField: UITextField = .init()
+    private let descriptionsTextView: UITextView = .init()
+    private let imagePickerController: UIImagePickerController = .init()
+    private let collectionViewBorderView: UIView = .init()
+    private let priceBorderView: UIView = .init()
+    private let titleBorderView: UIView = .init()
+    private let stockBorderView: UIView = .init()
+    private var scrollViewBottomAnchor: NSLayoutConstraint?
+
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.isDirectionalLockEnabled = true
-        scrollView.backgroundColor = .systemBackground
+        scrollView.backgroundColor = Style.backgroundColor
         return scrollView
     }()
+
     private let photoCollectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.isDirectionalLockEnabled = true
-        collectionView.register(ItemPhotoCollectionViewCell.self, forCellWithReuseIdentifier: ItemPhotoCollectionViewCell.identifier)
-        collectionView.register(AddPhotoCollectionViewCell.self, forCellWithReuseIdentifier: AddPhotoCollectionViewCell.identifier)
-        collectionView.backgroundColor = .systemBackground
+        collectionView.register(ItemPhotoCollectionViewCell.self,
+                                forCellWithReuseIdentifier: ItemPhotoCollectionViewCell.identifier)
+        collectionView.register(AddPhotoCollectionViewCell.self,
+                                forCellWithReuseIdentifier: AddPhotoCollectionViewCell.identifier)
+        collectionView.backgroundColor = Style.backgroundColor
         collectionView.showsHorizontalScrollIndicator = false
         return collectionView
     }()
-    private let collectionViewBorderView: UIView = {
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 1))
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .systemGray4
-        return view
-    }()
-    private let titleTextField: UITextField = {
-        let textField = UITextField()
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = "제품명"
-        textField.font = .preferredFont(forTextStyle: .body)
-        textField.adjustsFontForContentSizeCategory = true
-        textField.tintColor = .clear
-        return textField
-    }()
-    private let titleBorderView: UIView = {
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 1))
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .systemGray4
-        return view
-    }()
-    private let stockTextField: UITextField = {
-        let textField = UITextField()
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = "제품 수량"
-        textField.font = .preferredFont(forTextStyle: .body)
-        textField.keyboardType = .decimalPad
-        textField.adjustsFontForContentSizeCategory = true
-        return textField
-    }()
-    private let stockBorderView: UIView = {
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 1))
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .systemGray4
-        return view
-    }()
-    private let currencyPickerTextField: UITextField = {
-        let textField = UITextField()
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = "화폐"
-        textField.font = .preferredFont(forTextStyle: .body)
-        textField.textAlignment = .center
-        textField.adjustsFontForContentSizeCategory = true
-        return textField
-    }()
-    private let priceTextField: UITextField = {
-        let textField = UITextField()
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.keyboardType = .decimalPad
-        textField.font = .preferredFont(forTextStyle: .body)
-        textField.placeholder = "제품 가격"
-        textField.adjustsFontForContentSizeCategory = true
-        return textField
-    }()
-    private let discountedPriceTextField: UITextField = {
-        let textField = UITextField()
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.keyboardType = .decimalPad
-        textField.font = .preferredFont(forTextStyle: .body)
-        textField.placeholder = "할인 가격(선택 사항)"
-        textField.adjustsFontForContentSizeCategory = true
-        return textField
-    }()
-    private let priceBorderView: UIView = {
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 1))
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .systemGray4
-        return view
-    }()
-    private let descriptionsTextView: UITextView = {
-        let textView = UITextView()
-        textView.textColor = .lightGray
-        textView.text = "제품 설명을 입력하세요"
-        textView.font = .preferredFont(forTextStyle: .body)
-        textView.adjustsFontForContentSizeCategory = true
-        textView.showsVerticalScrollIndicator = false
-        textView.isScrollEnabled = false
-        textView.translatesAutoresizingMaskIntoConstraints = false
-        return textView
-    }()
+
     private lazy var priceStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [priceTextField, discountedPriceTextField])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
-        stackView.spacing = 40
+        stackView.spacing = Style.verticalSpacing * 2
         return stackView
     }()
-    private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [currencyPickerTextField, priceStackView])
+
+    private lazy var moneyStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [currencyTextField, priceStackView])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
-        stackView.spacing = 5
+        stackView.spacing = Style.MoneyStackView.spacing
         return stackView
     }()
-    private let imagePickerController: UIImagePickerController = .init()
-    private var scrollViewBottomAnchor: NSLayoutConstraint?
 
+    // MARK: Properties
+    private let mode: Mode
+    private let viewModel: ItemEditViewModel = .init()
+
+    // MARK: Initializer
     init(mode: Mode) {
         self.mode = mode
         super.init(nibName: nil, bundle: nil)
@@ -145,10 +82,13 @@ class ItemEditViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
         fatalError("not use interface builder")
     }
 
+    // MARK: Life Cycle Method
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubviews()
-        configureViews()
+        configureDelegates()
+        configureTextFields()
+        configureBorderViews()
         configureConstraints()
         addTapGestureRecognizer()
         viewModelBind()
@@ -165,7 +105,8 @@ class ItemEditViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
         removeKeyboardNotification()
     }
 
-    private func configureViews() {
+    // MARK: initialize ViewController
+    private func configureDelegates() {
         view.backgroundColor = .systemBackground
         descriptionsTextView.delegate = self
         photoCollectionView.dataSource = self
@@ -180,10 +121,55 @@ class ItemEditViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
         scrollView.addSubview(titleBorderView)
         scrollView.addSubview(stockTextField)
         scrollView.addSubview(stockBorderView)
-        scrollView.addSubview(stackView)
+        scrollView.addSubview(moneyStackView)
         scrollView.addSubview(priceBorderView)
         scrollView.addSubview(descriptionsTextView)
         view.addSubview(scrollView)
+    }
+
+    private func configureTextFields() {
+        descriptionsTextView.translatesAutoresizingMaskIntoConstraints = false
+        discountedPriceTextField.translatesAutoresizingMaskIntoConstraints = false
+        currencyTextField.translatesAutoresizingMaskIntoConstraints = false
+        titleTextField.translatesAutoresizingMaskIntoConstraints = false
+        stockTextField.translatesAutoresizingMaskIntoConstraints = false
+        priceTextField.translatesAutoresizingMaskIntoConstraints = false
+        discountedPriceTextField.placeholder = Style.DiscountedPriceTextField.placeHolder
+        currencyTextField.placeholder = Style.CurrencyTextField.placeHolder
+        descriptionsTextView.text = Style.DescriptionsTextView.placeHolder
+        titleTextField.placeholder = Style.TitleTextField.placeHolder
+        stockTextField.placeholder = Style.StockTextField.placeHolder
+        priceTextField.placeholder = Style.PriceTextField.placeHolder
+        discountedPriceTextField.font = Style.defaultFont
+        descriptionsTextView.font = Style.defaultFont
+        currencyTextField.font = Style.defaultFont
+        titleTextField.font = Style.defaultFont
+        stockTextField.font = Style.defaultFont
+        priceTextField.font = Style.defaultFont
+        discountedPriceTextField.adjustsFontForContentSizeCategory = true
+        descriptionsTextView.adjustsFontForContentSizeCategory = true
+        currencyTextField.adjustsFontForContentSizeCategory = true
+        titleTextField.adjustsFontForContentSizeCategory = true
+        stockTextField.adjustsFontForContentSizeCategory = true
+        priceTextField.adjustsFontForContentSizeCategory = true
+        discountedPriceTextField.keyboardType = .decimalPad
+        stockTextField.keyboardType = .decimalPad
+        priceTextField.keyboardType = .decimalPad
+        currencyTextField.textAlignment = .center
+        descriptionsTextView.textColor = Style.DescriptionsTextView.placeHolderTextColor
+        descriptionsTextView.showsVerticalScrollIndicator = false
+        descriptionsTextView.isScrollEnabled = false
+    }
+
+    private func configureBorderViews() {
+        collectionViewBorderView.translatesAutoresizingMaskIntoConstraints = false
+        priceBorderView.translatesAutoresizingMaskIntoConstraints = false
+        titleBorderView.translatesAutoresizingMaskIntoConstraints = false
+        stockBorderView.translatesAutoresizingMaskIntoConstraints = false
+        collectionViewBorderView.backgroundColor = Style.BorderView.backgroundColor
+        priceBorderView.backgroundColor = Style.BorderView.backgroundColor
+        titleBorderView.backgroundColor = Style.BorderView.backgroundColor
+        stockBorderView.backgroundColor = Style.BorderView.backgroundColor
     }
 
     private func viewModelBind() {
@@ -199,55 +185,58 @@ class ItemEditViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
         }
     }
 
-    private func configureCurrencyTextFieldToolBar() {
-        let pickerView = UIPickerView()
-        pickerView.translatesAutoresizingMaskIntoConstraints = false
-        pickerView.delegate = self
-        pickerView.dataSource = self
-        currencyPickerTextField.inputView = pickerView
-        let bar = UIToolbar()
-        bar.translatesAutoresizingMaskIntoConstraints = false
-        bar.sizeToFit()
-        bar.isUserInteractionEnabled = true
-        let done = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(touchDoneBarButtonItem(_:)))
-        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        bar.setItems([space, done], animated: false)
-        bar.sizeToFit()
-        currencyPickerTextField.inputAccessoryView = bar
+    // MARK: Set Keyboard associated Method
+    private func addTapGestureRecognizer() {
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(moveDownKeyboard))
+        recognizer.cancelsTouchesInView = false
+        view.addGestureRecognizer(recognizer)
     }
 
-    let datas: [String] = ["KRW", "JPW", "USD"]
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        1
+    private func configureKeyboardNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
 
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return datas.count
+    private func removeKeyboardNotification() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return datas[row]
+    @objc private func keyboardWillShow(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let endFrameValue = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue) else {
+            return
+        }
+        let endFrame = endFrameValue.cgRectValue
+        scrollViewBottomAnchor?.isActive = false
+        scrollViewBottomAnchor = scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -endFrame.height)
+        scrollViewBottomAnchor?.isActive = true
+        scrollView.contentInset.bottom = Style.DescriptionsTextView.spacingForKeyboard
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
     }
 
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        currencyPickerTextField.text = datas[row]
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        scrollView.contentInset = UIEdgeInsets.zero
+        scrollViewBottomAnchor?.isActive = false
+        scrollViewBottomAnchor = scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        scrollViewBottomAnchor?.isActive = true
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
     }
 
-    @objc private func touchDoneBarButtonItem(_ sender: UIBarButtonItem) {
-        currencyPickerTextField.resignFirstResponder()
+    @objc private func moveDownKeyboard() {
+        view.endEditing(true)
     }
-}
 
-extension ItemEditViewController {
     // MARK: Set Constraints Method
     private func configureConstraints() {
-        borderViewsConstraints()
+        configureBorderViewsConstraints()
         configureScrollViewConstraints()
         configurePhotoCollectionViewConstraints()
-        configureTitleTextFieldConstraints()
-        configureStockTextFieldConstraints()
-        configurePriceViewsConstraints()
-        configureDescriptionTextViewConstraints()
+        configureInputViewsConstraints()
     }
 
     private func configureScrollViewConstraints() {
@@ -269,136 +258,131 @@ extension ItemEditViewController {
             photoCollectionView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             photoCollectionView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             photoCollectionView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            photoCollectionView.bottomAnchor.constraint(equalTo: collectionViewBorderView.topAnchor, constant: -20),
+            photoCollectionView.bottomAnchor.constraint(equalTo: collectionViewBorderView.topAnchor,
+                                                        constant: -Style.verticalSpacing),
             photoCollectionView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.15)
         ])
     }
 
-    private func borderViewsConstraints() {
+    private func configureBorderViewsConstraints() {
         NSLayoutConstraint.activate([
-            collectionViewBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
-            collectionViewBorderView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
-            collectionViewBorderView.bottomAnchor.constraint(equalTo: titleTextField.topAnchor, constant: -20),
-            titleBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
-            titleBorderView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
-            titleBorderView.bottomAnchor.constraint(equalTo: stockTextField.topAnchor, constant: -20),
-            stockBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
-            stockBorderView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
-            stockBorderView.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -20),
-            priceBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
-            priceBorderView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
-            priceBorderView.bottomAnchor.constraint(equalTo: descriptionsTextView.topAnchor, constant: -20),
-            collectionViewBorderView.heightAnchor.constraint(equalToConstant: 1),
-            titleBorderView.heightAnchor.constraint(equalToConstant: 1),
-            stockBorderView.heightAnchor.constraint(equalToConstant: 1),
-            priceBorderView.heightAnchor.constraint(equalToConstant: 1)
-        ])
-    }
-    private func configureTitleTextFieldConstraints() {
-        NSLayoutConstraint.activate([
-            titleTextField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
-            titleTextField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
-            titleTextField.bottomAnchor.constraint(equalTo: titleBorderView.topAnchor, constant: -20)
-        ])
-    }
-
-    private func configureStockTextFieldConstraints() {
-        NSLayoutConstraint.activate([
-            stockTextField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
-            stockTextField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
-            stockTextField.bottomAnchor.constraint(equalTo: stockBorderView.topAnchor, constant: -20)
+            collectionViewBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
+                                                              constant: Style.horizontalSpacing),
+            collectionViewBorderView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
+                                                               constant: -Style.horizontalSpacing),
+            collectionViewBorderView.bottomAnchor.constraint(equalTo: titleTextField.topAnchor,
+                                                             constant: -Style.verticalSpacing),
+            titleBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
+                                                     constant: Style.horizontalSpacing),
+            titleBorderView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
+                                                      constant: -Style.horizontalSpacing),
+            titleBorderView.bottomAnchor.constraint(equalTo: stockTextField.topAnchor, constant: -Style.verticalSpacing),
+            stockBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: Style.horizontalSpacing),
+            stockBorderView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
+                                                      constant: -Style.horizontalSpacing),
+            stockBorderView.bottomAnchor.constraint(equalTo: moneyStackView.topAnchor, constant: -Style.verticalSpacing),
+            priceBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: Style.horizontalSpacing),
+            priceBorderView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
+                                                      constant: -Style.horizontalSpacing),
+            priceBorderView.bottomAnchor.constraint(equalTo: descriptionsTextView.topAnchor,
+                                                    constant: -Style.verticalSpacing),
+            collectionViewBorderView.heightAnchor.constraint(equalToConstant: Style.BorderView.height),
+            titleBorderView.heightAnchor.constraint(equalToConstant: Style.BorderView.height),
+            stockBorderView.heightAnchor.constraint(equalToConstant: Style.BorderView.height),
+            priceBorderView.heightAnchor.constraint(equalToConstant: Style.BorderView.height)
         ])
     }
 
-    private func configurePriceViewsConstraints() {
+    private func configureInputViewsConstraints() {
         NSLayoutConstraint.activate([
-            currencyPickerTextField.widthAnchor.constraint(equalToConstant: 80),
-            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
-            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
-            stackView.bottomAnchor.constraint(equalTo: priceBorderView.topAnchor, constant: -20)
-        ])
-    }
-
-    private func configureDescriptionTextViewConstraints() {
-        NSLayoutConstraint.activate([
-            descriptionsTextView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
-            descriptionsTextView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
+            titleTextField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: Style.horizontalSpacing),
+            titleTextField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
+                                                     constant: -Style.horizontalSpacing),
+            titleTextField.bottomAnchor.constraint(equalTo: titleBorderView.topAnchor, constant: -Style.verticalSpacing),
+            stockTextField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: Style.horizontalSpacing),
+            stockTextField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
+                                                     constant: -Style.horizontalSpacing),
+            stockTextField.bottomAnchor.constraint(equalTo: stockBorderView.topAnchor, constant: -Style.verticalSpacing),
+            currencyTextField.widthAnchor.constraint(equalToConstant: Style.CurrencyTextField.width),
+            moneyStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: Style.horizontalSpacing),
+            moneyStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
+                                                     constant: -Style.horizontalSpacing),
+            moneyStackView.bottomAnchor.constraint(equalTo: priceBorderView.topAnchor, constant: -Style.verticalSpacing),
+            descriptionsTextView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
+                                                          constant: Style.horizontalSpacing),
+            descriptionsTextView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
+                                                           constant: -Style.horizontalSpacing),
             descriptionsTextView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
         ])
     }
 }
 
-extension ItemEditViewController {
-    // MARK: Set Keyboard associated Method
-    private func configureKeyboardNotification() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+extension ItemEditViewController: UIPickerViewDelegate, UIPickerViewDataSource  {
+    // MARK: Currency TextField - ToolBar(UIPickerView)
+    private func configureCurrencyTextFieldToolBar() {
+        let pickerView = UIPickerView()
+        pickerView.translatesAutoresizingMaskIntoConstraints = false
+        pickerView.delegate = self
+        pickerView.dataSource = self
+        currencyTextField.inputView = pickerView
+        let bar = UIToolbar()
+        bar.translatesAutoresizingMaskIntoConstraints = false
+        bar.sizeToFit()
+        bar.isUserInteractionEnabled = true
+        let done = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(touchDoneBarButtonItem(_:)))
+        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        bar.setItems([space, done], animated: false)
+        bar.sizeToFit()
+        currencyTextField.inputAccessoryView = bar
     }
 
-    private func removeKeyboardNotification() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return Style.CurrenyPickerView.numberOfRows
     }
 
-    @objc private func keyboardWillShow(_ notification: Notification) {
-        guard let userInfo = notification.userInfo, let endFrameValue = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue) else {
-            return
-        }
-        let endFrame = endFrameValue.cgRectValue
-        scrollViewBottomAnchor?.isActive = false
-        scrollViewBottomAnchor = scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -endFrame.height)
-        scrollViewBottomAnchor?.isActive = true
-        scrollView.contentInset.bottom = 30
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-        }
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return viewModel.currencies.count
     }
 
-    @objc private func keyboardWillHide(_ notification: Notification) {
-        scrollView.contentInset = UIEdgeInsets.zero
-        scrollViewBottomAnchor?.isActive = false
-        scrollViewBottomAnchor = scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        scrollViewBottomAnchor?.isActive = true
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-        }
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return viewModel.currencies[row]
     }
 
-    func addTapGestureRecognizer() {
-        let recognizer = UITapGestureRecognizer(target: self, action: #selector(moveDownKeyboard))
-        recognizer.cancelsTouchesInView = false
-        view.addGestureRecognizer(recognizer)
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        currencyTextField.text = viewModel.currencies[row]
     }
 
-    @objc private func moveDownKeyboard() {
-        view.endEditing(true)
+    @objc private func touchDoneBarButtonItem(_ sender: UIBarButtonItem) {
+        currencyTextField.resignFirstResponder()
     }
 }
 
 extension ItemEditViewController: UITextViewDelegate {
+    // MARK: DescriptionTextView Delegate Method
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.textColor == UIColor.lightGray {
+        if textView.textColor == Style.DescriptionsTextView.placeHolderTextColor {
             textView.text = nil
-            textView.textColor = .black
+            textView.textColor = Style.DescriptionsTextView.defaultTextColor
         }
     }
 
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
-            textView.text = "제품 설명을 입력하세요"
-            textView.textColor = UIColor.lightGray
+            textView.text = Style.DescriptionsTextView.placeHolder
+            textView.textColor = Style.DescriptionsTextView.placeHolderTextColor
         }
     }
 }
 
 extension ItemEditViewController: UICollectionViewDataSource {
+    // MARK: PhotoCollectionView DataSource Method
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.images.count + 1
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         var cell: UICollectionViewCell
-        if indexPath.item == 0 {
+        if indexPath.item == .zero {
             guard let addPhotoCell = collectionView.dequeueReusableCell(withReuseIdentifier: AddPhotoCollectionViewCell.identifier, for: indexPath) as? AddPhotoCollectionViewCell else {
                 return UICollectionViewCell()
             }
@@ -428,6 +412,7 @@ extension ItemEditViewController: UICollectionViewDataSource {
 }
 
 extension ItemEditViewController: UICollectionViewDelegate {
+    // MARK: PhotoCollectionView Delegate Method
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.item == 0 {
             imagePickerController.sourceType = .photoLibrary
@@ -438,6 +423,7 @@ extension ItemEditViewController: UICollectionViewDelegate {
 }
 
 extension ItemEditViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    // MARK: UIImagePickerController Delegate Method
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         var image: UIImage?
@@ -456,19 +442,67 @@ extension ItemEditViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return .init(width: collectionView.bounds.height * 3/4,
-                     height: collectionView.bounds.height * 3/4)
+        return .init(width: collectionView.bounds.height * Style.PhotoCollectionView.cellSizeRatio,
+                     height: collectionView.bounds.height * Style.PhotoCollectionView.cellSizeRatio)
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 20
+        return Style.verticalSpacing
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
-        return .init(top: 20, left: 20, bottom: 0, right: 20)
+        return Style.PhotoCollectionView.edgeInsets
+    }
+}
+
+extension ItemEditViewController {
+    enum Style {
+        static let backgroundColor = UIColor.systemBackground
+        static let defaultFont = UIFont.preferredFont(forTextStyle: .body)
+        static let verticalSpacing: CGFloat = 20
+        static let horizontalSpacing: CGFloat = 10
+        enum PhotoCollectionView {
+            static let cellSizeRatio: CGFloat = 3/4
+            static let edgeInsets: UIEdgeInsets = .init(top: 20, left: 20, bottom: 0, right: 20)
+        }
+        enum TitleTextField {
+            static let placeHolder = "제품명"
+        }
+        enum StockTextField {
+            static let placeHolder = "제품 수량"
+        }
+        enum CurrencyTextField {
+            static let placeHolder = "화폐"
+            static let width: CGFloat = 80
+        }
+        enum PriceTextField {
+            static let placeHolder = "제품 가격"
+        }
+        enum DiscountedPriceTextField {
+            static let placeHolder = "할인 가격(선택 사항)"
+        }
+        enum DescriptionsTextView {
+            static let placeHolder = "제품 설명을 입력하세요"
+            static let placeHolderTextColor = UIColor.lightGray
+            static let defaultTextColor = UIColor.black
+            static let spacingForKeyboard: CGFloat = 30
+        }
+        enum MoneyStackView {
+            static let spacing: CGFloat = 5
+        }
+        enum CurrenyPickerView {
+            static let numberOfRows = 1
+        }
+        enum BorderView {
+            static let backgroundColor = UIColor.systemGray4
+            static let height: CGFloat = 1
+        }
+        enum TextField {
+            static let tintColor = UIColor.clear
+        }
     }
 }

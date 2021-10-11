@@ -13,6 +13,7 @@ protocol ItemEditViewModelDelegate: AnyObject {
 
 final class ItemEditViewModel {
     weak var delegate: ItemEditViewModelDelegate?
+    let currencies: [String] = ["KRW", "JPY", "USD", "EUR", "CNY"]
     private(set) var images: [UIImage] = [] {
         didSet {
             delegate?.imagesCountChanged(images.count)

@@ -47,7 +47,7 @@ final class ItemListViewController: UIViewController {
         return collectionView
     }()
 
-    // MARK: Instance Properties
+    // MARK: Properties
     private let viewModel: ItemListViewModel = .init()
     private var cellStyle: CellStyle = .list
 
