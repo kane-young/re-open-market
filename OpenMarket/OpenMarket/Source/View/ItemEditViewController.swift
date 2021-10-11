@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ItemEditViewController: UIViewController {
+class ItemEditViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     enum Mode {
         case register
         case update
@@ -50,6 +50,7 @@ class ItemEditViewController: UIViewController {
         textField.placeholder = "제품명"
         textField.font = .preferredFont(forTextStyle: .body)
         textField.adjustsFontForContentSizeCategory = true
+        textField.tintColor = .clear
         return textField
     }()
     private let titleBorderView: UIView = {
@@ -151,6 +152,7 @@ class ItemEditViewController: UIViewController {
         configureConstraints()
         addTapGestureRecognizer()
         viewModelBind()
+        configureCurrencyTextFieldToolBar()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -195,6 +197,44 @@ class ItemEditViewController: UIViewController {
                 break
             }
         }
+    }
+
+    private func configureCurrencyTextFieldToolBar() {
+        let pickerView = UIPickerView()
+        pickerView.translatesAutoresizingMaskIntoConstraints = false
+        pickerView.delegate = self
+        pickerView.dataSource = self
+        currencyPickerTextField.inputView = pickerView
+        let bar = UIToolbar()
+        bar.translatesAutoresizingMaskIntoConstraints = false
+        bar.sizeToFit()
+        bar.isUserInteractionEnabled = true
+        let done = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(touchDoneBarButtonItem(_:)))
+        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        bar.setItems([space, done], animated: false)
+        bar.sizeToFit()
+        currencyPickerTextField.inputAccessoryView = bar
+    }
+
+    let datas: [String] = ["KRW", "JPW", "USD"]
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        1
+    }
+
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return datas.count
+    }
+
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return datas[row]
+    }
+
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        currencyPickerTextField.text = datas[row]
+    }
+
+    @objc private func touchDoneBarButtonItem(_ sender: UIBarButtonItem) {
+        currencyPickerTextField.resignFirstResponder()
     }
 }
 

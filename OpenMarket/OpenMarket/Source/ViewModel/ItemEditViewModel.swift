@@ -7,12 +7,12 @@
 
 import UIKit
 
-protocol ItemEditViewModelDelegate {
+protocol ItemEditViewModelDelegate: AnyObject {
     func imagesCountChanged(_ count: Int)
 }
 
 final class ItemEditViewModel {
-    var delegate: ItemEditViewModelDelegate?
+    weak var delegate: ItemEditViewModelDelegate?
     private(set) var images: [UIImage] = [] {
         didSet {
             delegate?.imagesCountChanged(images.count)
