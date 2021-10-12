@@ -12,7 +12,6 @@ final class ItemEditViewController: UIViewController {
         case register
         case update
     }
-
     // MARK: Views Properties
     private let discountedPriceTextField: UITextField = .init()
     private let currencyTextField: UITextField = .init()
@@ -26,7 +25,6 @@ final class ItemEditViewController: UIViewController {
     private let titleBorderView: UIView = .init()
     private let stockBorderView: UIView = .init()
     private var scrollViewBottomAnchor: NSLayoutConstraint?
-
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -35,7 +33,6 @@ final class ItemEditViewController: UIViewController {
         scrollView.backgroundColor = Style.backgroundColor
         return scrollView
     }()
-
     private let photoCollectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .horizontal
@@ -50,7 +47,6 @@ final class ItemEditViewController: UIViewController {
         collectionView.showsHorizontalScrollIndicator = false
         return collectionView
     }()
-
     private lazy var priceStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [priceTextField, discountedPriceTextField])
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -59,7 +55,6 @@ final class ItemEditViewController: UIViewController {
         stackView.spacing = Style.verticalSpacing * 2
         return stackView
     }()
-
     private lazy var moneyStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [currencyTextField, priceStackView])
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -70,7 +65,7 @@ final class ItemEditViewController: UIViewController {
 
     // MARK: Properties
     private let mode: Mode
-    private let viewModel: ItemEditViewModel = .init()
+    private(set) var viewModel: ItemEditViewModel = .init()
 
     // MARK: Initializer
     init(mode: Mode) {
@@ -89,6 +84,7 @@ final class ItemEditViewController: UIViewController {
         configureDelegates()
         configureTextFields()
         configureBorderViews()
+        configureNavigationBar()
         configureConstraints()
         addTapGestureRecognizer()
         viewModelBind()
@@ -175,14 +171,48 @@ final class ItemEditViewController: UIViewController {
     private func viewModelBind() {
         viewModel.bind { [weak self] state in
             switch state {
-            case .add(let indexPath):
+            case .addPhoto(let indexPath):
                 self?.photoCollectionView.insertItems(at: [indexPath])
-            case .delete(let indexPath):
+            case .deletePhoto(let indexPath):
                 self?.photoCollectionView.deleteItems(at: [indexPath])
+            case .satisfied:
+                self?.alertRegister()
+            case .dissatisfied:
+                self?.alertDissatisfication()
             default:
                 break
             }
         }
+    }
+
+    private func configureNavigationBar() {
+        let doneButton = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(touchRegisterItemButton(_:)))
+        navigationItem.rightBarButtonItem = doneButton
+    }
+
+    @objc private func touchRegisterItemButton(_ sender: UIBarButtonItem) {
+        viewModel.validate(title: titleTextField.text, stock: stockTextField.text,
+                           currency: currencyTextField.text, price: priceTextField.text,
+                           descriptions: descriptionsTextView.text)
+    }
+
+    private func alertRegister() {
+        let alertController = UIAlertController(title: "비밀번호 입력", message: "등록자 인증을 위한 비밀번호이 필요합니다", preferredStyle: .alert)
+        alertController.addTextField { textField in
+            textField.placeholder = "비밀번호"
+        }
+        let register = UIAlertAction(title: "등록", style: .default, handler: nil)
+        let cancel = UIAlertAction(title: "취소", style: .default, handler: nil)
+        alertController.addAction(register)
+        alertController.addAction(cancel)
+        present(alertController, animated: true, completion: nil)
+    }
+
+    private func alertDissatisfication() {
+        let alertController = UIAlertController(title: "필수 요소 작성 불만족", message: "할인 가격을 제외한 모든 요소를 채워주세요", preferredStyle: .alert)
+        let okay = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okay)
+        present(alertController, animated: true, completion: nil)
     }
 
     // MARK: Set Keyboard associated Method
@@ -317,7 +347,7 @@ final class ItemEditViewController: UIViewController {
     }
 }
 
-extension ItemEditViewController: UIPickerViewDelegate, UIPickerViewDataSource  {
+extension ItemEditViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     // MARK: Currency TextField - ToolBar(UIPickerView)
     private func configureCurrencyTextFieldToolBar() {
         let pickerView = UIPickerView()
@@ -415,17 +445,28 @@ extension ItemEditViewController: UICollectionViewDelegate {
     // MARK: PhotoCollectionView Delegate Method
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.item == 0 {
+            if viewModel.images.count >= 5 {
+                alertExcessImagesCount()
+                return
+            }
             imagePickerController.sourceType = .photoLibrary
             imagePickerController.allowsEditing = true
             present(imagePickerController, animated: true, completion: nil)
         }
+    }
+
+    private func alertExcessImagesCount() {
+        let alertController = UIAlertController(title: "이미지 등록 개수 초과", message: "이미지는 최대 5개까지만 추가할 수 있습니다", preferredStyle: .alert)
+        let okay = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okay)
+        present(alertController, animated: true, completion: nil)
     }
 }
 
 extension ItemEditViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     // MARK: UIImagePickerController Delegate Method
     func imagePickerController(_ picker: UIImagePickerController,
-                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         var image: UIImage?
         if let editedImage = info[UIImagePickerController.InfoKey(rawValue: "UIImagePickerControllerEditedImage")] as? UIImage {
             image = editedImage

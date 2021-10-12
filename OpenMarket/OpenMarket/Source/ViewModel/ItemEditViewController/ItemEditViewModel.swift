@@ -39,11 +39,20 @@ final class ItemEditViewModel {
         if let image = image {
             images.append(image)
         }
-        state = .add(IndexPath(item: images.count, section: 0))
+        state = .addPhoto(IndexPath(item: images.count, section: 0))
     }
 
     func deleteImage(_ indexPath: IndexPath) {
         images.remove(at: indexPath.item-1)
-        state = .delete(indexPath)
+        state = .deletePhoto(indexPath)
+    }
+
+    func validate(title: String?, stock: String?, currency: String?, price: String?, descriptions: String?) {
+        if !images.isEmpty && title != nil && stock != nil && currency != nil && price != nil &&
+            descriptions != ItemEditViewController.Style.DescriptionsTextView.placeHolder && descriptions?.isEmpty != true {
+            state = .satisfied
+        } else {
+            state = .dissatisfied
+        }
     }
 }

@@ -9,6 +9,8 @@ import Foundation
 
 enum ItemEditViewModelState {
     case initial
-    case add(IndexPath)
-    case delete(IndexPath)
+    case addPhoto(IndexPath)
+    case deletePhoto(IndexPath)
+    case satisfied
+    case dissatisfied
 }
