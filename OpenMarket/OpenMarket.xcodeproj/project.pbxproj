@@ -30,6 +30,7 @@
 		C32EDBD92700023500F6BC53 /* NetworkManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBD82700023500F6BC53 /* NetworkManagerTest.swift */; };
 		C32EDBDC2700029400F6BC53 /* MockURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBDB2700029400F6BC53 /* MockURLProtocol.swift */; };
 		C32EDBE027002B4600F6BC53 /* RequestMakerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBDF27002B4600F6BC53 /* RequestMakerTest.swift */; };
+		C355A6892715BB3300AE2000 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C355A6882715BB3300AE2000 /* UIImage+Extension.swift */; };
 		C35943DA27059B1600146FFC /* ItemCellDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35943D927059B1600146FFC /* ItemCellDisplayable.swift */; };
 		C35943E127059C4300146FFC /* ThumbnailUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35943E027059C4300146FFC /* ThumbnailUseCaseProtocol.swift */; };
 		C35943E327059C9F00146FFC /* ThumbnailUseCaseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35943E227059C9F00146FFC /* ThumbnailUseCaseError.swift */; };
@@ -110,6 +111,7 @@
 		C32EDBD82700023500F6BC53 /* NetworkManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManagerTest.swift; sourceTree = "<group>"; };
 		C32EDBDB2700029400F6BC53 /* MockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
 		C32EDBDF27002B4600F6BC53 /* RequestMakerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestMakerTest.swift; sourceTree = "<group>"; };
+		C355A6882715BB3300AE2000 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		C35943D927059B1600146FFC /* ItemCellDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCellDisplayable.swift; sourceTree = "<group>"; };
 		C35943E027059C4300146FFC /* ThumbnailUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailUseCaseProtocol.swift; sourceTree = "<group>"; };
 		C35943E227059C9F00146FFC /* ThumbnailUseCaseError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailUseCaseError.swift; sourceTree = "<group>"; };
@@ -309,6 +311,7 @@
 			children = (
 				C32EDBC326FD9BF400F6BC53 /* Data+Extension.swift */,
 				C37EA631270341C3000518A0 /* NSAttributedString+Extension.swift */,
+				C355A6882715BB3300AE2000 /* UIImage+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -633,6 +636,7 @@
 				C35943DA27059B1600146FFC /* ItemCellDisplayable.swift in Sources */,
 				C37EA632270341C3000518A0 /* NSAttributedString+Extension.swift in Sources */,
 				C3E76FD32712F56200755E07 /* ItemEditViewModel.swift in Sources */,
+				C355A6892715BB3300AE2000 /* UIImage+Extension.swift in Sources */,
 				C32EDBAE26FC954500F6BC53 /* ItemList.swift in Sources */,
 				C32EDBD126FEB64000F6BC53 /* NetworkError.swift in Sources */,
 				C37EA6342704444C000518A0 /* ItemGridCollectionViewCell.swift in Sources */,

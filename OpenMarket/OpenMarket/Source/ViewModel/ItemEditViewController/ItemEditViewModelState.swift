@@ -13,4 +13,7 @@ enum ItemEditViewModelState {
     case deletePhoto(IndexPath)
     case satisfied
     case dissatisfied
+    case register(Item)
+    case update(Item)
+    case error(ItemEditViewModelError)
 }

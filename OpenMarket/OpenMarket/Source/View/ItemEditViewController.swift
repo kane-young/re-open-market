@@ -179,6 +179,8 @@ final class ItemEditViewController: UIViewController {
                 self?.alertRegister()
             case .dissatisfied:
                 self?.alertDissatisfication()
+            case .error(let error):
+                self?.alertErrorMessage(error: error)
             default:
                 break
             }
@@ -193,7 +195,7 @@ final class ItemEditViewController: UIViewController {
     @objc private func touchRegisterItemButton(_ sender: UIBarButtonItem) {
         viewModel.validate(title: titleTextField.text, stock: stockTextField.text,
                            currency: currencyTextField.text, price: priceTextField.text,
-                           descriptions: descriptionsTextView.text)
+                           discountedPrice: discountedPriceTextField.text, descriptions: descriptionsTextView.text)
     }
 
     private func alertRegister() {
@@ -201,9 +203,22 @@ final class ItemEditViewController: UIViewController {
         alertController.addTextField { textField in
             textField.placeholder = "비밀번호"
         }
-        let register = UIAlertAction(title: "등록", style: .default, handler: nil)
+        guard let password = alertController.textFields?[0].text else {
+            return
+        }
+        let register = UIAlertAction(title: "등록", style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            self.viewModel.registerItem(password: password)
+        }
         let cancel = UIAlertAction(title: "취소", style: .default, handler: nil)
         alertController.addAction(register)
+        alertController.addAction(cancel)
+        present(alertController, animated: true, completion: nil)
+    }
+
+    private func alertErrorMessage(error: ItemEditViewModelError) {
+        let alertController = UIAlertController(title: "에러 발생", message: "\(error.localizedDescription)", preferredStyle: .alert)
+        let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
         alertController.addAction(cancel)
         present(alertController, animated: true, completion: nil)
     }
