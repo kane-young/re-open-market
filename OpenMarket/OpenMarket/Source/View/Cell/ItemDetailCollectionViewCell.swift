@@ -10,7 +10,7 @@ import UIKit
 class ItemDetailCollectionViewCell: UICollectionViewCell {
     static let identifier: String = "ItemDetailCollectionViewCell"
 
-    let imageView: UIImageView = {
+    private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -18,7 +18,7 @@ class ItemDetailCollectionViewCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configureCell()
+        addSubviews()
         configureConstraints()
     }
 
@@ -26,7 +26,11 @@ class ItemDetailCollectionViewCell: UICollectionViewCell {
         fatalError("not use interface builder")
     }
 
-    private func configureCell() {
+    func configureCell(with image: UIImage) {
+        imageView.image = image
+    }
+
+    private func addSubviews() {
         contentView.addSubview(imageView)
     }
 
