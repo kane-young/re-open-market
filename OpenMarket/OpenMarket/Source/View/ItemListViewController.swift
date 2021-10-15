@@ -148,6 +148,9 @@ final class ItemListViewController: UIViewController {
 extension ItemListViewController: UICollectionViewDelegate {
     // MARK: CollectionViewDelegate Method
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let item = viewModel.items[indexPath.item]
+        let itemDetailViewController = ItemDetailViewController(id: item.id)
+        navigationController?.pushViewController(itemDetailViewController, animated: true)
     }
 
     func collectionView(_ collectionView: UICollectionView,

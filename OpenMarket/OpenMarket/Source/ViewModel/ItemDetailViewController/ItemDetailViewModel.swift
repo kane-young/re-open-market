@@ -7,11 +7,6 @@
 
 import UIKit
 
-
-
-
-
-
 final class ItemDetailViewModel {
     struct MetaData {
         let title: String
@@ -22,6 +17,7 @@ final class ItemDetailViewModel {
         let descriptions: String
     }
 
+    private let id: Int
     private let itemNetworkUseCase: ItemNetworkUseCaseProtocol
     private let imageNetworkUseCase: ThumbnailUseCaseProtocol
     private var handler: ((ItemDetailViewModelState) -> Void)?
@@ -40,7 +36,8 @@ final class ItemDetailViewModel {
         }
     }
 
-    init(itemNetworkUseCase: ItemNetworkUseCaseProtocol = ItemNetworkUseCase(), imageNetworkUseCase: ThumbnailUseCaseProtocol = ThumbnailUseCase.shared) {
+    init(id: Int, itemNetworkUseCase: ItemNetworkUseCaseProtocol = ItemNetworkUseCase(), imageNetworkUseCase: ThumbnailUseCaseProtocol = ThumbnailUseCase.shared) {
+        self.id = id
         self.itemNetworkUseCase = itemNetworkUseCase
         self.imageNetworkUseCase = imageNetworkUseCase
     }
@@ -49,22 +46,23 @@ final class ItemDetailViewModel {
         self.handler = handler
     }
 
-    func loadItem(id: Int) {
+    func loadItem() {
         itemNetworkUseCase.retrieveItem(id: id) { [weak self] result in
             switch result {
             case .success(let item):
                 guard let images = item.images else { return }
                 for image in images {
-                    self?.imageNetworkUseCase.retrieveImage(with: image) { result in
-                        switch result {
-                        case .success(let image):
-                            self?.images.append(image)
-                        case .failure(let error):
-                            self?.state = .thumbnailNetworkError(error)
+                    OperationQueue().addOperation {
+                        self?.imageNetworkUseCase.retrieveImage(with: image) { result in
+                            switch result {
+                            case .success(let image):
+                                self?.images.append(image)
+                            case .failure(let error):
+                                self?.state = .thumbnailNetworkError(error)
+                            }
                         }
                     }
                 }
-                
                 let metaData = MetaData(title: item.title,
                                         price: String(item.price),
                                         discountedPrice: String(item.discountedPrice ?? 0), isNeededDiscountedLabel: false,

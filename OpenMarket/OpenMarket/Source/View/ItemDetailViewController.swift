@@ -24,6 +24,7 @@ class ItemDetailViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.isPagingEnabled = true
+        collectionView.isDirectionalLockEnabled = true
         collectionView.register(ItemDetailCollectionViewCell.self, forCellWithReuseIdentifier: ItemDetailCollectionViewCell.identifier)
         return collectionView
     }()
@@ -71,13 +72,21 @@ class ItemDetailViewController: UIViewController {
     }()
 
     // MARK: Properties
-    let viewModel: ItemDetailViewModel = .init()
+    private let viewModel: ItemDetailViewModel
+
+    init(id: Int) {
+        self.viewModel = ItemDetailViewModel(id: id)
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("not use interface builder")
+    }
 
     // MARK: Life Cycle Method
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModelBind()
-        viewModel.loadItem(id: 50)
         addSubviews()
         configureViews()
         configureConstraints()
@@ -124,6 +133,7 @@ class ItemDetailViewController: UIViewController {
                 print("I don't know what happened")
             }
         }
+        viewModel.loadItem()
     }
 
     private func configureNavigationBar() {
@@ -149,6 +159,7 @@ class ItemDetailViewController: UIViewController {
             collectionView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             collectionView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/2),
+            collectionView.widthAnchor.constraint(equalTo: view.widthAnchor),
             collectionView.bottomAnchor.constraint(equalTo: titleLabel.topAnchor, constant: -10),
             titleLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
             titleLabel.trailingAnchor.constraint(equalTo: stockLabel.leadingAnchor, constant: -10),
@@ -200,7 +211,7 @@ extension ItemDetailViewController: UICollectionViewDelegateFlowLayout {
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.width,
+        return CGSize(width: view.bounds.width,
                       height: collectionView.bounds.height)
     }
 }
