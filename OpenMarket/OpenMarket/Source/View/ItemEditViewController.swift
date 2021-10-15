@@ -8,10 +8,12 @@
 import UIKit
 
 final class ItemEditViewController: UIViewController {
+    // MARK: Cell Layout Mode
     enum Mode {
         case register
         case update
     }
+
     // MARK: Views Properties
     private let discountedPriceTextField: UITextField = .init()
     private let currencyTextField: UITextField = .init()
@@ -26,7 +28,7 @@ final class ItemEditViewController: UIViewController {
     private let stockBorderView: UIView = .init()
     private var scrollViewBottomAnchor: NSLayoutConstraint?
     private let scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
+        let scrollView: UIScrollView = .init()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.isDirectionalLockEnabled = true
@@ -34,9 +36,9 @@ final class ItemEditViewController: UIViewController {
         return scrollView
     }()
     private let photoCollectionView: UICollectionView = {
-        let flowLayout = UICollectionViewFlowLayout()
+        let flowLayout: UICollectionViewFlowLayout = .init()
         flowLayout.scrollDirection = .horizontal
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        let collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: flowLayout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.isDirectionalLockEnabled = true
         collectionView.register(ItemPhotoCollectionViewCell.self,
@@ -48,7 +50,7 @@ final class ItemEditViewController: UIViewController {
         return collectionView
     }()
     private lazy var priceStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [priceTextField, discountedPriceTextField])
+        let stackView: UIStackView = .init(arrangedSubviews: [priceTextField, discountedPriceTextField])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
@@ -56,7 +58,7 @@ final class ItemEditViewController: UIViewController {
         return stackView
     }()
     private lazy var moneyStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [currencyTextField, priceStackView])
+        let stackView: UIStackView = .init(arrangedSubviews: [currencyTextField, priceStackView])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
         stackView.spacing = Style.MoneyStackView.spacing
@@ -188,7 +190,8 @@ final class ItemEditViewController: UIViewController {
     }
 
     private func configureNavigationBar() {
-        let doneButton = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(touchRegisterItemButton(_:)))
+        let doneButton: UIBarButtonItem = .init(title: Style.RightBarButtonItem.title, style: .plain,
+                                         target: self, action: #selector(touchRegisterItemButton(_:)))
         navigationItem.rightBarButtonItem = doneButton
     }
 
@@ -199,34 +202,36 @@ final class ItemEditViewController: UIViewController {
     }
 
     private func alertRegister() {
-        let alertController = UIAlertController(title: "비밀번호 입력", message: "등록자 인증을 위한 비밀번호이 필요합니다", preferredStyle: .alert)
+        let alertController: UIAlertController = .init(title: Style.Alert.InputPassword.title,
+                                                message: Style.Alert.InputPassword.message,
+                                                preferredStyle: .alert)
         alertController.addTextField { textField in
-            textField.placeholder = "비밀번호"
+            textField.placeholder = Style.Alert.InputPassword.placeHolder
         }
-        guard let password = alertController.textFields?[0].text else {
-            return
-        }
-        let register = UIAlertAction(title: "등록", style: .default) { [weak self] _ in
+        guard let password = alertController.textFields?[0].text else { return }
+        let register: UIAlertAction = .init(title: Style.Alert.Register.title, style: .default) { [weak self] _ in
             guard let self = self else { return }
             self.viewModel.registerItem(password: password)
         }
-        let cancel = UIAlertAction(title: "취소", style: .default, handler: nil)
+        let cancel: UIAlertAction = .init(title: Style.Alert.Cancel.title, style: .default, handler: nil)
         alertController.addAction(register)
         alertController.addAction(cancel)
         present(alertController, animated: true, completion: nil)
     }
 
     private func alertErrorMessage(error: ItemEditViewModelError) {
-        let alertController = UIAlertController(title: "에러 발생", message: "\(error.localizedDescription)", preferredStyle: .alert)
-        let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        let alertController: UIAlertController = .init(title: Style.Alert.Error.title,
+                                                message: "\(error.message)", preferredStyle: .alert)
+        let cancel: UIAlertAction = .init(title: Style.Alert.Cancel.title, style: .default, handler: nil)
         alertController.addAction(cancel)
         present(alertController, animated: true, completion: nil)
     }
 
     private func alertDissatisfication() {
-        let alertController = UIAlertController(title: "필수 요소 작성 불만족", message: "할인 가격을 제외한 모든 요소를 채워주세요", preferredStyle: .alert)
-        let okay = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(okay)
+        let alertController: UIAlertController = .init(title: Style.Alert.Dissatisfication.title,
+                                                message: Style.Alert.Dissatisfication.message, preferredStyle: .alert)
+        let cancel: UIAlertAction = .init(title: Style.Alert.Cancel.title, style: .default, handler: nil)
+        alertController.addAction(cancel)
         present(alertController, animated: true, completion: nil)
     }
 
@@ -305,7 +310,7 @@ final class ItemEditViewController: UIViewController {
             photoCollectionView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             photoCollectionView.bottomAnchor.constraint(equalTo: collectionViewBorderView.topAnchor,
                                                         constant: -Style.verticalSpacing),
-            photoCollectionView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.15)
+            photoCollectionView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.2)
         ])
     }
 
@@ -365,17 +370,18 @@ final class ItemEditViewController: UIViewController {
 extension ItemEditViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     // MARK: Currency TextField - ToolBar(UIPickerView)
     private func configureCurrencyTextFieldToolBar() {
-        let pickerView = UIPickerView()
+        let pickerView: UIPickerView = .init()
         pickerView.translatesAutoresizingMaskIntoConstraints = false
         pickerView.delegate = self
         pickerView.dataSource = self
         currencyTextField.inputView = pickerView
-        let bar = UIToolbar()
+        let bar: UIToolbar = .init()
         bar.translatesAutoresizingMaskIntoConstraints = false
         bar.sizeToFit()
         bar.isUserInteractionEnabled = true
-        let done = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(touchDoneBarButtonItem(_:)))
-        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let done: UIBarButtonItem = .init(title: Style.CurrenyPickerView.buttonTitle, style: .plain,
+                                   target: self, action: #selector(touchDoneBarButtonItem(_:)))
+        let space: UIBarButtonItem = .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         bar.setItems([space, done], animated: false)
         bar.sizeToFit()
         currencyTextField.inputAccessoryView = bar
@@ -459,8 +465,8 @@ extension ItemEditViewController: UICollectionViewDataSource {
 extension ItemEditViewController: UICollectionViewDelegate {
     // MARK: PhotoCollectionView Delegate Method
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.item == 0 {
-            if viewModel.images.count >= 5 {
+        if indexPath.item == .zero {
+            if viewModel.images.count >= Style.maximumImageCount {
                 alertExcessImagesCount()
                 return
             }
@@ -471,9 +477,10 @@ extension ItemEditViewController: UICollectionViewDelegate {
     }
 
     private func alertExcessImagesCount() {
-        let alertController = UIAlertController(title: "이미지 등록 개수 초과", message: "이미지는 최대 5개까지만 추가할 수 있습니다", preferredStyle: .alert)
-        let okay = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(okay)
+        let alertController = UIAlertController(title: Style.Alert.ExcessImageCount.title,
+                                                message: Style.Alert.ExcessImageCount.message, preferredStyle: .alert)
+        let cancel = UIAlertAction(title: Style.Alert.Cancel.title, style: .default, handler: nil)
+        alertController.addAction(cancel)
         present(alertController, animated: true, completion: nil)
     }
 }
@@ -512,53 +519,5 @@ extension ItemEditViewController: UICollectionViewDelegateFlowLayout {
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
         return Style.PhotoCollectionView.edgeInsets
-    }
-}
-
-extension ItemEditViewController {
-    enum Style {
-        static let backgroundColor = UIColor.systemBackground
-        static let defaultFont = UIFont.preferredFont(forTextStyle: .body)
-        static let verticalSpacing: CGFloat = 20
-        static let horizontalSpacing: CGFloat = 10
-        enum PhotoCollectionView {
-            static let cellSizeRatio: CGFloat = 3/4
-            static let edgeInsets: UIEdgeInsets = .init(top: 20, left: 20, bottom: 0, right: 20)
-        }
-        enum TitleTextField {
-            static let placeHolder = "제품명"
-        }
-        enum StockTextField {
-            static let placeHolder = "제품 수량"
-        }
-        enum CurrencyTextField {
-            static let placeHolder = "화폐"
-            static let width: CGFloat = 80
-        }
-        enum PriceTextField {
-            static let placeHolder = "제품 가격"
-        }
-        enum DiscountedPriceTextField {
-            static let placeHolder = "할인 가격(선택 사항)"
-        }
-        enum DescriptionsTextView {
-            static let placeHolder = "제품 설명을 입력하세요"
-            static let placeHolderTextColor = UIColor.lightGray
-            static let defaultTextColor = UIColor.black
-            static let spacingForKeyboard: CGFloat = 30
-        }
-        enum MoneyStackView {
-            static let spacing: CGFloat = 5
-        }
-        enum CurrenyPickerView {
-            static let numberOfRows = 1
-        }
-        enum BorderView {
-            static let backgroundColor = UIColor.systemGray4
-            static let height: CGFloat = 1
-        }
-        enum TextField {
-            static let tintColor = UIColor.clear
-        }
     }
 }
