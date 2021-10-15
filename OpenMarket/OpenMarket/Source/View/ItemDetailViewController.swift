@@ -24,8 +24,10 @@ class ItemDetailViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.isPagingEnabled = true
+        collectionView.backgroundColor = .systemBackground
         collectionView.isDirectionalLockEnabled = true
-        collectionView.register(ItemDetailCollectionViewCell.self, forCellWithReuseIdentifier: ItemDetailCollectionViewCell.identifier)
+        collectionView.register(ItemDetailCollectionViewCell.self,
+                                forCellWithReuseIdentifier: ItemDetailCollectionViewCell.identifier)
         return collectionView
     }()
     private let pageControl: UIPageControl = {
@@ -37,7 +39,7 @@ class ItemDetailViewController: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .preferredFont(forTextStyle: .largeTitle)
-        label.numberOfLines = 0
+        label.numberOfLines = .zero
         label.adjustsFontForContentSizeCategory = true
         return label
     }()
@@ -154,7 +156,7 @@ class ItemDetailViewController: UIViewController {
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: view.widthAnchor),
-            scrollView.frameLayoutGuide.topAnchor.constraint(equalTo: collectionView.topAnchor),
+            scrollView.contentLayoutGuide.topAnchor.constraint(equalTo: collectionView.topAnchor),
             scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: descriptionLabel.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
