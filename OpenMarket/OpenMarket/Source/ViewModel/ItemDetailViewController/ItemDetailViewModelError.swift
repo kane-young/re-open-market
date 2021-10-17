@@ -7,6 +7,13 @@
 
 import Foundation
 
-enum ItemDetailViewModelError: Error {
+enum ItemDetailViewModelError: Error, ComprehensibleError {
     case useCaseError(ItemNetworkUseCaseError)
+
+    var message: String {
+        switch self {
+        case .useCaseError(let error):
+            return "UseCase \(error.message)"
+        }
+    }
 }

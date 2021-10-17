@@ -7,13 +7,13 @@
 
 import Foundation
 
-enum ItemEditViewModelError: Error {
+enum ItemEditViewModelError: Error, ComprehensibleError {
     case useCaseError(ItemEditUseCaseError)
 
     var message: String {
         switch self {
         case .useCaseError(let error):
-            return "UseCase Error \(error.message)"
+            return "UseCase \(error.message)"
         }
     }
 }

@@ -182,7 +182,7 @@ final class ItemEditViewController: UIViewController {
             case .dissatisfied:
                 self?.alertDissatisfication()
             case .error(let error):
-                self?.alertErrorMessage(error: error)
+                self?.alertErrorMessage(error)
             default:
                 break
             }
@@ -215,14 +215,6 @@ final class ItemEditViewController: UIViewController {
         }
         let cancel: UIAlertAction = .init(title: Style.Alert.Cancel.title, style: .default, handler: nil)
         alertController.addAction(register)
-        alertController.addAction(cancel)
-        present(alertController, animated: true, completion: nil)
-    }
-
-    private func alertErrorMessage(error: ItemEditViewModelError) {
-        let alertController: UIAlertController = .init(title: Style.Alert.Error.title,
-                                                message: "\(error.message)", preferredStyle: .alert)
-        let cancel: UIAlertAction = .init(title: Style.Alert.Cancel.title, style: .default, handler: nil)
         alertController.addAction(cancel)
         present(alertController, animated: true, completion: nil)
     }

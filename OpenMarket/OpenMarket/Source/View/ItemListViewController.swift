@@ -136,17 +136,6 @@ final class ItemListViewController: UIViewController {
         let itemEditViewController = ItemEditViewController(mode: .register)
         self.navigationController?.pushViewController(itemEditViewController, animated: true)
     }
-
-    private func alertErrorMessage(_ error: ItemListViewModelError) {
-        let alertController = UIAlertController(title: Style.AlertMessage.title,
-                                                message: error.message,
-                                                preferredStyle: .alert)
-        let okay = UIAlertAction(title: Style.AlertMessage.alertActionTitle,
-                                 style: .default,
-                                 handler: nil)
-        alertController.addAction(okay)
-        present(alertController, animated: true, completion: nil)
-    }
 }
 
 extension ItemListViewController: UICollectionViewDelegate {
