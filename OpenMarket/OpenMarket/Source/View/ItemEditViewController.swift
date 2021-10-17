@@ -54,7 +54,7 @@ final class ItemEditViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
-        stackView.spacing = Style.verticalSpacing * 2
+        stackView.spacing = Style.Views.verticalSpacing * 2
         return stackView
     }()
     private lazy var moneyStackView: UIStackView = {
@@ -301,7 +301,7 @@ final class ItemEditViewController: UIViewController {
             photoCollectionView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             photoCollectionView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             photoCollectionView.bottomAnchor.constraint(equalTo: collectionViewBorderView.topAnchor,
-                                                        constant: -Style.verticalSpacing),
+                                                        constant: -Style.Views.verticalSpacing),
             photoCollectionView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.2)
         ])
     }
@@ -309,25 +309,25 @@ final class ItemEditViewController: UIViewController {
     private func configureBorderViewsConstraints() {
         NSLayoutConstraint.activate([
             collectionViewBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
-                                                              constant: Style.horizontalSpacing),
+                                                              constant: Style.Views.horizontalSpacing),
             collectionViewBorderView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
-                                                               constant: -Style.horizontalSpacing),
+                                                               constant: -Style.Views.horizontalSpacing),
             collectionViewBorderView.bottomAnchor.constraint(equalTo: titleTextField.topAnchor,
-                                                             constant: -Style.verticalSpacing),
+                                                             constant: -Style.Views.verticalSpacing),
             titleBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
-                                                     constant: Style.horizontalSpacing),
+                                                     constant: Style.Views.horizontalSpacing),
             titleBorderView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
-                                                      constant: -Style.horizontalSpacing),
-            titleBorderView.bottomAnchor.constraint(equalTo: stockTextField.topAnchor, constant: -Style.verticalSpacing),
-            stockBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: Style.horizontalSpacing),
+                                                      constant: -Style.Views.horizontalSpacing),
+            titleBorderView.bottomAnchor.constraint(equalTo: stockTextField.topAnchor, constant: -Style.Views.verticalSpacing),
+            stockBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: Style.Views.horizontalSpacing),
             stockBorderView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
-                                                      constant: -Style.horizontalSpacing),
-            stockBorderView.bottomAnchor.constraint(equalTo: moneyStackView.topAnchor, constant: -Style.verticalSpacing),
-            priceBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: Style.horizontalSpacing),
+                                                      constant: -Style.Views.horizontalSpacing),
+            stockBorderView.bottomAnchor.constraint(equalTo: moneyStackView.topAnchor, constant: -Style.Views.verticalSpacing),
+            priceBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: Style.Views.horizontalSpacing),
             priceBorderView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
-                                                      constant: -Style.horizontalSpacing),
+                                                      constant: -Style.Views.horizontalSpacing),
             priceBorderView.bottomAnchor.constraint(equalTo: descriptionsTextView.topAnchor,
-                                                    constant: -Style.verticalSpacing),
+                                                    constant: -Style.Views.verticalSpacing),
             collectionViewBorderView.heightAnchor.constraint(equalToConstant: Style.BorderView.height),
             titleBorderView.heightAnchor.constraint(equalToConstant: Style.BorderView.height),
             stockBorderView.heightAnchor.constraint(equalToConstant: Style.BorderView.height),
@@ -337,23 +337,29 @@ final class ItemEditViewController: UIViewController {
 
     private func configureInputViewsConstraints() {
         NSLayoutConstraint.activate([
-            titleTextField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: Style.horizontalSpacing),
+            titleTextField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
+                                                    constant: Style.Views.horizontalSpacing),
             titleTextField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
-                                                     constant: -Style.horizontalSpacing),
-            titleTextField.bottomAnchor.constraint(equalTo: titleBorderView.topAnchor, constant: -Style.verticalSpacing),
-            stockTextField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: Style.horizontalSpacing),
+                                                     constant: -Style.Views.horizontalSpacing),
+            titleTextField.bottomAnchor.constraint(equalTo: titleBorderView.topAnchor,
+                                                   constant: -Style.Views.verticalSpacing),
+            stockTextField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
+                                                    constant: Style.Views.horizontalSpacing),
             stockTextField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
-                                                     constant: -Style.horizontalSpacing),
-            stockTextField.bottomAnchor.constraint(equalTo: stockBorderView.topAnchor, constant: -Style.verticalSpacing),
+                                                     constant: -Style.Views.horizontalSpacing),
+            stockTextField.bottomAnchor.constraint(equalTo: stockBorderView.topAnchor,
+                                                   constant: -Style.Views.verticalSpacing),
             currencyTextField.widthAnchor.constraint(equalToConstant: Style.CurrencyTextField.width),
-            moneyStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: Style.horizontalSpacing),
+            moneyStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
+                                                    constant: Style.Views.horizontalSpacing),
             moneyStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
-                                                     constant: -Style.horizontalSpacing),
-            moneyStackView.bottomAnchor.constraint(equalTo: priceBorderView.topAnchor, constant: -Style.verticalSpacing),
+                                                     constant: -Style.Views.horizontalSpacing),
+            moneyStackView.bottomAnchor.constraint(equalTo: priceBorderView.topAnchor,
+                                                   constant: -Style.Views.verticalSpacing),
             descriptionsTextView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
-                                                          constant: Style.horizontalSpacing),
+                                                          constant: Style.Views.horizontalSpacing),
             descriptionsTextView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
-                                                           constant: -Style.horizontalSpacing),
+                                                           constant: -Style.Views.horizontalSpacing),
             descriptionsTextView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
         ])
     }
@@ -504,7 +510,7 @@ extension ItemEditViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return Style.verticalSpacing
+        return Style.Views.verticalSpacing
     }
 
     func collectionView(_ collectionView: UICollectionView,

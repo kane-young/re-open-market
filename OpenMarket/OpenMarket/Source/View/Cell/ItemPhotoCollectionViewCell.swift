@@ -13,15 +13,15 @@ final class ItemPhotoCollectionViewCell: UICollectionViewCell {
     private var viewModel: ItemEditPhotoCellViewModel?
 
     private let imageView: UIImageView = {
-        let imageView = UIImageView()
+        let imageView: UIImageView = .init()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.cornerRadius = 15
+        imageView.layer.cornerRadius = Style.defaultCornerRadius
         imageView.clipsToBounds = true
         return imageView
     }()
     let deleteButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(systemName: "xmark.circle"), for: .normal)
+        let button: UIButton = .init()
+        button.setImage(Style.ImageView.deleteButtonImage, for: .normal)
         button.layer.cornerRadius = button.bounds.width / 2
         button.tintColor = .black
         button.backgroundColor = .none
@@ -72,6 +72,8 @@ final class ItemPhotoCollectionViewCell: UICollectionViewCell {
     }
 
     private func configureConstraints() {
+        deleteButton.imageView?.layoutMargins = .zero
+        deleteButton.layoutMargins = .zero
         NSLayoutConstraint.activate([
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
@@ -85,8 +87,17 @@ final class ItemPhotoCollectionViewCell: UICollectionViewCell {
     }
 
     private func configureCellStyle() {
-        contentView.layer.cornerRadius = 15
+        contentView.layer.cornerRadius = Style.defaultCornerRadius
         contentView.layer.borderWidth = 1
         contentView.layer.borderColor = UIColor.lightGray.cgColor
+    }
+}
+
+extension ItemPhotoCollectionViewCell {
+    enum Style {
+        static let defaultCornerRadius: CGFloat = 15
+        enum ImageView {
+            static let deleteButtonImage: UIImage? = .init(systemName: "xmark.circle")
+        }
     }
 }

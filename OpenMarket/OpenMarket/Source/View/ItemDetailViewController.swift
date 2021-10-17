@@ -10,7 +10,7 @@ import UIKit
 class ItemDetailViewController: UIViewController {
     // MARK: View Properties
     private let scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
+        let scrollView: UIScrollView = .init()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.isDirectionalLockEnabled = true
@@ -18,7 +18,7 @@ class ItemDetailViewController: UIViewController {
         return scrollView
     }()
     private let collectionView: UICollectionView = {
-        let flowLayout = UICollectionViewFlowLayout()
+        let flowLayout: UICollectionViewFlowLayout = .init()
         flowLayout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -31,29 +31,29 @@ class ItemDetailViewController: UIViewController {
         return collectionView
     }()
     private let pageControl: UIPageControl = {
-        let pageControl = UIPageControl()
+        let pageControl: UIPageControl = .init()
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         pageControl.pageIndicatorTintColor = Style.PageControl.remainPageColor
         pageControl.currentPageIndicatorTintColor = Style.PageControl.currentPageColor
         return pageControl
     }()
     private let titleLabel: UILabel = {
-        let label = UILabel()
+        let label: UILabel = .init()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.adjustsFontForContentSizeCategory = true
-        label.font = .preferredFont(forTextStyle: .largeTitle)
+        label.font = Style.stressedFont
         label.numberOfLines = .zero
         return label
     }()
     private let priceLabel: UILabel = {
-        let label = UILabel()
+        let label: UILabel = .init()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.adjustsFontForContentSizeCategory = true
         label.font = Style.defaultFont
         return label
     }()
     private let discountedPriceLabel: UILabel = {
-        let label = UILabel()
+        let label: UILabel = .init()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.adjustsFontForContentSizeCategory = true
         label.font = Style.defaultFont
@@ -62,19 +62,20 @@ class ItemDetailViewController: UIViewController {
     private lazy var priceStackView: UIStackView = {
         let stackView: UIStackView = .init(arrangedSubviews: [priceLabel, discountedPriceLabel])
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.spacing = Style.defaultViewsMargin
         stackView.distribution = .fillEqually
         stackView.axis = .vertical
         return stackView
     }()
     private let stockLabel: UILabel = {
-        let label = UILabel()
+        let label: UILabel = .init()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.adjustsFontForContentSizeCategory = true
         label.font = Style.defaultFont
         return label
     }()
     private let descriptionLabel: UILabel = {
-        let label = UILabel()
+        let label: UILabel = .init()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.adjustsFontForContentSizeCategory = true
         label.font = Style.defaultFont
@@ -126,18 +127,16 @@ class ItemDetailViewController: UIViewController {
             guard let self = self else { return }
             switch state {
             case .update(let metaData):
-                self.titleLabel.text = metaData.title
-                self.stockLabel.text = metaData.stock
-                self.stockLabel.textColor = metaData.isSoldOut ? Style.StockLabel.soldOutColor :
-                    Style.StockLabel.normalColor
-                self.priceLabel.attributedText = metaData.price
-                self.priceLabel.textColor = metaData.isNeededDiscountedLabel ? Style.PriceLabel.strikeThroughColor :
-                    Style.PriceLabel.normalColor
                 self.discountedPriceLabel.isHidden = !metaData.isNeededDiscountedLabel
                 self.discountedPriceLabel.text = metaData.discountedPrice
-                self.descriptionLabel.text = metaData.descriptions
-                self.collectionView.reloadData()
+                self.stockLabel.textColor = metaData.stockLabelTextColor
+                self.priceLabel.textColor = metaData.priceLabelTextColor
                 self.pageControl.numberOfPages = metaData.imageCount
+                self.descriptionLabel.text = metaData.descriptions
+                self.priceLabel.attributedText = metaData.price
+                self.titleLabel.text = metaData.title
+                self.stockLabel.text = metaData.stock
+                self.collectionView.reloadData()
             case .itemNetworkError(let error):
                 self.alertErrorMessage(error)
             default:
@@ -228,15 +227,18 @@ extension ItemDetailViewController: UICollectionViewDataSource {
 
 extension ItemDetailViewController: UICollectionViewDelegateFlowLayout {
     // MARK: CollectionView Flow Layout Method
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return .zero
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return .zero
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.bounds.width,
                       height: collectionView.bounds.height)
     }
@@ -248,6 +250,7 @@ extension ItemDetailViewController {
         static let defaultBackgroundColor: UIColor = .systemBackground
         static let defaultTintColor: UIColor = .label
         static let defaultFont: UIFont = .preferredFont(forTextStyle: .body)
+        static let stressedFont: UIFont = .preferredFont(forTextStyle: .largeTitle)
         static let defaultViewsMargin: CGFloat = 10
         enum MoreBarButtonItem {
             static let image: UIImage? = .init(named: "ellipsis")

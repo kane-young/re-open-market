@@ -11,25 +11,25 @@ class AddPhotoCollectionViewCell: UICollectionViewCell {
     static let identifier: String = "AddPhotoCollectionViewCell"
 
     private let imageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "camera"))
+        let imageView: UIImageView = .init(image: Style.ImageView.addButtonImage)
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.tintColor = .label
+        imageView.tintColor = Style.defaultTintColor
         return imageView
     }()
     private let photoCountLabel: UILabel = {
-        let label = UILabel()
+        let label: UILabel = .init()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .label
+        label.textColor = Style.defaultTextColor
         label.font = UIFont.preferredFont(forTextStyle: .body)
-        label.text = "0/5"
+        label.text = "\(Int.zero)/\(Style.maximumPhotoCount)"
         return label
     }()
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [imageView, photoCountLabel])
+        let stackView: UIStackView = .init(arrangedSubviews: [imageView, photoCountLabel])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.alignment = .center
-        stackView.spacing = 5
-        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.spacing = Style.Views.defaultMargin
         return stackView
     }()
 
@@ -45,9 +45,9 @@ class AddPhotoCollectionViewCell: UICollectionViewCell {
     }
 
     private func configureCellStyle() {
-        contentView.layer.borderWidth = 1
-        contentView.layer.borderColor = UIColor.lightGray.cgColor
-        contentView.layer.cornerRadius = 15
+        contentView.layer.borderWidth = Style.Views.borderWidth
+        contentView.layer.borderColor = Style.Views.borderColor
+        contentView.layer.cornerRadius = Style.Views.cornerRadius
     }
 
     private func addSubviews() {
@@ -64,6 +64,23 @@ class AddPhotoCollectionViewCell: UICollectionViewCell {
 
 extension AddPhotoCollectionViewCell: ItemEditViewModelDelegate {
     func imagesCountChanged(_ count: Int) {
-        photoCountLabel.text = "\(count)/5"
+        photoCountLabel.text = "\(count)/\(Style.maximumPhotoCount)"
+    }
+}
+
+extension AddPhotoCollectionViewCell {
+    enum Style {
+        static let defaultTintColor: UIColor = .label
+        static let defaultTextColor: UIColor = .label
+        static let maximumPhotoCount: Int = 5
+        enum ImageView {
+            static let addButtonImage: UIImage? = .init(systemName: "camera")
+        }
+        enum Views {
+            static let defaultMargin: CGFloat = 5
+            static let borderWidth: CGFloat = 1
+            static let borderColor: CGColor = UIColor.lightGray.cgColor
+            static let cornerRadius: CGFloat = 15
+        }
     }
 }

@@ -17,23 +17,23 @@ final class ItemListViewController: UIViewController {
     // MARK: UI Properties
     private let addBarButtonItem: UIBarButtonItem = {
         let barButtonItem: UIBarButtonItem = .init(systemItem: .add)
-        barButtonItem.tintColor = .label
+        barButtonItem.tintColor = Style.defaultTintColor
         return barButtonItem
     }()
     private let segmentedControl: UISegmentedControl = {
         let segmentedControl: UISegmentedControl = .init(items: [Style.SegmentedControl.listItem,
                                                                  Style.SegmentedControl.gridItem])
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
-        segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.systemBackground], for: .selected)
-        segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.label], for: .normal)
-        segmentedControl.selectedSegmentTintColor = .label
-        segmentedControl.backgroundColor = .systemBackground
-        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.setTitleTextAttributes([.foregroundColor: Style.defaultBackgroundColor], for: .selected)
+        segmentedControl.setTitleTextAttributes([.foregroundColor: Style.defaultTintColor], for: .normal)
+        segmentedControl.selectedSegmentTintColor = Style.defaultTintColor
+        segmentedControl.backgroundColor = Style.defaultBackgroundColor
+        segmentedControl.selectedSegmentIndex = .zero
         return segmentedControl
     }()
     private let activityIndicator: UIActivityIndicatorView = {
         let indicator: UIActivityIndicatorView = .init()
-        indicator.color = Style.reverseDefaultColor
+        indicator.color = Style.defaultTintColor
         indicator.style = .large
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
@@ -41,7 +41,7 @@ final class ItemListViewController: UIViewController {
     private let collectionView: UICollectionView = {
         let flowLayout: UICollectionViewFlowLayout = .init()
         let collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: flowLayout)
-        collectionView.backgroundColor = Style.defaultColor
+        collectionView.backgroundColor = Style.defaultBackgroundColor
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.register(ItemListCollectionViewCell.self, forCellWithReuseIdentifier: ItemListCollectionViewCell.identifier)
         collectionView.register(ItemGridCollectionViewCell.self, forCellWithReuseIdentifier: ItemGridCollectionViewCell.identifier)
@@ -76,7 +76,7 @@ final class ItemListViewController: UIViewController {
         segmentedControl.addTarget(self, action: #selector(segmentedControlChangedValue(_:)), for: .valueChanged)
         navigationItem.titleView = segmentedControl
         navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.barTintColor = Style.defaultColor
+        navigationController?.navigationBar.barTintColor = Style.defaultBackgroundColor
     }
 
     private func viewModelBind() {
@@ -100,7 +100,7 @@ final class ItemListViewController: UIViewController {
     }
 
     private func configureView() {
-        self.view.backgroundColor = Style.defaultColor
+        self.view.backgroundColor = Style.defaultBackgroundColor
     }
 
     private func configureCollectionView() {
@@ -207,9 +207,9 @@ extension ItemListViewController: UICollectionViewDelegateFlowLayout {
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         switch cellStyle {
         case .list:
-            return Style.CollectionView.gridLayoutMinimumLineSpacing
-        case .grid:
             return Style.CollectionView.listLayoutMinimumLineSpacing
+        case .grid:
+            return Style.CollectionView.gridLayoutMinimumLineSpacing
         }
     }
 
@@ -227,29 +227,15 @@ extension ItemListViewController: UICollectionViewDelegateFlowLayout {
 
 extension ItemListViewController {
     private enum Style {
-        static let defaultColor: UIColor = .systemBackground
-        static let reverseDefaultColor: UIColor = .label
+        static let defaultBackgroundColor: UIColor = .systemBackground
+        static let defaultTintColor: UIColor = .label
         enum SegmentedControl {
             static let listItem = "LIST"
             static let gridItem = "GRID"
         }
-        enum NavigationBar {
-            static let title = "오픈마켓"
-        }
-        enum BarButtonItem {
-            static let gridImage = UIImage(systemName: "square.grid.2x2")
-            static let plusImage = UIImage(systemName: "plus")
-            static let listImage = UIImage(systemName: "list.dash")
-            static let tintColor = UIColor.black
-        }
-        enum AlertMessage {
-            static let title = "에러 발생"
-            static let alertActionTitle = "OK"
-        }
         enum CollectionView {
-            static let backgroundColor = UIColor.white
-            static let listLayoutMinimumLineSpacing: CGFloat = 10
-            static let gridLayoutMinimumLineSpacing: CGFloat = 0
+            static let listLayoutMinimumLineSpacing: CGFloat = .zero
+            static let gridLayoutMinimumLineSpacing: CGFloat = 10
             static let listLayoutInsets: UIEdgeInsets = .zero
             static let gridLayoutInsets: UIEdgeInsets = .init(top: 10, left: 10, bottom: 10, right: 10)
             static let remainCellCount: Int = 10

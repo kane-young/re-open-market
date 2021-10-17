@@ -19,12 +19,13 @@ final class ItemDetailViewModel {
     struct MetaData {
         let title: String
         let price: NSAttributedString
+        let priceLabelTextColor: UIColor
         let discountedPrice: String
         let isNeededDiscountedLabel: Bool
         let stock: String
+        let stockLabelTextColor: UIColor
         let descriptions: String
         let imageCount: Int
-        let isSoldOut: Bool
     }
 
     // MARK: Properties
@@ -62,16 +63,29 @@ final class ItemDetailViewModel {
                 guard let descriptions = item.descriptions else { return }
                 let metaData = MetaData(title: item.title,
                                         price: self.originalPriceText(item: item),
+                                        priceLabelTextColor: self.priceLabelTextColor(item: item),
                                         discountedPrice: self.discountedPriceText(item),
                                         isNeededDiscountedLabel: isNeededDiscountedLabel,
                                         stock: self.convertStockText(item),
+                                        stockLabelTextColor: self.stockLabelTextColor(item: item),
                                         descriptions: descriptions,
-                                        imageCount: images.count,
-                                        isSoldOut: item.stock == .zero ? true : false)
+                                        imageCount: images.count)
                 self.state = .update(metaData)
             case .failure(let error):
                 self.state = .itemNetworkError(.useCaseError(error))
             }
+        }
+    }
+
+    private func priceLabelTextColor(item: Item) -> UIColor {
+        return item.discountedPrice != nil ? Format.Price.stressedColor : Format.Price.defaultColor
+    }
+
+    private func stockLabelTextColor(item: Item) -> UIColor {
+        if item.stock == .zero {
+            return Format.Stock.soldOutColor
+        } else {
+            return Format.Stock.defaultColor
         }
     }
 
@@ -118,6 +132,10 @@ final class ItemDetailViewModel {
 extension ItemDetailViewModel {
     // MARK: Format
     private enum Format {
+        enum Price {
+            static let defaultColor: UIColor = .label
+            static let stressedColor: UIColor = .systemRed
+        }
         enum Stock {
             static let standardCount: Int = 1000
             static let soldOutColor: UIColor = .systemYellow

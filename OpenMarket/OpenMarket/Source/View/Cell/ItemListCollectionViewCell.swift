@@ -18,27 +18,25 @@ final class ItemListCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
     private var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .title2)
+        label.font = Style.stressedFont
         return label
     }()
     private var priceLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .body)
-        label.textColor = .systemRed
+        label.font = Style.defaultFont
         return label
     }()
     private var discountedPriceLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .body)
+        label.font = Style.defaultFont
         return label
     }()
     private var stockLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .body)
-        label.textAlignment = .left
+        label.font = Style.defaultFont
         return label
     }()
     private lazy var priceLabelsStackView: UIStackView = {
@@ -53,7 +51,6 @@ final class ItemListCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
         let stackView = UIStackView(arrangedSubviews: [titleLabel, priceLabelsStackView])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.distribution = .fillEqually
         stackView.spacing = Style.StackView.defaultSpacing
         return stackView
     }()
@@ -66,17 +63,18 @@ final class ItemListCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configureViews()
+        addSubViews()
+        configureView()
         configureConstraints()
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        thumbnailImageView.image = nil
-        titleLabel.text = nil
-        priceLabel.text = nil
-        stockLabel.text = nil
         discountedPriceLabel.text = nil
+        thumbnailImageView.image = nil
+        priceLabel.attributedText = nil
+        titleLabel.text = nil
+        stockLabel.text = nil
     }
 
     func bind(_ viewModel: ItemListCellViewModel) {
@@ -84,13 +82,14 @@ final class ItemListCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
         viewModel.bind { [weak self] state in
             switch state {
             case .update(let metaData):
-                self?.thumbnailImageView.image = metaData.thumbnail
-                self?.titleLabel.text = metaData.title
-                self?.priceLabel.text = metaData.originalPrice
-                self?.stockLabel.text = metaData.stock
-                self?.stockLabel.textColor = metaData.stockLabelTextColor
                 self?.discountedPriceLabel.isHidden = metaData.isneededDiscountedLabel
-                self?.discountedPriceLabel.attributedText = metaData.discountedPrice
+                self?.priceLabel.attributedText = metaData.originalPrice
+                self?.discountedPriceLabel.text = metaData.discountedPrice
+                self?.thumbnailImageView.image = metaData.thumbnail
+                self?.priceLabel.textColor = metaData.priceLabelTextColor
+                self?.stockLabel.textColor = metaData.stockLabelTextColor
+                self?.titleLabel.text = metaData.title
+                self?.stockLabel.text = metaData.stock
             case .error(_):
                 self?.thumbnailImageView.image = nil
             default:
@@ -103,12 +102,15 @@ final class ItemListCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
         viewModel?.configureCell()
     }
 
-    private func configureViews() {
+    private func configureView() {
+        contentView.backgroundColor = Style.defaultBackgroundColor
+    }
+
+    private func addSubViews() {
         contentView.addSubview(thumbnailImageView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(stockLabel)
         contentView.addSubview(itemInfoStackView)
-        contentView.backgroundColor = .systemBackground
     }
 
     private func configureConstraints() {
@@ -133,15 +135,19 @@ final class ItemListCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
                                                  constant: -Style.Views.defaultMargin),
             stockLabel.topAnchor.constraint(equalTo: thumbnailImageView.topAnchor)
         ])
+        discountedPriceLabel.setContentCompressionResistancePriority(Style.Priority.veryHigh, for: .horizontal)
+        priceLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         stockLabel.setContentHuggingPriority(Style.Priority.veryHigh, for: .horizontal)
         stockLabel.setContentCompressionResistancePriority(Style.Priority.veryHigh, for: .horizontal)
-        priceLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-        priceLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
     }
 }
 
 extension ItemListCollectionViewCell {
     private enum Style {
+        static let stressedFont: UIFont = .preferredFont(forTextStyle: .title2)
+        static let defaultFont: UIFont = .preferredFont(forTextStyle: .body)
+        static let defaultBackgroundColor: UIColor = .systemBackground
+        static let defaultTextColor: UIColor = .label
         enum StackView {
             static let defaultSpacing: CGFloat = 5
         }

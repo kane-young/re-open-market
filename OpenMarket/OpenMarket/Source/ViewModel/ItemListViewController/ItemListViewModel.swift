@@ -20,7 +20,7 @@ final class ItemListViewModel {
     private let useCase: ItemListNetworkUseCaseProtocol
     private(set) var items: [Item] = [] {
         didSet {
-            let indexPaths = (oldValue.count..<items.count).map { IndexPath(item: $0, section: 0) }
+            let indexPaths = (oldValue.count..<items.count).map { IndexPath(item: $0, section: .zero) }
             if oldValue.count == .zero {
                 state = .initial(indexPaths)
             } else {

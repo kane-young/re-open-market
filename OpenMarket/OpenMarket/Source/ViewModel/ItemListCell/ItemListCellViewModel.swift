@@ -20,8 +20,9 @@ final class ItemListCellViewModel {
         var thumbnail: UIImage?
         let title: String
         let isneededDiscountedLabel: Bool
-        let discountedPrice: NSAttributedString
-        let originalPrice: String
+        let discountedPrice: String
+        let originalPrice: NSAttributedString
+        let priceLabelTextColor: UIColor
         let stockLabelTextColor: UIColor
         let stock: String
     }
@@ -75,17 +76,19 @@ final class ItemListCellViewModel {
     }
 
     private func updateText() {
-        let isneededDiscountedLabel = item.discountedPrice == nil
-        let discountedPrice = discountedPriceText(isneededDiscountedLabel)
-        let originalPrice = originalPriceText(isneededDiscountedLabel)
-        let stockLabelTextColor: UIColor = item.stock == 0 ?
+        let isNeededDiscountedLabel = item.discountedPrice == nil
+        let discountedPrice = discountedPriceText()
+        let originalPrice = originalPriceText()
+        let priceLabelTextColor = priceLabelTextColor(isNeededDiscountedLabel)
+        let stockLabelTextColor: UIColor = item.stock == .zero ?
             Format.Stock.soldOutColor : Format.Stock.defaultColor
         let stock = stockText(item.stock)
         let metaData = MetaData(thumbnail: nil,
                                 title: item.title,
-                                isneededDiscountedLabel: isneededDiscountedLabel,
+                                isneededDiscountedLabel: isNeededDiscountedLabel,
                                 discountedPrice: discountedPrice,
                                 originalPrice: originalPrice,
+                                priceLabelTextColor: priceLabelTextColor,
                                 stockLabelTextColor: stockLabelTextColor,
                                 stock: stock)
         state = .update(metaData)
@@ -101,15 +104,27 @@ final class ItemListCellViewModel {
         }
     }
 
-    private func originalPriceText(_ isneededDiscountedLabel: Bool) -> String {
-        let price = isneededDiscountedLabel ? converToMoneyType(item.price) : converToMoneyType(item.discountedPrice ?? .zero)
-        let text = item.currency + " " + price
-        return text
+    private func priceLabelTextColor(_ isNeededDiscountedLabel: Bool) -> UIColor {
+        return isNeededDiscountedLabel ? .label : .systemRed
     }
 
-    private func discountedPriceText(_ isneededDiscountedLabel: Bool) -> NSAttributedString {
-        let price = converToMoneyType(item.price)
-        return isneededDiscountedLabel ? .init() : "\(item.currency) \(price)".strikeThrough()
+    private func originalPriceText() -> NSAttributedString {
+        let convertedFormatPrice = converToMoneyType(item.price)
+        let text = "\(item.currency) \(convertedFormatPrice)"
+        if item.discountedPrice != nil {
+            return text.strikeThrough()
+        } else {
+            return NSAttributedString(string: text)
+        }
+    }
+
+    private func discountedPriceText() -> String {
+        if let discountedPrice = item.discountedPrice {
+            let convertedFormatPrice = converToMoneyType(discountedPrice)
+            return "\(item.currency) \(convertedFormatPrice)"
+        } else {
+            return .init()
+        }
     }
 
     private func converToMoneyType(_ price: Int) -> String {
