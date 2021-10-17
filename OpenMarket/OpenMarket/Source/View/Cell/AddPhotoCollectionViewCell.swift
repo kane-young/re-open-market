@@ -10,6 +10,7 @@ import UIKit
 class AddPhotoCollectionViewCell: UICollectionViewCell {
     static let identifier: String = "AddPhotoCollectionViewCell"
 
+    // MARK: View Properties
     private let imageView: UIImageView = {
         let imageView: UIImageView = .init(image: Style.ImageView.addButtonImage)
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -69,6 +70,7 @@ extension AddPhotoCollectionViewCell: ItemEditViewModelDelegate {
 }
 
 extension AddPhotoCollectionViewCell {
+    // MARK: Style
     enum Style {
         static let defaultTintColor: UIColor = .label
         static let defaultTextColor: UIColor = .label

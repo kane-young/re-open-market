@@ -10,6 +10,7 @@ import UIKit
 final class ItemGridCollectionViewCell: UICollectionViewCell, ItemCellDisplayable {
     static let identifier: String = "ItemGridCell"
 
+    // MARK: View Properties
     private var thumbnailImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -53,6 +54,7 @@ final class ItemGridCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
         return stackView
     }()
 
+    // MARK: Property
     private var viewModel: ItemListCellViewModel?
 
     required init?(coder: NSCoder) {
@@ -75,6 +77,7 @@ final class ItemGridCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
         stockLabel.text = nil
     }
 
+    // MARK: Instance Method
     func bind(_ viewModel: ItemListCellViewModel) {
         self.viewModel = viewModel
         viewModel.bind { [weak self] state in
@@ -147,6 +150,7 @@ final class ItemGridCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
 }
 
 extension ItemGridCollectionViewCell {
+    // MARK: Style
     enum Style {
         static let defaultFont: UIFont = .preferredFont(forTextStyle: .body)
         static let stressedFont: UIFont = .preferredFont(forTextStyle: .title2)

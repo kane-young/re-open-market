@@ -10,6 +10,7 @@ import UIKit
 class ItemDetailPhotoCollectionViewCell: UICollectionViewCell {
     static let identifier: String = "ItemDetailCollectionViewCell"
 
+    // MARK: View Property
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -17,6 +18,7 @@ class ItemDetailPhotoCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
 
+    // MARk: Property
     private var viewModel: ItemDetailPhotoCellViewModel?
 
     override init(frame: CGRect) {
@@ -29,6 +31,7 @@ class ItemDetailPhotoCollectionViewCell: UICollectionViewCell {
         fatalError("not use interface builder")
     }
 
+    // MARK: Instance Method
     func configureCell(with imagePath: String) {
         viewModel = ItemDetailPhotoCellViewModel(imagePath: imagePath)
         viewModel?.bind({ [weak self] state in

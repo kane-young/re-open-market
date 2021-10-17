@@ -10,8 +10,7 @@ import UIKit
 final class ItemEditPhotoCollectionViewCell: UICollectionViewCell {
     static let identifier: String = "ItemPhotoCollectionViewCell"
 
-    private var viewModel: ItemEditPhotoCellViewModel?
-
+    // MARK: View Properties
     private let imageView: UIImageView = {
         let imageView: UIImageView = .init()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -21,14 +20,17 @@ final class ItemEditPhotoCollectionViewCell: UICollectionViewCell {
     }()
     let deleteButton: UIButton = {
         let button: UIButton = .init()
-        button.setImage(Style.ImageView.deleteButtonImage, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setBackgroundImage(Style.DeleteButton.image, for: .normal)
         button.layer.cornerRadius = button.bounds.width / 2
         button.tintColor = .black
         button.backgroundColor = .none
         button.clipsToBounds = true
-        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+
+    // MARK: Property
+    private var viewModel: ItemEditPhotoCellViewModel?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -46,6 +48,7 @@ final class ItemEditPhotoCollectionViewCell: UICollectionViewCell {
         imageView.image = nil
     }
 
+    // MARK: Instance Method
     func addDeleteButtonTarget(target: Any?, action: Selector, for event: UIControl.Event) {
         deleteButton.addTarget(target, action: action, for: event)
     }
@@ -82,22 +85,32 @@ final class ItemEditPhotoCollectionViewCell: UICollectionViewCell {
             deleteButton.centerXAnchor.constraint(equalTo: contentView.leadingAnchor),
             deleteButton.centerYAnchor.constraint(equalTo: contentView.topAnchor),
             deleteButton.widthAnchor.constraint(equalTo: deleteButton.heightAnchor),
-            deleteButton.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 1/2)
+            deleteButton.widthAnchor.constraint(equalTo: contentView.widthAnchor,
+                                                multiplier: Style.DeleteButton.sizeRatio)
         ])
     }
 
     private func configureCellStyle() {
         contentView.layer.cornerRadius = Style.defaultCornerRadius
-        contentView.layer.borderWidth = 1
-        contentView.layer.borderColor = UIColor.lightGray.cgColor
+        contentView.layer.borderWidth = Style.defaultBorderWidth
+        contentView.layer.borderColor = Style.ContentView.borderColor
     }
 }
 
 extension ItemEditPhotoCollectionViewCell {
+    // MARK: Style
     enum Style {
         static let defaultCornerRadius: CGFloat = 15
-        enum ImageView {
-            static let deleteButtonImage: UIImage? = .init(systemName: "xmark.circle")
+        static let defaultBorderWidth: CGFloat = 1
+        enum ContentView {
+            static let borderColor: CGColor = UIColor.lightGray.cgColor
+        }
+        enum DeleteButton {
+            static let image: UIImage? = .init(systemName: "xmark.circle")
+            static let backgroundColor: UIColor = .systemBackground
+            static let tintColor: UIColor = .label
+            static let sizeRatio: CGFloat = 1/4
+            static let borderColor: CGColor = UIColor.systemBackground.cgColor
         }
     }
 }

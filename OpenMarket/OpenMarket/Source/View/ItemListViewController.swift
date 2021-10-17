@@ -14,7 +14,7 @@ final class ItemListViewController: UIViewController {
         case grid
     }
 
-    // MARK: UI Properties
+    // MARK: Views Properties
     private let addBarButtonItem: UIBarButtonItem = {
         let barButtonItem: UIBarButtonItem = .init(systemItem: .add)
         barButtonItem.tintColor = Style.defaultTintColor
