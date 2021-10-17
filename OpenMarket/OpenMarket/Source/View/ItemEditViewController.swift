@@ -41,8 +41,8 @@ final class ItemEditViewController: UIViewController {
         let collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: flowLayout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.isDirectionalLockEnabled = true
-        collectionView.register(ItemPhotoCollectionViewCell.self,
-                                forCellWithReuseIdentifier: ItemPhotoCollectionViewCell.identifier)
+        collectionView.register(ItemEditPhotoCollectionViewCell.self,
+                                forCellWithReuseIdentifier: ItemEditPhotoCollectionViewCell.identifier)
         collectionView.register(AddPhotoCollectionViewCell.self,
                                 forCellWithReuseIdentifier: AddPhotoCollectionViewCell.identifier)
         collectionView.backgroundColor = Style.backgroundColor
@@ -438,7 +438,7 @@ extension ItemEditViewController: UICollectionViewDataSource {
             viewModel.delegate = addPhotoCell
             cell = addPhotoCell
         } else {
-            guard let photoCell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemPhotoCollectionViewCell.identifier, for: indexPath) as? ItemPhotoCollectionViewCell else {
+            guard let photoCell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemEditPhotoCollectionViewCell.identifier, for: indexPath) as? ItemEditPhotoCollectionViewCell else {
                 return UICollectionViewCell()
             }
             photoCell.addDeleteButtonTarget(target: self, action: #selector(touchDeletePhotoButton(_:)), for: .touchUpInside)
@@ -452,7 +452,7 @@ extension ItemEditViewController: UICollectionViewDataSource {
     @objc private func touchDeletePhotoButton(_ sender: UIButton) {
         for index in 0..<viewModel.images.count {
             let indexPath = IndexPath(item: index + 1, section: 0)
-            guard let cell = photoCollectionView.cellForItem(at: indexPath) as? ItemPhotoCollectionViewCell else { return }
+            guard let cell = photoCollectionView.cellForItem(at: indexPath) as? ItemEditPhotoCollectionViewCell else { return }
             if cell.deleteButton == sender {
                 viewModel.deleteImage(indexPath)
             }

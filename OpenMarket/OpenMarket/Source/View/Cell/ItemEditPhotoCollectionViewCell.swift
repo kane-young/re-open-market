@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ItemPhotoCollectionViewCell: UICollectionViewCell {
+final class ItemEditPhotoCollectionViewCell: UICollectionViewCell {
     static let identifier: String = "ItemPhotoCollectionViewCell"
 
     private var viewModel: ItemEditPhotoCellViewModel?
@@ -93,7 +93,7 @@ final class ItemPhotoCollectionViewCell: UICollectionViewCell {
     }
 }
 
-extension ItemPhotoCollectionViewCell {
+extension ItemEditPhotoCollectionViewCell {
     enum Style {
         static let defaultCornerRadius: CGFloat = 15
         enum ImageView {

@@ -73,8 +73,8 @@
 		C3916AC5270B29CA005E5C24 /* StubNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3916AC4270B29CA005E5C24 /* StubNetworkManager.swift */; };
 		C3916AC7270B3B36005E5C24 /* ThumbnailUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3916AC6270B3B36005E5C24 /* ThumbnailUseCaseTests.swift */; };
 		C3CDCEE2271728F500127636 /* ItemDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CDCEE1271728F500127636 /* ItemDetailViewController.swift */; };
-		C3CDCEE42717291200127636 /* ItemDetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CDCEE32717291200127636 /* ItemDetailCollectionViewCell.swift */; };
-		C3E76FC12712AFB600755E07 /* ItemPhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FC02712AFB600755E07 /* ItemPhotoCollectionViewCell.swift */; };
+		C3CDCEE42717291200127636 /* ItemDetailPhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CDCEE32717291200127636 /* ItemDetailPhotoCollectionViewCell.swift */; };
+		C3E76FC12712AFB600755E07 /* ItemEditPhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FC02712AFB600755E07 /* ItemEditPhotoCollectionViewCell.swift */; };
 		C3E76FCB2712D2AF00755E07 /* AddPhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FCA2712D2AF00755E07 /* AddPhotoCollectionViewCell.swift */; };
 		C3E76FD12712E79000755E07 /* ItemEditPhotoCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FD02712E79000755E07 /* ItemEditPhotoCellViewModel.swift */; };
 		C3E76FD32712F56200755E07 /* ItemEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FD22712F56200755E07 /* ItemEditViewModel.swift */; };
@@ -165,8 +165,8 @@
 		C3916AC4270B29CA005E5C24 /* StubNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubNetworkManager.swift; sourceTree = "<group>"; };
 		C3916AC6270B3B36005E5C24 /* ThumbnailUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailUseCaseTests.swift; sourceTree = "<group>"; };
 		C3CDCEE1271728F500127636 /* ItemDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewController.swift; sourceTree = "<group>"; };
-		C3CDCEE32717291200127636 /* ItemDetailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailCollectionViewCell.swift; sourceTree = "<group>"; };
-		C3E76FC02712AFB600755E07 /* ItemPhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemPhotoCollectionViewCell.swift; sourceTree = "<group>"; };
+		C3CDCEE32717291200127636 /* ItemDetailPhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailPhotoCollectionViewCell.swift; sourceTree = "<group>"; };
+		C3E76FC02712AFB600755E07 /* ItemEditPhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditPhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3E76FCA2712D2AF00755E07 /* AddPhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3E76FD02712E79000755E07 /* ItemEditPhotoCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditPhotoCellViewModel.swift; sourceTree = "<group>"; };
 		C3E76FD22712F56200755E07 /* ItemEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditViewModel.swift; sourceTree = "<group>"; };
@@ -443,8 +443,8 @@
 		C35943D827059AF800146FFC /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				C3CDCEE32717291200127636 /* ItemDetailCollectionViewCell.swift */,
-				C3E76FC02712AFB600755E07 /* ItemPhotoCollectionViewCell.swift */,
+				C3CDCEE32717291200127636 /* ItemDetailPhotoCollectionViewCell.swift */,
+				C3E76FC02712AFB600755E07 /* ItemEditPhotoCollectionViewCell.swift */,
 				C3E76FCA2712D2AF00755E07 /* AddPhotoCollectionViewCell.swift */,
 				C37EA62B2702FD6A000518A0 /* ItemListCollectionViewCell.swift */,
 				C37EA6332704444C000518A0 /* ItemGridCollectionViewCell.swift */,
@@ -682,8 +682,8 @@
 				C32EDBA826FC950000F6BC53 /* PatchItem.swift in Sources */,
 				C3441A9227184E0200D876B0 /* ItemNetworkUseCase.swift in Sources */,
 				C37EA62E2702FE91000518A0 /* ItemListCellViewModel.swift in Sources */,
-				C3E76FC12712AFB600755E07 /* ItemPhotoCollectionViewCell.swift in Sources */,
-				C3CDCEE42717291200127636 /* ItemDetailCollectionViewCell.swift in Sources */,
+				C3E76FC12712AFB600755E07 /* ItemEditPhotoCollectionViewCell.swift in Sources */,
+				C3CDCEE42717291200127636 /* ItemDetailPhotoCollectionViewCell.swift in Sources */,
 				C32EDBD326FEB88F00F6BC53 /* OpenMarketAPI.swift in Sources */,
 				C37EA63027033E0A000518A0 /* ImageNetworkUseCase.swift in Sources */,
 				C32EDB8826FC904B00F6BC53 /* ItemListViewController.swift in Sources */,

@@ -26,8 +26,8 @@ class ItemDetailViewController: UIViewController {
         collectionView.isPagingEnabled = true
         collectionView.backgroundColor = Style.defaultBackgroundColor
         collectionView.isDirectionalLockEnabled = true
-        collectionView.register(ItemDetailCollectionViewCell.self,
-                                forCellWithReuseIdentifier: ItemDetailCollectionViewCell.identifier)
+        collectionView.register(ItemDetailPhotoCollectionViewCell.self,
+                                forCellWithReuseIdentifier: ItemDetailPhotoCollectionViewCell.identifier)
         return collectionView
     }()
     private let pageControl: UIPageControl = {
@@ -216,7 +216,7 @@ extension ItemDetailViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemDetailCollectionViewCell.identifier, for: indexPath) as? ItemDetailCollectionViewCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemDetailPhotoCollectionViewCell.identifier, for: indexPath) as? ItemDetailPhotoCollectionViewCell else {
             return UICollectionViewCell()
         }
         let image = viewModel.images[indexPath.item]
