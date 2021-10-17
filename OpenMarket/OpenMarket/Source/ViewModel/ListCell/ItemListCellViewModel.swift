@@ -8,6 +8,14 @@
 import UIKit
 
 final class ItemListCellViewModel {
+    // MARK: State
+    enum State {
+        case empty
+        case update(ItemListCellViewModel.MetaData)
+        case error(ItemListCellViewModelError)
+    }
+
+    // MARK: MetaData
     struct MetaData {
         var thumbnail: UIImage?
         let title: String
@@ -18,11 +26,12 @@ final class ItemListCellViewModel {
         let stock: String
     }
 
+    // MARK: Properties
     private let item: Item
-    private let useCase: ThumbnailUseCaseProtocol
+    private let useCase: ImageNetworkUseCaseProtocol
     private var imageTask: URLSessionDataTask?
-    private var handler: ((ItemListCellViewModelState) -> Void)?
-    private var state: ItemListCellViewModelState = .empty {
+    private var handler: ((State) -> Void)?
+    private var state: State = .empty {
         didSet {
             DispatchQueue.main.async { [weak self] in
                 guard let state = self?.state else {
@@ -33,12 +42,13 @@ final class ItemListCellViewModel {
         }
     }
 
-    init(item: Item, useCase: ThumbnailUseCaseProtocol = ThumbnailUseCase.shared) {
+    init(item: Item, useCase: ImageNetworkUseCaseProtocol = ImageNetworkUseCase.shared) {
         self.item = item
         self.useCase = useCase
     }
 
-    func bind(_ handler: @escaping (ItemListCellViewModelState) -> Void) {
+    // MARK: Instance Method
+    func bind(_ handler: @escaping (State) -> Void) {
         self.handler = handler
     }
 
@@ -69,7 +79,7 @@ final class ItemListCellViewModel {
         let discountedPrice = discountedPriceText(isneededDiscountedLabel)
         let originalPrice = originalPriceText(isneededDiscountedLabel)
         let stockLabelTextColor: UIColor = item.stock == 0 ?
-            Format.Stock.outOfStockColor : Format.Stock.defaultStockColor
+            Format.Stock.soldOutColor : Format.Stock.defaultColor
         let stock = stockText(item.stock)
         let metaData = MetaData(thumbnail: nil,
                                 title: item.title,
@@ -83,11 +93,11 @@ final class ItemListCellViewModel {
 
     private func stockText(_ count: Int) -> String {
         if count == .zero {
-            return Format.Stock.outOfStockText
+            return Format.Stock.soldOutText
         } else if count >= Format.Stock.standardCount {
             return Format.Stock.excessiveStockText
         } else {
-            return "\(Format.Stock.format)\(count)"
+            return "\(Format.Stock.preText)\(count)"
         }
     }
 
@@ -114,14 +124,15 @@ final class ItemListCellViewModel {
 }
 
 extension ItemListCellViewModel {
+    // MARK: Format
     private enum Format {
         enum Stock {
             static let standardCount: Int = 1000
-            static let outOfStockColor: UIColor = .systemYellow
-            static let defaultStockColor: UIColor = .label
-            static let outOfStockText: String = "품절"
-            static let format: String = "수량 : "
-            static let excessiveStockText: String = "\(format)999+"
+            static let soldOutColor: UIColor = .systemYellow
+            static let defaultColor: UIColor = .label
+            static let soldOutText: String = "품절"
+            static let preText: String = "수량 : "
+            static let excessiveStockText: String = "\(preText)999+"
         }
     }
 }

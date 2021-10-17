@@ -41,7 +41,7 @@ class ItemDetailViewController: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.adjustsFontForContentSizeCategory = true
-        label.font = Style.defaultFont
+        label.font = .preferredFont(forTextStyle: .largeTitle)
         label.numberOfLines = .zero
         return label
     }()
@@ -203,6 +203,7 @@ class ItemDetailViewController: UIViewController {
 }
 
 extension ItemDetailViewController: UICollectionViewDelegate {
+    // MARK: CollectionView Delegate Method
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let scrollPos = scrollView.contentOffset.x / view.frame.width
         pageControl.currentPage = Int(scrollPos)
@@ -210,6 +211,7 @@ extension ItemDetailViewController: UICollectionViewDelegate {
 }
 
 extension ItemDetailViewController: UICollectionViewDataSource {
+    // MARK: CollectionView DataSource Method
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.images.count
     }
@@ -225,6 +227,7 @@ extension ItemDetailViewController: UICollectionViewDataSource {
 }
 
 extension ItemDetailViewController: UICollectionViewDelegateFlowLayout {
+    // MARK: CollectionView Flow Layout Method
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return .zero
     }
@@ -240,6 +243,7 @@ extension ItemDetailViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension ItemDetailViewController {
+    // MARK: Style
     enum Style {
         static let defaultBackgroundColor: UIColor = .systemBackground
         static let defaultTintColor: UIColor = .label

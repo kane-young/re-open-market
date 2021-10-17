@@ -7,11 +7,19 @@
 
 import UIKit
 
-final class ItemDetailCellViewModel {
+final class ItemDetailPhotoCellViewModel {
+    // MARK: State
+    enum State {
+        case initial
+        case update(UIImage)
+        case error(ItemDetailPhotoCellViewModelError)
+    }
+
+    // MARK: Properties
     private let imagePath: String
-    private var handler: ((ItemPhotoCellViewModelState) -> Void)?
-    private let useCase: ThumbnailUseCaseProtocol
-    private var state: ItemPhotoCellViewModelState = .initial {
+    private var handler: ((State) -> Void)?
+    private let useCase: ImageNetworkUseCaseProtocol
+    private var state: State = .initial {
         didSet {
             DispatchQueue.main.async { [weak self] in
                 guard let state = self?.state else {
@@ -22,12 +30,13 @@ final class ItemDetailCellViewModel {
         }
     }
 
-    init(imagePath: String, useCase: ThumbnailUseCaseProtocol = ThumbnailUseCase.shared) {
+    init(imagePath: String, useCase: ImageNetworkUseCaseProtocol = ImageNetworkUseCase.shared) {
         self.imagePath = imagePath
         self.useCase =  useCase
     }
 
-    func bind(_ handler: @escaping (ItemPhotoCellViewModelState) -> Void) {
+    // MARK: Instance Method
+    func bind(_ handler: @escaping (State) -> Void) {
         self.handler = handler
     }
 
@@ -36,8 +45,8 @@ final class ItemDetailCellViewModel {
             switch result {
             case .success(let image):
                 self?.state = .update(image)
-            case .failure(_):
-                print("실패")
+            case .failure(let error):
+                self?.state = .error(.useCase(error))
             }
         }
     }

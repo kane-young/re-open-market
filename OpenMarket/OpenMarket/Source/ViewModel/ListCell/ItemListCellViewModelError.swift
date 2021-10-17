@@ -9,7 +9,7 @@ import Foundation
 
 enum ItemListCellViewModelError: Error {
     case emptyPath
-    case useCaseError(ThumbnailUseCaseError)
+    case useCaseError(ImageNetworkUseCaseError)
 
     var message: String {
         switch self {

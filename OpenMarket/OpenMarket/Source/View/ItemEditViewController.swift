@@ -196,9 +196,9 @@ final class ItemEditViewController: UIViewController {
     }
 
     @objc private func touchRegisterItemButton(_ sender: UIBarButtonItem) {
-        viewModel.validate(title: titleTextField.text, stock: stockTextField.text,
-                           currency: currencyTextField.text, price: priceTextField.text,
-                           discountedPrice: discountedPriceTextField.text, descriptions: descriptionsTextView.text)
+        viewModel.validate(titleText: titleTextField.text, stockText: stockTextField.text,
+                           currencyText: currencyTextField.text, priceText: priceTextField.text,
+                           discountedPriceText: discountedPriceTextField.text, descriptionsText: descriptionsTextView.text)
     }
 
     private func alertRegister() {
@@ -436,7 +436,7 @@ extension ItemEditViewController: UICollectionViewDataSource {
                 return UICollectionViewCell()
             }
             photoCell.addDeleteButtonTarget(target: self, action: #selector(touchDeletePhotoButton(_:)), for: .touchUpInside)
-            photoCell.bind(ItemPhotoCellViewModel(image: viewModel.images[indexPath.item-1]))
+            photoCell.bind(ItemEditPhotoCellViewModel(image: viewModel.images[indexPath.item-1]))
             photoCell.configureCell()
             cell = photoCell
         }

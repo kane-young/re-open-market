@@ -8,6 +8,15 @@
 import UIKit
 
 final class ItemListViewModel {
+    // MARK: State
+    enum State {
+        case empty
+        case initial([IndexPath])
+        case update([IndexPath])
+        case error(ItemListViewModelError)
+    }
+
+    // MARK: Properties
     private let useCase: ItemListNetworkUseCaseProtocol
     private(set) var items: [Item] = [] {
         didSet {
@@ -19,8 +28,8 @@ final class ItemListViewModel {
             }
         }
     }
-    private var handler: ((ItemListViewModelState) -> Void)?
-    private var state: ItemListViewModelState = .empty {
+    private var handler: ((State) -> Void)?
+    private var state: State = .empty {
         didSet {
             DispatchQueue.main.async { [weak self] in
                 guard let state = self?.state else { return }
@@ -33,7 +42,8 @@ final class ItemListViewModel {
         self.useCase = useCase
     }
 
-    func bind(handler: @escaping (ItemListViewModelState) -> Void) {
+    // MARK: Instance Method
+    func bind(handler: @escaping (State) -> Void) {
         self.handler = handler
     }
 

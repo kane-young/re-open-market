@@ -10,7 +10,7 @@ import UIKit
 final class ItemPhotoCollectionViewCell: UICollectionViewCell {
     static let identifier: String = "ItemPhotoCollectionViewCell"
 
-    private var viewModel: ItemPhotoCellViewModel?
+    private var viewModel: ItemEditPhotoCellViewModel?
 
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -50,7 +50,7 @@ final class ItemPhotoCollectionViewCell: UICollectionViewCell {
         deleteButton.addTarget(target, action: action, for: event)
     }
 
-    func bind(_ viewModel: ItemPhotoCellViewModel) {
+    func bind(_ viewModel: ItemEditPhotoCellViewModel) {
         self.viewModel = viewModel
         viewModel.bind { [weak self] state in
             switch state {

@@ -8,6 +8,7 @@
 import UIKit
 
 final class ItemListViewController: UIViewController {
+    // MARK: CellStyle
     private enum CellStyle {
         case list
         case grid
@@ -19,7 +20,7 @@ final class ItemListViewController: UIViewController {
         barButtonItem.tintColor = .label
         return barButtonItem
     }()
-    private var segmentedControl: UISegmentedControl = {
+    private let segmentedControl: UISegmentedControl = {
         let segmentedControl: UISegmentedControl = .init(items: [Style.SegmentedControl.listItem,
                                                                  Style.SegmentedControl.gridItem])
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
@@ -30,14 +31,14 @@ final class ItemListViewController: UIViewController {
         segmentedControl.selectedSegmentIndex = 0
         return segmentedControl
     }()
-    private var activityIndicator: UIActivityIndicatorView = {
+    private let activityIndicator: UIActivityIndicatorView = {
         let indicator: UIActivityIndicatorView = .init()
         indicator.color = Style.reverseDefaultColor
         indicator.style = .large
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
     }()
-    private var collectionView: UICollectionView = {
+    private let collectionView: UICollectionView = {
         let flowLayout: UICollectionViewFlowLayout = .init()
         let collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: flowLayout)
         collectionView.backgroundColor = Style.defaultColor

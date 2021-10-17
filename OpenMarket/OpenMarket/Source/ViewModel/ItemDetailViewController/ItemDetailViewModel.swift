@@ -8,6 +8,14 @@
 import UIKit
 
 final class ItemDetailViewModel {
+    // MARK: State
+    enum State {
+        case initial
+        case update(MetaData)
+        case itemNetworkError(ItemDetailViewModelError)
+    }
+
+    // MARK: MetaData
     struct MetaData {
         let title: String
         let price: NSAttributedString
@@ -19,11 +27,12 @@ final class ItemDetailViewModel {
         let isSoldOut: Bool
     }
 
+    // MARK: Properties
     private let id: Int
     private let itemNetworkUseCase: ItemNetworkUseCaseProtocol
-    private var handler: ((ItemDetailViewModelState) -> Void)?
+    private var handler: ((State) -> Void)?
     private(set) var images: [String] = []
-    private var state: ItemDetailViewModelState = .initial {
+    private var state: State = .initial {
         didSet {
             DispatchQueue.main.async { [weak self] in
                 guard let state = self?.state else { return }
@@ -37,7 +46,8 @@ final class ItemDetailViewModel {
         self.itemNetworkUseCase = itemNetworkUseCase
     }
 
-    func bind(handler: @escaping (ItemDetailViewModelState) -> Void) {
+    // MARK: Instance Method
+    func bind(handler: @escaping (State) -> Void) {
         self.handler = handler
     }
 
@@ -96,20 +106,25 @@ final class ItemDetailViewModel {
     private func convertStockText(_ item: Item) -> String {
         let stock = item.stock
         if stock == .zero {
-            return Style.outOfStock
-        } else if stock >= Style.standardOfStock {
-            return Style.stockPreText + Style.tooManyStock
+            return Format.Stock.soldOutText
+        } else if stock >= Format.Stock.standardCount {
+            return Format.Stock.excessiveStockText
         } else {
-            return Style.stockPreText + "\(stock)"
+            return Format.Stock.preText + "\(stock)"
         }
     }
 }
 
 extension ItemDetailViewModel {
-    enum Style {
-        static let outOfStock: String = "품절"
-        static let stockPreText: String = "수량 : "
-        static let standardOfStock: Int = 1000
-        static let tooManyStock: String = "999+"
+    // MARK: Format
+    private enum Format {
+        enum Stock {
+            static let standardCount: Int = 1000
+            static let soldOutColor: UIColor = .systemYellow
+            static let defaultColor: UIColor = .label
+            static let soldOutText: String = "품절"
+            static let preText: String = "수량 : "
+            static let excessiveStockText: String = "\(preText)999+"
+        }
     }
 }

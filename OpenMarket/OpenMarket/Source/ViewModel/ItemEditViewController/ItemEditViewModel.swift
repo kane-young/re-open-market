@@ -12,6 +12,19 @@ protocol ItemEditViewModelDelegate: AnyObject {
 }
 
 final class ItemEditViewModel {
+    // MARK: State
+    enum State {
+        case initial
+        case addPhoto(IndexPath)
+        case deletePhoto(IndexPath)
+        case satisfied
+        case dissatisfied
+        case register(Item)
+        case update(Item)
+        case error(ItemEditViewModelError)
+    }
+
+    // MARK: Properties
     weak var delegate: ItemEditViewModelDelegate?
     private(set) var currencies: [String] = ["KRW", "JPY", "USD", "EUR", "CNY"]
     private(set) var images: [UIImage] = [] {
@@ -26,7 +39,7 @@ final class ItemEditViewModel {
     private var discountedPrice: Int?
     private var descriptions: String?
     private var password: String?
-    private var state: ItemEditViewModelState = .initial {
+    private var state: State = .initial {
         didSet {
             DispatchQueue.main.async { [weak self] in
                 guard let state = self?.state else {
@@ -36,14 +49,15 @@ final class ItemEditViewModel {
             }
         }
     }
-    private var handler: ((ItemEditViewModelState) -> Void)?
+    private var handler: ((State) -> Void)?
     private let useCase: ItemEditNetworkUseCaseProtocol
 
     init(useCase: ItemEditNetworkUseCaseProtocol = ItemEditNetworkUseCase()) {
         self.useCase = useCase
     }
 
-    func bind(_ handler: @escaping (ItemEditViewModelState) -> Void) {
+    // MARK: Instance Method
+    func bind(_ handler: @escaping (State) -> Void) {
         self.handler = handler
     }
 
@@ -59,13 +73,22 @@ final class ItemEditViewModel {
         state = .deletePhoto(indexPath)
     }
 
-    func validate(title: String?, stock: String?, currency: String?, price: String?,
-                  discountedPrice: String?,descriptions: String?) {
-        if let discountedPrice = discountedPrice {
-            self.discountedPrice = Int(discountedPrice)
+    func validate(titleText: String?, stockText: String?, currencyText: String?, priceText: String?,
+                  discountedPriceText: String?, descriptionsText: String?) {
+        if let discountedPriceText = discountedPriceText,
+           let discountedPrice = Int(discountedPriceText),
+           let priceText = priceText,
+           let price = Int(priceText) {
+            if discountedPrice < price {
+                self.discountedPrice = discountedPrice
+            } else {
+                state = .dissatisfied
+                return
+            }
         }
-        if !images.isEmpty, let title = title, let stock = stock, let currency = currency, let price = price,
-           let descriptions = descriptions, descriptions != ItemEditViewController.Style.DescriptionsTextView.placeHolder {
+        if !images.isEmpty, let title = titleText, let stock = stockText, let currency = currencyText,
+           let price = priceText, let descriptions = descriptionsText,
+           descriptions != ItemEditViewController.Style.DescriptionsTextView.placeHolder {
             self.title = title
             self.stock = Int(stock)
             self.currency = currency

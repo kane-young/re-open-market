@@ -8,6 +8,7 @@
 import UIKit
 
 extension ItemEditViewController {
+    // MARK: Style
     enum Style {
         static let maximumImageCount: Int = 5
         static let backgroundColor: UIColor = .systemBackground
@@ -75,7 +76,7 @@ extension ItemEditViewController {
             }
             enum Dissatisfication {
                 static let title: String = "필수 요소 작성 불만족"
-                static let message: String = "할인 가격을 제외한 모든 요소를 채워주세요"
+                static let message: String = "할인 가격을 제외한 모든 요소를 채워야 하며,\n할인 가격은 제품 가격에 비해 낮아야 합니다"
             }
             enum Cancel {
                 static let title: String = "취소"
