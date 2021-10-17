@@ -8,8 +8,9 @@
 import UIKit
 
 final class ItemDetailCellViewModel {
-    private let image: UIImage
+    private let imagePath: String
     private var handler: ((ItemPhotoCellViewModelState) -> Void)?
+    private let useCase: ThumbnailUseCaseProtocol
     private var state: ItemPhotoCellViewModelState = .initial {
         didSet {
             DispatchQueue.main.async { [weak self] in
@@ -21,8 +22,9 @@ final class ItemDetailCellViewModel {
         }
     }
 
-    init(image: UIImage) {
-        self.image = image
+    init(imagePath: String, useCase: ThumbnailUseCaseProtocol = ThumbnailUseCase.shared) {
+        self.imagePath = imagePath
+        self.useCase =  useCase
     }
 
     func bind(_ handler: @escaping (ItemPhotoCellViewModelState) -> Void) {
@@ -30,6 +32,13 @@ final class ItemDetailCellViewModel {
     }
 
     func configureCell() {
-        state = .update(image)
+        useCase.retrieveImage(with: imagePath) { [weak self] result in
+            switch result {
+            case .success(let image):
+                self?.state = .update(image)
+            case .failure(_):
+                print("실패")
+            }
+        }
     }
 }

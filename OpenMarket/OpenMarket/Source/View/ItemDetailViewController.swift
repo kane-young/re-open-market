@@ -14,7 +14,7 @@ class ItemDetailViewController: UIViewController {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.isDirectionalLockEnabled = true
-        scrollView.backgroundColor = .systemBackground
+        scrollView.backgroundColor = Style.defaultBackgroundColor
         return scrollView
     }()
     private let collectionView: UICollectionView = {
@@ -24,7 +24,7 @@ class ItemDetailViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.isPagingEnabled = true
-        collectionView.backgroundColor = .systemBackground
+        collectionView.backgroundColor = Style.defaultBackgroundColor
         collectionView.isDirectionalLockEnabled = true
         collectionView.register(ItemDetailCollectionViewCell.self,
                                 forCellWithReuseIdentifier: ItemDetailCollectionViewCell.identifier)
@@ -33,43 +33,52 @@ class ItemDetailViewController: UIViewController {
     private let pageControl: UIPageControl = {
         let pageControl = UIPageControl()
         pageControl.translatesAutoresizingMaskIntoConstraints = false
+        pageControl.pageIndicatorTintColor = Style.PageControl.remainPageColor
+        pageControl.currentPageIndicatorTintColor = Style.PageControl.currentPageColor
         return pageControl
     }()
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .largeTitle)
-        label.numberOfLines = .zero
         label.adjustsFontForContentSizeCategory = true
+        label.font = Style.defaultFont
+        label.numberOfLines = .zero
         return label
     }()
     private let priceLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .caption1)
         label.adjustsFontForContentSizeCategory = true
+        label.font = Style.defaultFont
         return label
     }()
-    private let discountedLabel: UILabel = {
+    private let discountedPriceLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .body)
         label.adjustsFontForContentSizeCategory = true
+        label.font = Style.defaultFont
         return label
+    }()
+    private lazy var priceStackView: UIStackView = {
+        let stackView: UIStackView = .init(arrangedSubviews: [priceLabel, discountedPriceLabel])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.distribution = .fillEqually
+        stackView.axis = .vertical
+        return stackView
     }()
     private let stockLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .body)
         label.adjustsFontForContentSizeCategory = true
+        label.font = Style.defaultFont
         return label
     }()
     private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .body)
-        label.numberOfLines = .zero
         label.adjustsFontForContentSizeCategory = true
+        label.font = Style.defaultFont
+        label.numberOfLines = .zero
         return label
     }()
 
@@ -98,54 +107,55 @@ class ItemDetailViewController: UIViewController {
     // MARK: Configure Views
     private func addSubviews() {
         view.addSubview(scrollView)
+        scrollView.addSubview(titleLabel)
         scrollView.addSubview(collectionView)
         scrollView.addSubview(pageControl)
-        scrollView.addSubview(descriptionLabel)
-        scrollView.addSubview(titleLabel)
-        scrollView.addSubview(priceLabel)
-        scrollView.addSubview(discountedLabel)
+        scrollView.addSubview(priceStackView)
         scrollView.addSubview(stockLabel)
+        scrollView.addSubview(descriptionLabel)
     }
 
     private func configureViews() {
-        view.backgroundColor = .systemYellow
+        view.backgroundColor = Style.defaultBackgroundColor
         collectionView.delegate = self
         collectionView.dataSource = self
-        pageControl.numberOfPages = viewModel.images.count
     }
 
     private func viewModelBind() {
         viewModel.bind { [weak self] state in
             guard let self = self else { return }
             switch state {
-            case .loadImage(let indexPaths):
-                self.collectionView.insertItems(at: indexPaths)
-                self.pageControl.numberOfPages = self.viewModel.images.count
             case .update(let metaData):
                 self.titleLabel.text = metaData.title
                 self.stockLabel.text = metaData.stock
-                self.priceLabel.text = metaData.price
-                self.discountedLabel.text = metaData.discountedPrice
+                self.stockLabel.textColor = metaData.isSoldOut ? Style.StockLabel.soldOutColor :
+                    Style.StockLabel.normalColor
+                self.priceLabel.attributedText = metaData.price
+                self.priceLabel.textColor = metaData.isNeededDiscountedLabel ? Style.PriceLabel.strikeThroughColor :
+                    Style.PriceLabel.normalColor
+                self.discountedPriceLabel.isHidden = !metaData.isNeededDiscountedLabel
+                self.discountedPriceLabel.text = metaData.discountedPrice
                 self.descriptionLabel.text = metaData.descriptions
+                self.collectionView.reloadData()
+                self.pageControl.numberOfPages = metaData.imageCount
             case .itemNetworkError(let error):
-                print("아이템 다운로드 실패 \(error.localizedDescription)")
-            case .thumbnailNetworkError(let error):
-                print("이미지 다운로드를 실패 \(error.message)")
+                self.alertErrorMessage(error)
             default:
-                print("I don't know what happened")
+                break
             }
         }
         viewModel.loadItem()
     }
 
     private func configureNavigationBar() {
-        let barButtonItem = UIBarButtonItem(systemItem: .add)
-        barButtonItem.tintColor = .gray
-        navigationItem.rightBarButtonItem = barButtonItem
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.isTranslucent = true
-        navigationController?.navigationBar.backgroundColor = .clear
+        guard let moreImage = Style.MoreBarButtonItem.image else { return }
+        let menuBarButtonItem: UIBarButtonItem = .init(image: moreImage, style: .plain, target: self,
+                                                       action: #selector(touchMenuBarButtonItem(_:)))
+        menuBarButtonItem.tintColor = Style.defaultTintColor
+        navigationItem.rightBarButtonItem = menuBarButtonItem
+    }
+
+    @objc private func touchMenuBarButtonItem(_ sender: UIBarButtonItem) {
     }
 
     private func configureConstraints() {
@@ -153,28 +163,39 @@ class ItemDetailViewController: UIViewController {
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
             scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: view.widthAnchor),
-            scrollView.contentLayoutGuide.topAnchor.constraint(equalTo: collectionView.topAnchor),
-            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: descriptionLabel.bottomAnchor),
+            scrollView.contentLayoutGuide.topAnchor.constraint(equalTo: titleLabel.topAnchor,
+                                                               constant: -Style.defaultViewsMargin),
+            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: descriptionLabel.bottomAnchor,
+                                                                  constant: -Style.defaultViewsMargin),
+            titleLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
+                                                constant: Style.defaultViewsMargin),
+            titleLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
+                                                 constant: -Style.defaultViewsMargin),
+            titleLabel.bottomAnchor.constraint(equalTo: collectionView.topAnchor,
+                                               constant: -Style.defaultViewsMargin),
             collectionView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             collectionView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/2),
-            collectionView.widthAnchor.constraint(equalTo: view.widthAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: titleLabel.topAnchor, constant: -10),
-            titleLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
-            titleLabel.trailingAnchor.constraint(equalTo: stockLabel.leadingAnchor, constant: -10),
-            stockLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
-            stockLabel.topAnchor.constraint(equalTo: titleLabel.topAnchor),
-            titleLabel.bottomAnchor.constraint(equalTo: discountedLabel.topAnchor, constant: -10),
-            discountedLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            discountedLabel.bottomAnchor.constraint(equalTo: priceLabel.topAnchor, constant: -5),
-            priceLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            priceLabel.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor, constant: -10),
+            collectionView.bottomAnchor.constraint(equalTo: priceStackView.topAnchor,
+                                                   constant: -Style.defaultViewsMargin),
+            priceStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
+                                                    constant: Style.defaultViewsMargin),
+            priceStackView.trailingAnchor.constraint(equalTo: stockLabel.leadingAnchor,
+                                                     constant: -Style.defaultViewsMargin),
+            priceStackView.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor,
+                                                   constant: -(Style.defaultViewsMargin * 2)),
+            stockLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
+                                                 constant: -Style.defaultViewsMargin),
+            stockLabel.topAnchor.constraint(equalTo: collectionView.bottomAnchor,
+                                            constant: Style.defaultViewsMargin),
             descriptionLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            descriptionLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
-            pageControl.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: -10),
+            descriptionLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
+                                                       constant: -Style.defaultViewsMargin),
+            pageControl.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor,
+                                                constant: -Style.defaultViewsMargin),
             pageControl.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor)
         ])
         stockLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -215,5 +236,29 @@ extension ItemDetailViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.bounds.width,
                       height: collectionView.bounds.height)
+    }
+}
+
+extension ItemDetailViewController {
+    enum Style {
+        static let defaultBackgroundColor: UIColor = .systemBackground
+        static let defaultTintColor: UIColor = .label
+        static let defaultFont: UIFont = .preferredFont(forTextStyle: .body)
+        static let defaultViewsMargin: CGFloat = 10
+        enum MoreBarButtonItem {
+            static let image: UIImage? = .init(named: "ellipsis")
+        }
+        enum PageControl {
+            static let currentPageColor: UIColor = .systemBlue
+            static let remainPageColor: UIColor = .systemGray
+        }
+        enum StockLabel {
+            static let soldOutColor: UIColor = .systemYellow
+            static let normalColor: UIColor = .label
+        }
+        enum PriceLabel {
+            static let strikeThroughColor: UIColor = .systemRed
+            static let normalColor: UIColor = .label
+        }
     }
 }

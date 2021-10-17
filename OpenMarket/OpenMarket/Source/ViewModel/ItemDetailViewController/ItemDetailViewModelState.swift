@@ -10,7 +10,5 @@ import Foundation
 enum ItemDetailViewModelState {
     case initial
     case update(ItemDetailViewModel.MetaData)
-    case itemNetworkError(ItemNetworkUseCaseError)
-    case thumbnailNetworkError(ThumbnailUseCaseError)
-    case loadImage([IndexPath])
+    case itemNetworkError(ItemDetailViewModelError)
 }

@@ -13,8 +13,11 @@ class ItemDetailCollectionViewCell: UICollectionViewCell {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
+
+    private var viewModel: ItemDetailCellViewModel?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -26,8 +29,17 @@ class ItemDetailCollectionViewCell: UICollectionViewCell {
         fatalError("not use interface builder")
     }
 
-    func configureCell(with image: UIImage) {
-        imageView.image = image
+    func configureCell(with imagePath: String) {
+        viewModel = ItemDetailCellViewModel(imagePath: imagePath)
+        viewModel?.bind({ [weak self] state in
+            switch state {
+            case .update(let image):
+                self?.imageView.image = image
+            default:
+                break
+            }
+        })
+        viewModel?.configureCell()
     }
 
     private func addSubviews() {
