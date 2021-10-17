@@ -96,11 +96,20 @@ final class ItemDetailViewModel {
     private func convertStockText(_ item: Item) -> String {
         let stock = item.stock
         if stock == .zero {
-            return "품절"
-        } else if stock >= 1000 {
-            return "수량 : 999+"
+            return Style.outOfStock
+        } else if stock >= Style.standardOfStock {
+            return Style.stockPreText + Style.tooManyStock
         } else {
-            return "수량 : \(stock)"
+            return Style.stockPreText + "\(stock)"
         }
+    }
+}
+
+extension ItemDetailViewModel {
+    enum Style {
+        static let outOfStock: String = "품절"
+        static let stockPreText: String = "수량 : "
+        static let standardOfStock: Int = 1000
+        static let tooManyStock: String = "999+"
     }
 }
