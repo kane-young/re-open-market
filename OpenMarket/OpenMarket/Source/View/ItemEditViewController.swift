@@ -183,6 +183,8 @@ final class ItemEditViewController: UIViewController {
                 self?.alertDissatisfication()
             case .error(let error):
                 self?.alertErrorMessage(error)
+            case .register(let item):
+                print(item)
             default:
                 break
             }

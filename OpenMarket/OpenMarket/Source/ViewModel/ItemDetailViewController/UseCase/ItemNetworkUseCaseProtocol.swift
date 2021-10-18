@@ -9,4 +9,5 @@ import Foundation
 
 protocol ItemNetworkUseCaseProtocol {
     func retrieveItem(id: Int, completionHandler: @escaping (Result<Item, ItemNetworkUseCaseError>) -> Void)
+    func deleteItem(id: Int, password: String, completionHandler: @escaping (Result<Item, ItemNetworkUseCaseError>) -> Void)
 }

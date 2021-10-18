@@ -11,6 +11,7 @@ final class ItemDetailViewModel {
     // MARK: State
     enum State {
         case initial
+        case delete
         case update(MetaData)
         case itemNetworkError(ItemDetailViewModelError)
     }
@@ -73,6 +74,17 @@ final class ItemDetailViewModel {
                 self.state = .update(metaData)
             case .failure(let error):
                 self.state = .itemNetworkError(.useCaseError(error))
+            }
+        }
+    }
+
+    func deleteItem(password: String) {
+        itemNetworkUseCase.deleteItem(id: id, password: password) { result in
+            switch result {
+            case .failure(let error):
+                self.state = .itemNetworkError(.useCaseError(error))
+            default:
+                self.state = .delete
             }
         }
     }

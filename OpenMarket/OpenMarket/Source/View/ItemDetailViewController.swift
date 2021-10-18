@@ -139,6 +139,8 @@ class ItemDetailViewController: UIViewController {
                 self.collectionView.reloadData()
             case .itemNetworkError(let error):
                 self.alertErrorMessage(error)
+            case .delete:
+                self.navigationController?.popViewController(animated: true)
             default:
                 break
             }
@@ -147,14 +149,52 @@ class ItemDetailViewController: UIViewController {
     }
 
     private func configureNavigationBar() {
-        guard let moreImage = Style.MoreBarButtonItem.image else { return }
-        let menuBarButtonItem: UIBarButtonItem = .init(image: moreImage, style: .plain, target: self,
-                                                       action: #selector(touchMenuBarButtonItem(_:)))
-        menuBarButtonItem.tintColor = Style.defaultTintColor
-        navigationItem.rightBarButtonItem = menuBarButtonItem
+        let moreBarButtonItem: UIBarButtonItem = .init(image: Style.MoreBarButtonItem.image, style: .plain,
+                                                       target: self, action: #selector(touchMenuBarButtonItem(_:)))
+        navigationItem.rightBarButtonItem = moreBarButtonItem
     }
 
     @objc private func touchMenuBarButtonItem(_ sender: UIBarButtonItem) {
+        alertUpdateOrDelete()
+    }
+
+    private func alertUpdateOrDelete() {
+        let alertController: UIAlertController = .init(title: nil, message: nil, preferredStyle: .actionSheet)
+        let update: UIAlertAction = .init(title: Style.Alert.updateActionTitle, style: .default) { [weak self] _ in
+            self?.updateItem()
+        }
+        let delete: UIAlertAction = .init(title: Style.Alert.deleteActionTitle, style: .destructive) { [weak self] _ in
+            self?.deleteItem()
+        }
+        alertController.addAction(update)
+        alertController.addAction(delete)
+        present(alertController, animated: true, completion: nil)
+    }
+
+    private func updateItem() {
+        
+    }
+
+    private func deleteItem() {
+        alertCheckPassword()
+    }
+
+    private func alertCheckPassword() {
+        let alertController: UIAlertController = .init(title: Style.Alert.InputPassword.title,
+                                                message: Style.Alert.InputPassword.message,
+                                                preferredStyle: .alert)
+        alertController.addTextField { textField in
+            textField.placeholder = Style.Alert.InputPassword.placeHolder
+        }
+        guard let password = alertController.textFields?[0].text else { return }
+        let register: UIAlertAction = .init(title: Style.Alert.deleteActionTitle, style: .destructive) { [weak self] _ in
+            guard let self = self else { return }
+            self.viewModel.deleteItem(password: password)
+        }
+        let cancel: UIAlertAction = .init(title: Style.Alert.cancelActionTitle, style: .default, handler: nil)
+        alertController.addAction(register)
+        alertController.addAction(cancel)
+        present(alertController, animated: true, completion: nil)
     }
 
     private func configureConstraints() {
@@ -253,7 +293,7 @@ extension ItemDetailViewController {
         static let stressedFont: UIFont = .preferredFont(forTextStyle: .largeTitle)
         static let defaultViewsMargin: CGFloat = 10
         enum MoreBarButtonItem {
-            static let image: UIImage? = .init(named: "ellipsis")
+            static let image: UIImage? = .init(systemName: "ellipsis")
         }
         enum PageControl {
             static let currentPageColor: UIColor = .systemBlue
@@ -266,6 +306,16 @@ extension ItemDetailViewController {
         enum PriceLabel {
             static let strikeThroughColor: UIColor = .systemRed
             static let normalColor: UIColor = .label
+        }
+        enum Alert {
+            static let updateActionTitle: String = "수정"
+            static let deleteActionTitle: String = "삭제"
+            static let cancelActionTitle: String = "취소"
+            enum InputPassword {
+                static let title: String = "비밀번호 입력"
+                static let message: String = "등록자 인증을 위한 비밀번호가 필요합니다"
+                static let placeHolder: String = "비밀번호"
+            }
         }
     }
 }

@@ -8,6 +8,7 @@
 import Foundation
 
 final class ItemNetworkUseCase: ItemNetworkUseCaseProtocol {
+    private let decoder: JSONDecoder = .init()
     private let networkManager: NetworkManagable
 
     init(networkManager: NetworkManagable = NetworkManager()) {
@@ -16,10 +17,27 @@ final class ItemNetworkUseCase: ItemNetworkUseCaseProtocol {
 
     func retrieveItem(id: Int, completionHandler: @escaping (Result<Item, ItemNetworkUseCaseError>) -> Void) {
         let path = OpenMarketAPI.loadProduct(id: id).urlString
-        networkManager.request(urlString: path, with: nil, httpMethod: .get) { result in
+        networkManager.request(urlString: path, with: nil, httpMethod: .get) { [weak self] result in
             switch result {
             case .success(let data):
-                guard let item = try? JSONDecoder().decode(Item.self, from: data) else {
+                guard let item = try? self?.decoder.decode(Item.self, from: data) else {
+                    completionHandler(.failure(.decodingError))
+                    return
+                }
+                completionHandler(.success(item))
+            case .failure(let error):
+                completionHandler(.failure(.networkError(error)))
+            }
+        }
+    }
+
+    func deleteItem(id: Int, password: String, completionHandler: @escaping (Result<Item, ItemNetworkUseCaseError>) -> Void) {
+        let path = OpenMarketAPI.deleteProduct(id: id).urlString
+        let deletItem = DeleteItem(password: password)
+        networkManager.request(urlString: path, with: deletItem, httpMethod: .delete) { [weak self] result in
+            switch result {
+            case .success(let data):
+                guard let item = try? self?.decoder.decode(Item.self, from: data) else {
                     completionHandler(.failure(.decodingError))
                     return
                 }
