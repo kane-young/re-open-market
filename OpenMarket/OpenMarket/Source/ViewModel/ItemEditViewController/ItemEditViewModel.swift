@@ -14,7 +14,8 @@ protocol ItemEditViewModelDelegate: AnyObject {
 final class ItemEditViewModel {
     // MARK: State
     enum State {
-        case initial
+        case empty
+        case initial(Item)
         case addPhoto(IndexPath)
         case deletePhoto(IndexPath)
         case satisfied
@@ -29,7 +30,10 @@ final class ItemEditViewModel {
     private(set) var currencies: [String] = ["KRW", "JPY", "USD", "EUR", "CNY"]
     private(set) var images: [UIImage] = [] {
         didSet {
-            delegate?.imagesCountChanged(images.count)
+            DispatchQueue.main.async { [weak self] in
+                guard let imagesCount = self?.images.count else { return }
+                self?.delegate?.imagesCountChanged(imagesCount)
+            }
         }
     }
     private var title: String?
@@ -39,7 +43,7 @@ final class ItemEditViewModel {
     private var discountedPrice: Int?
     private var descriptions: String?
     private var password: String?
-    private var state: State = .initial {
+    private var state: State = .empty {
         didSet {
             DispatchQueue.main.async { [weak self] in
                 guard let state = self?.state else {
@@ -51,6 +55,7 @@ final class ItemEditViewModel {
     }
     private var handler: ((State) -> Void)?
     private let useCase: ItemEditNetworkUseCaseProtocol
+    private let imageNetworkUseCase = ImageNetworkUseCase()
 
     init(useCase: ItemEditNetworkUseCaseProtocol = ItemEditNetworkUseCase()) {
         self.useCase = useCase
@@ -58,6 +63,7 @@ final class ItemEditViewModel {
 
     // MARK: Instance Method
     func bind(_ handler: @escaping (State) -> Void) {
+        handler(state)
         self.handler = handler
     }
 
@@ -113,8 +119,42 @@ final class ItemEditViewModel {
             case .success(let item):
                 self?.state = .register(item)
             case .failure(let error):
-                self?.state = .error(.useCaseError(error))
+                self?.state = .error(.editUseCaseError(error))
             }
+        }
+    }
+
+    func loadItem(id: Int) {
+        let path = OpenMarketAPI.loadProduct(id: id).urlString
+        useCase.request(path: path, with: nil, for: .get) { [weak self] result in
+            switch result {
+            case .success(let item):
+                self?.loadImages(item: item)
+            case .failure(let error):
+                self?.state = .error(.editUseCaseError(error))
+            }
+        }
+    }
+
+    private func loadImages(item: Item) {
+        let dispatchGroup = DispatchGroup()
+        guard let imagePaths = item.images else { return }
+        for imagePath in imagePaths {
+            dispatchGroup.enter()
+            DispatchQueue(label: "ImageLoadQueue", attributes: .concurrent).async(group: dispatchGroup) { [weak self] in
+                self?.imageNetworkUseCase.retrieveImage(with: imagePath) { result in
+                    switch result {
+                    case .success(let image):
+                        self?.images.append(image)
+                        dispatchGroup.leave()
+                    case .failure(let error):
+                        self?.state = .error(.imageUseCaseError(error))
+                    }
+                }
+            }
+        }
+        dispatchGroup.notify(queue: DispatchQueue.global()) { [weak self] in
+            self?.state = .initial(item)
         }
     }
 }

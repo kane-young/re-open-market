@@ -67,11 +67,12 @@ final class ItemEditViewController: UIViewController {
 
     // MARK: Properties
     private let mode: Mode
-    private(set) var viewModel: ItemEditViewModel = .init()
+    private let viewModel: ItemEditViewModel
 
     // MARK: Initializer
-    init(mode: Mode) {
+    init(mode: Mode, viewModel: ItemEditViewModel = ItemEditViewModel()) {
         self.mode = mode
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -134,7 +135,6 @@ final class ItemEditViewController: UIViewController {
         priceTextField.translatesAutoresizingMaskIntoConstraints = false
         discountedPriceTextField.placeholder = Style.DiscountedPriceTextField.placeHolder
         currencyTextField.placeholder = Style.CurrencyTextField.placeHolder
-        descriptionsTextView.text = Style.DescriptionsTextView.placeHolder
         titleTextField.placeholder = Style.TitleTextField.placeHolder
         stockTextField.placeholder = Style.StockTextField.placeHolder
         priceTextField.placeholder = Style.PriceTextField.placeHolder
@@ -150,13 +150,16 @@ final class ItemEditViewController: UIViewController {
         titleTextField.adjustsFontForContentSizeCategory = true
         stockTextField.adjustsFontForContentSizeCategory = true
         priceTextField.adjustsFontForContentSizeCategory = true
-        discountedPriceTextField.keyboardType = .decimalPad
-        stockTextField.keyboardType = .decimalPad
-        priceTextField.keyboardType = .decimalPad
+        discountedPriceTextField.keyboardType = .numberPad
+        stockTextField.keyboardType = .numberPad
+        priceTextField.keyboardType = .numberPad
         currencyTextField.textAlignment = .center
-        descriptionsTextView.textColor = Style.DescriptionsTextView.placeHolderTextColor
         descriptionsTextView.showsVerticalScrollIndicator = false
         descriptionsTextView.isScrollEnabled = false
+        if mode == .register {
+            descriptionsTextView.text = Style.DescriptionsTextView.placeHolder
+            descriptionsTextView.textColor = Style.DescriptionsTextView.placeHolderTextColor
+        }
     }
 
     private func configureBorderViews() {
@@ -173,6 +176,9 @@ final class ItemEditViewController: UIViewController {
     private func viewModelBind() {
         viewModel.bind { [weak self] state in
             switch state {
+            case .initial(let item):
+                self?.configureViewsForUpdate(item)
+                self?.photoCollectionView.reloadData()
             case .addPhoto(let indexPath):
                 self?.photoCollectionView.insertItems(at: [indexPath])
             case .deletePhoto(let indexPath):
@@ -191,16 +197,37 @@ final class ItemEditViewController: UIViewController {
         }
     }
 
+    private func configureViewsForUpdate(_ item: Item) {
+        titleTextField.text = item.title
+        currencyTextField.text = item.currency
+        priceTextField.text = String(item.price)
+        stockTextField.text = String(item.stock)
+        descriptionsTextView.text = item.descriptions
+        if let discountedPrice = item.discountedPrice {
+            discountedPriceTextField.text = String(discountedPrice)
+        }
+    }
+
     private func configureNavigationBar() {
-        let doneButton: UIBarButtonItem = .init(title: Style.RightBarButtonItem.title, style: .plain,
-                                         target: self, action: #selector(touchRegisterItemButton(_:)))
-        navigationItem.rightBarButtonItem = doneButton
+        switch mode {
+        case .register:
+            let doneButton: UIBarButtonItem = .init(title: Style.RightBarButtonItem.registerTitle, style: .plain,
+                                             target: self, action: #selector(touchRegisterItemButton(_:)))
+            navigationItem.rightBarButtonItem = doneButton
+        case .update:
+            let updateButton: UIBarButtonItem = .init(title: Style.RightBarButtonItem.updateTitle, style: .plain,
+                                                      target: self, action: #selector(touchUpdateItemButton(_:)))
+            navigationItem.rightBarButtonItem = updateButton
+        }
     }
 
     @objc private func touchRegisterItemButton(_ sender: UIBarButtonItem) {
         viewModel.validate(titleText: titleTextField.text, stockText: stockTextField.text,
                            currencyText: currencyTextField.text, priceText: priceTextField.text,
                            discountedPriceText: discountedPriceTextField.text, descriptionsText: descriptionsTextView.text)
+    }
+
+    @objc private func touchUpdateItemButton(_ sender: UIBarButtonItem) {
     }
 
     private func alertRegister() {
@@ -375,7 +402,7 @@ extension ItemEditViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         pickerView.delegate = self
         pickerView.dataSource = self
         currencyTextField.inputView = pickerView
-        let bar: UIToolbar = .init()
+        let bar: UIToolbar = .init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         bar.translatesAutoresizingMaskIntoConstraints = false
         bar.sizeToFit()
         bar.isUserInteractionEnabled = true

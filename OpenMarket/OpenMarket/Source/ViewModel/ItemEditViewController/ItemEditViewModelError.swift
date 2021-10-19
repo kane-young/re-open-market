@@ -8,12 +8,15 @@
 import Foundation
 
 enum ItemEditViewModelError: Error, ComprehensibleError {
-    case useCaseError(ItemEditUseCaseError)
+    case editUseCaseError(ItemEditUseCaseError)
+    case imageUseCaseError(ImageNetworkUseCaseError)
 
     var message: String {
         switch self {
-        case .useCaseError(let error):
-            return "UseCase \(error.message)"
+        case .editUseCaseError(let error):
+            return "Item Edit UseCase \(error.message)"
+        case .imageUseCaseError(let error):
+            return "Image Load UseCase \(error.message)"
         }
     }
 }

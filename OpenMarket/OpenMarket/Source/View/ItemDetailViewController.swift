@@ -105,6 +105,11 @@ class ItemDetailViewController: UIViewController {
         configureNavigationBar()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.loadItem()
+    }
+
     // MARK: Configure Views
     private func addSubviews() {
         view.addSubview(scrollView)
@@ -145,7 +150,6 @@ class ItemDetailViewController: UIViewController {
                 break
             }
         }
-        viewModel.loadItem()
     }
 
     private func configureNavigationBar() {
@@ -166,13 +170,18 @@ class ItemDetailViewController: UIViewController {
         let delete: UIAlertAction = .init(title: Style.Alert.deleteActionTitle, style: .destructive) { [weak self] _ in
             self?.deleteItem()
         }
+        let cancel: UIAlertAction = .init(title: Style.Alert.cancelActionTitle, style: .cancel, handler: nil)
         alertController.addAction(update)
         alertController.addAction(delete)
+        alertController.addAction(cancel)
         present(alertController, animated: true, completion: nil)
     }
 
     private func updateItem() {
-        
+        let itemEditViewModel = ItemEditViewModel()
+        itemEditViewModel.loadItem(id: viewModel.id)
+        let itemEditViewController: ItemEditViewController = .init(mode: .update, viewModel: itemEditViewModel)
+        self.navigationController?.pushViewController(itemEditViewController, animated: true)
     }
 
     private func deleteItem() {
@@ -186,9 +195,9 @@ class ItemDetailViewController: UIViewController {
         alertController.addTextField { textField in
             textField.placeholder = Style.Alert.InputPassword.placeHolder
         }
-        guard let password = alertController.textFields?[0].text else { return }
         let register: UIAlertAction = .init(title: Style.Alert.deleteActionTitle, style: .destructive) { [weak self] _ in
             guard let self = self else { return }
+            guard let password = alertController.textFields?[0].text else { return }
             self.viewModel.deleteItem(password: password)
         }
         let cancel: UIAlertAction = .init(title: Style.Alert.cancelActionTitle, style: .default, handler: nil)
@@ -252,14 +261,14 @@ extension ItemDetailViewController: UICollectionViewDelegate {
 extension ItemDetailViewController: UICollectionViewDataSource {
     // MARK: CollectionView DataSource Method
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.images.count
+        return viewModel.imagePaths.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemDetailPhotoCollectionViewCell.identifier, for: indexPath) as? ItemDetailPhotoCollectionViewCell else {
             return UICollectionViewCell()
         }
-        let image = viewModel.images[indexPath.item]
+        let image = viewModel.imagePaths[indexPath.item]
         cell.configureCell(with: image)
         return cell
     }

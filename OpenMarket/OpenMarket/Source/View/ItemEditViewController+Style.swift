@@ -18,7 +18,8 @@ extension ItemEditViewController {
             static let horizontalSpacing: CGFloat = 10
         }
         enum RightBarButtonItem {
-            static let title: String = "등록"
+            static let registerTitle: String = "등록"
+            static let updateTitle: String = "수정"
         }
         enum PhotoCollectionView {
             static let cellSizeRatio: CGFloat = 3/4
@@ -50,7 +51,7 @@ extension ItemEditViewController {
             static let spacing: CGFloat = 5
         }
         enum CurrenyPickerView {
-            static let buttonTitle: String = "done"
+            static let buttonTitle: String = "Done"
             static let numberOfRows: Int = 1
         }
         enum BorderView {

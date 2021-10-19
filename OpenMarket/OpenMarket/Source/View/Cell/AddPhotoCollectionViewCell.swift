@@ -65,7 +65,7 @@ class AddPhotoCollectionViewCell: UICollectionViewCell {
 
 extension AddPhotoCollectionViewCell: ItemEditViewModelDelegate {
     func imagesCountChanged(_ count: Int) {
-        photoCountLabel.text = "\(count)/\(Style.maximumPhotoCount)"
+        self.photoCountLabel.text = "\(count)/\(Style.maximumPhotoCount)"
     }
 }
 

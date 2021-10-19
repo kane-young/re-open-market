@@ -30,10 +30,9 @@ final class ItemDetailViewModel {
     }
 
     // MARK: Properties
-    private let id: Int
+    private(set) var id: Int
     private let itemNetworkUseCase: ItemNetworkUseCaseProtocol
     private var handler: ((State) -> Void)?
-    private(set) var images: [String] = []
     private var state: State = .initial {
         didSet {
             DispatchQueue.main.async { [weak self] in
@@ -42,6 +41,7 @@ final class ItemDetailViewModel {
             }
         }
     }
+    private(set) var imagePaths: [String] = []
 
     init(id: Int, itemNetworkUseCase: ItemNetworkUseCaseProtocol = ItemNetworkUseCase()) {
         self.id = id
@@ -59,7 +59,7 @@ final class ItemDetailViewModel {
             switch result {
             case .success(let item):
                 guard let images = item.images else { return }
-                self.images.append(contentsOf: images)
+                self.imagePaths.append(contentsOf: images)
                 let isNeededDiscountedLabel: Bool = item.discountedPrice != nil ? true: false
                 guard let descriptions = item.descriptions else { return }
                 let metaData = MetaData(title: item.title,
