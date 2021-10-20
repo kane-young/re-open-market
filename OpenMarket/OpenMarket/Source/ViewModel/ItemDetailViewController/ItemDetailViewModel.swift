@@ -13,7 +13,7 @@ final class ItemDetailViewModel {
         case initial
         case delete
         case update(MetaData)
-        case itemNetworkError(ItemDetailViewModelError)
+        case error(ItemDetailViewModelError)
     }
 
     // MARK: MetaData
@@ -26,12 +26,12 @@ final class ItemDetailViewModel {
         let stock: String
         let stockLabelTextColor: UIColor
         let descriptions: String
-        let imageCount: Int
     }
 
     // MARK: Properties
     private(set) var id: Int
     private let itemNetworkUseCase: ItemNetworkUseCaseProtocol
+    private let imageNetworkUseCase: ImageNetworkUseCase = .init()
     private var handler: ((State) -> Void)?
     private var state: State = .initial {
         didSet {
@@ -41,7 +41,7 @@ final class ItemDetailViewModel {
             }
         }
     }
-    private(set) var imagePaths: [String] = []
+    private(set) var images: [UIImage] = []
 
     init(id: Int, itemNetworkUseCase: ItemNetworkUseCaseProtocol = ItemNetworkUseCase()) {
         self.id = id
@@ -58,31 +58,55 @@ final class ItemDetailViewModel {
             guard let self = self else { return }
             switch result {
             case .success(let item):
-                guard let images = item.images else { return }
-                self.imagePaths.append(contentsOf: images)
-                let isNeededDiscountedLabel: Bool = item.discountedPrice != nil ? true: false
-                guard let descriptions = item.descriptions else { return }
-                let metaData = MetaData(title: item.title,
-                                        price: self.originalPriceText(item: item),
-                                        priceLabelTextColor: self.priceLabelTextColor(item: item),
-                                        discountedPrice: self.discountedPriceText(item),
-                                        isNeededDiscountedLabel: isNeededDiscountedLabel,
-                                        stock: self.convertStockText(item),
-                                        stockLabelTextColor: self.stockLabelTextColor(item: item),
-                                        descriptions: descriptions,
-                                        imageCount: images.count)
-                self.state = .update(metaData)
+                self.loadImages(item: item)
             case .failure(let error):
-                self.state = .itemNetworkError(.useCaseError(error))
+                self.state = .error(.useCaseError(error))
             }
         }
+    }
+
+    private func loadImages(item: Item) {
+        let dispatchGroup = DispatchGroup()
+        guard let imagePaths = item.images else { return }
+        for imagePath in imagePaths {
+            dispatchGroup.enter()
+            DispatchQueue(label: "ImageLoadQueue", attributes: .concurrent).async(group: dispatchGroup) { [weak self] in
+                self?.imageNetworkUseCase.retrieveImage(with: imagePath) { result in
+                    switch result {
+                    case .success(let image):
+                        self?.images.append(image)
+                        dispatchGroup.leave()
+                    case .failure(let error):
+                        self?.state = .error(.imageUseCaseError(error))
+                    }
+                }
+            }
+        }
+        dispatchGroup.notify(queue: DispatchQueue.global()) { [weak self] in
+            guard let metaData = self?.metaData(for: item) else { return }
+            self?.state = .update(metaData)
+        }
+    }
+
+    private func metaData(for item: Item) -> MetaData {
+        let isNeededDiscountedLabel: Bool = item.discountedPrice != nil ? true: false
+        let descriptions = item.descriptions ?? ""
+        let metaData = MetaData(title: item.title,
+                                price: self.originalPriceText(item: item),
+                                priceLabelTextColor: self.priceLabelTextColor(item: item),
+                                discountedPrice: self.discountedPriceText(item),
+                                isNeededDiscountedLabel: isNeededDiscountedLabel,
+                                stock: self.convertStockText(item),
+                                stockLabelTextColor: self.stockLabelTextColor(item: item),
+                                descriptions: descriptions)
+        return metaData
     }
 
     func deleteItem(password: String) {
         itemNetworkUseCase.deleteItem(id: id, password: password) { result in
             switch result {
             case .failure(let error):
-                self.state = .itemNetworkError(.useCaseError(error))
+                self.state = .error(.useCaseError(error))
             default:
                 self.state = .delete
             }

@@ -20,3 +20,9 @@ enum ItemEditViewModelError: Error, ComprehensibleError {
         }
     }
 }
+
+extension ItemEditViewModelError: Equatable {
+    static func == (lhs: ItemEditViewModelError, rhs: ItemEditViewModelError) -> Bool {
+        return lhs.message == rhs.message
+    }
+}

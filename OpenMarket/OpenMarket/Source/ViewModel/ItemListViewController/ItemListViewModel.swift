@@ -20,6 +20,7 @@ final class ItemListViewModel {
     private let useCase: ItemListNetworkUseCaseProtocol
     private(set) var items: [Item] = [] {
         didSet {
+            if oldValue.count > items.count { return }
             let indexPaths = (oldValue.count..<items.count).map { IndexPath(item: $0, section: .zero) }
             if oldValue.count == .zero {
                 state = .initial(indexPaths)
@@ -56,5 +57,11 @@ final class ItemListViewModel {
                 self?.state = .error(.useCaseError(error))
             }
         }
+    }
+
+    func reset() {
+        items.removeAll()
+        useCase.reset()
+        loadItems()
     }
 }

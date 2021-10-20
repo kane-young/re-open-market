@@ -32,8 +32,8 @@ class ItemDetailPhotoCollectionViewCell: UICollectionViewCell {
     }
 
     // MARK: Instance Method
-    func configureCell(with imagePath: String) {
-        viewModel = ItemDetailPhotoCellViewModel(imagePath: imagePath)
+    func configureCell(with image: UIImage) {
+        viewModel = ItemDetailPhotoCellViewModel(image: image)
         viewModel?.bind({ [weak self] state in
             switch state {
             case .update(let image):

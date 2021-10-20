@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol ItemDetailViewControllerDelegate: AnyObject {
+    func itemStateDidChanged()
+}
+
 class ItemDetailViewController: UIViewController {
     // MARK: View Properties
     private let scrollView: UIScrollView = {
@@ -85,6 +89,7 @@ class ItemDetailViewController: UIViewController {
 
     // MARK: Properties
     private let viewModel: ItemDetailViewModel
+    weak var delegate: ItemDetailViewControllerDelegate?
 
     init(id: Int) {
         self.viewModel = ItemDetailViewModel(id: id)
@@ -136,15 +141,20 @@ class ItemDetailViewController: UIViewController {
                 self.discountedPriceLabel.text = metaData.discountedPrice
                 self.stockLabel.textColor = metaData.stockLabelTextColor
                 self.priceLabel.textColor = metaData.priceLabelTextColor
-                self.pageControl.numberOfPages = metaData.imageCount
                 self.descriptionLabel.text = metaData.descriptions
                 self.priceLabel.attributedText = metaData.price
                 self.titleLabel.text = metaData.title
                 self.stockLabel.text = metaData.stock
+                self.pageControl.numberOfPages = self.viewModel.images.count
                 self.collectionView.reloadData()
-            case .itemNetworkError(let error):
+            case .error(let error) where error == ItemDetailViewModelError.useCaseError(.networkError(.invalidResponseStatuscode(404))):
+                self.alertIncorrectPasswordMessage { _ in
+                    self.alertCheckPassword()
+                }
+            case .error(let error):
                 self.alertErrorMessage(error)
             case .delete:
+                self.delegate?.itemStateDidChanged()
                 self.navigationController?.popViewController(animated: true)
             default:
                 break
@@ -261,14 +271,14 @@ extension ItemDetailViewController: UICollectionViewDelegate {
 extension ItemDetailViewController: UICollectionViewDataSource {
     // MARK: CollectionView DataSource Method
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.imagePaths.count
+        return viewModel.images.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemDetailPhotoCollectionViewCell.identifier, for: indexPath) as? ItemDetailPhotoCollectionViewCell else {
             return UICollectionViewCell()
         }
-        let image = viewModel.imagePaths[indexPath.item]
+        let image = viewModel.images[indexPath.item]
         cell.configureCell(with: image)
         return cell
     }

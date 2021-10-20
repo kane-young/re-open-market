@@ -17,6 +17,10 @@ final class ItemListNetworkUseCase: ItemListNetworkUseCaseProtocol {
         self.networkManager = networkManager
     }
 
+    func reset() {
+        page = 1
+    }
+
     func retrieveItems(completionHandler: @escaping (Result<[Item], ItemListUseCaseError>) -> Void) {
         let urlString = OpenMarketAPI.load(page: page).urlString
         if isLoading {

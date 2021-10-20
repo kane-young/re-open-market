@@ -12,13 +12,11 @@ final class ItemDetailPhotoCellViewModel {
     enum State {
         case initial
         case update(UIImage)
-        case error(ItemDetailPhotoCellViewModelError)
     }
 
     // MARK: Properties
-    private let imagePath: String
+    private let image: UIImage
     private var handler: ((State) -> Void)?
-    private let useCase: ImageNetworkUseCaseProtocol
     private var state: State = .initial {
         didSet {
             DispatchQueue.main.async { [weak self] in
@@ -30,9 +28,8 @@ final class ItemDetailPhotoCellViewModel {
         }
     }
 
-    init(imagePath: String, useCase: ImageNetworkUseCaseProtocol = ImageNetworkUseCase.shared) {
-        self.imagePath = imagePath
-        self.useCase =  useCase
+    init(image: UIImage) {
+        self.image = image
     }
 
     // MARK: Instance Method
@@ -41,13 +38,6 @@ final class ItemDetailPhotoCellViewModel {
     }
 
     func configureCell() {
-        useCase.retrieveImage(with: imagePath) { [weak self] result in
-            switch result {
-            case .success(let image):
-                self?.state = .update(image)
-            case .failure(let error):
-                self?.state = .error(.useCase(error))
-            }
-        }
+        state = .update(image)
     }
 }

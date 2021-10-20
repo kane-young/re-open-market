@@ -144,6 +144,7 @@ extension ItemListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = viewModel.items[indexPath.item]
         let itemDetailViewController = ItemDetailViewController(id: item.id)
+        itemDetailViewController.delegate = self
         navigationController?.pushViewController(itemDetailViewController, animated: true)
     }
 
@@ -222,6 +223,13 @@ extension ItemListViewController: UICollectionViewDelegateFlowLayout {
         case .grid:
             return Style.CollectionView.gridLayoutInsets
         }
+    }
+}
+
+extension ItemListViewController: ItemDetailViewControllerDelegate {
+    func itemStateDidChanged() {
+        viewModel.reset()
+        collectionView.reloadData()
     }
 }
 

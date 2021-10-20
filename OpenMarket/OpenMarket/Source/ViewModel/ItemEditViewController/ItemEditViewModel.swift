@@ -36,6 +36,7 @@ final class ItemEditViewModel {
             }
         }
     }
+    private var id: Int?
     private var title: String?
     private var stock: Int?
     private var currency: String?
@@ -107,9 +108,7 @@ final class ItemEditViewModel {
     }
 
     func registerItem(password: String) {
-        let imageDatas = images.map { image in
-            image.compress(target: 300)
-        }
+        let imageDatas = images.map { $0.compress(target: 300) }
         guard let title = title, let stock = stock, let currency = currency, let price = price, let descriptions = descriptions else {
             return
         }
@@ -129,6 +128,7 @@ final class ItemEditViewModel {
         useCase.request(path: path, with: nil, for: .get) { [weak self] result in
             switch result {
             case .success(let item):
+                self?.id = item.id
                 self?.loadImages(item: item)
             case .failure(let error):
                 self?.state = .error(.editUseCaseError(error))
@@ -155,6 +155,24 @@ final class ItemEditViewModel {
         }
         dispatchGroup.notify(queue: DispatchQueue.global()) { [weak self] in
             self?.state = .initial(item)
+        }
+    }
+
+    func updateItem(password: String) {
+        let imageDatas = images.map { $0.compress(target: 300) }
+        guard let title = title, let stock = stock, let currency = currency, let price = price, let descriptions = descriptions else {
+            return
+        }
+        let updateItem = PatchItem(title: title, descriptions: descriptions, price: price, currency: currency, stock: stock, discountedPrice: discountedPrice, images: imageDatas, password: password)
+        guard let id = id else { return }
+        let path = OpenMarketAPI.patchProduct(id: id).urlString
+        useCase.request(path: path, with: updateItem, for: .patch) { [weak self] result in
+            switch result {
+            case .success(let item):
+                self?.state = .update(item)
+            case .failure(let error):
+                self?.state = .error(.editUseCaseError(error))
+            }
         }
     }
 }

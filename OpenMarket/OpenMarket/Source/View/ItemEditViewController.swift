@@ -184,17 +184,33 @@ final class ItemEditViewController: UIViewController {
             case .deletePhoto(let indexPath):
                 self?.photoCollectionView.deleteItems(at: [indexPath])
             case .satisfied:
-                self?.alertRegister()
+                self?.alertInputPassword()
             case .dissatisfied:
                 self?.alertDissatisfication()
+            case .error(let error) where error == ItemEditViewModelError.editUseCaseError(.networkError(.invalidResponseStatuscode(404))):
+                self?.alertIncorrectPasswordMessage { _ in
+                    self?.alertInputPassword()
+                }
             case .error(let error):
                 self?.alertErrorMessage(error)
             case .register(let item):
-                print(item)
+                let itemDetailViewController = ItemDetailViewController(id: item.id)
+                self?.navigationController?.pushViewController(itemDetailViewController, animated: true)
+            case .update(let item):
+                self?.alertSuccessUpdate()
             default:
                 break
             }
         }
+    }
+
+    private func alertSuccessUpdate() {
+        let alertController = UIAlertController(title: "수정 완료", message: "아이템 수정에 성공하였습니다", preferredStyle: .alert)
+        let okay = UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        }
+        alertController.addAction(okay)
+        present(alertController, animated: true, completion: nil)
     }
 
     private func configureViewsForUpdate(_ item: Item) {
@@ -228,19 +244,27 @@ final class ItemEditViewController: UIViewController {
     }
 
     @objc private func touchUpdateItemButton(_ sender: UIBarButtonItem) {
+        viewModel.validate(titleText: titleTextField.text, stockText: stockTextField.text,
+                           currencyText: currencyTextField.text, priceText: priceTextField.text,
+                           discountedPriceText: discountedPriceTextField.text, descriptionsText: descriptionsTextView.text)
     }
 
-    private func alertRegister() {
+    private func alertInputPassword() {
         let alertController: UIAlertController = .init(title: Style.Alert.InputPassword.title,
                                                 message: Style.Alert.InputPassword.message,
                                                 preferredStyle: .alert)
         alertController.addTextField { textField in
             textField.placeholder = Style.Alert.InputPassword.placeHolder
         }
-        guard let password = alertController.textFields?[0].text else { return }
         let register: UIAlertAction = .init(title: Style.Alert.Register.title, style: .default) { [weak self] _ in
             guard let self = self else { return }
-            self.viewModel.registerItem(password: password)
+            guard let password = alertController.textFields?[0].text else { return }
+            switch self.mode {
+            case .register:
+                self.viewModel.registerItem(password: password)
+            case .update:
+                self.viewModel.updateItem(password: password)
+            }
         }
         let cancel: UIAlertAction = .init(title: Style.Alert.Cancel.title, style: .default, handler: nil)
         alertController.addAction(register)
