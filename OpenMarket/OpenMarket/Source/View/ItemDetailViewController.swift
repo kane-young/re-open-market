@@ -191,6 +191,7 @@ class ItemDetailViewController: UIViewController {
         let itemEditViewModel = ItemEditViewModel()
         itemEditViewModel.loadItem(id: viewModel.id)
         let itemEditViewController: ItemEditViewController = .init(mode: .update, viewModel: itemEditViewModel)
+        itemEditViewController.delegate = self
         self.navigationController?.pushViewController(itemEditViewController, animated: true)
     }
 
@@ -300,6 +301,12 @@ extension ItemDetailViewController: UICollectionViewDelegateFlowLayout {
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.bounds.width,
                       height: collectionView.bounds.height)
+    }
+}
+
+extension ItemDetailViewController: ItemEditViewControllerDelegate {
+    func didEndRegister(item: Item) {
+        delegate?.itemStateDidChanged()
     }
 }
 

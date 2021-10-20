@@ -54,6 +54,7 @@ final class ItemDetailViewModel {
     }
 
     func loadItem() {
+        images.removeAll()
         itemNetworkUseCase.retrieveItem(id: id) { [weak self] result in
             guard let self = self else { return }
             switch result {

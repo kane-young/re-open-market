@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol ItemEditViewControllerDelegate: AnyObject {
+    func didEndRegister(item: Item)
+}
+
 final class ItemEditViewController: UIViewController {
     // MARK: Cell Layout Mode
     enum Mode {
@@ -68,6 +72,7 @@ final class ItemEditViewController: UIViewController {
     // MARK: Properties
     private let mode: Mode
     private let viewModel: ItemEditViewModel
+    weak var delegate: ItemEditViewControllerDelegate?
 
     // MARK: Initializer
     init(mode: Mode, viewModel: ItemEditViewModel = ItemEditViewModel()) {
@@ -194,20 +199,30 @@ final class ItemEditViewController: UIViewController {
             case .error(let error):
                 self?.alertErrorMessage(error)
             case .register(let item):
-                let itemDetailViewController = ItemDetailViewController(id: item.id)
-                self?.navigationController?.pushViewController(itemDetailViewController, animated: true)
+                self?.alertSuccessRegister(item: item)
             case .update(let item):
-                self?.alertSuccessUpdate()
+                self?.alertSuccessUpdate(item: item)
             default:
                 break
             }
         }
     }
 
-    private func alertSuccessUpdate() {
+    private func alertSuccessRegister(item: Item) {
+        let alertController = UIAlertController(title: "등록 완료", message: "아이템 등록에 성공하였습니다", preferredStyle: .alert)
+        let okay = UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+            self?.navigationController?.popViewController(animated: false)
+            self?.delegate?.didEndRegister(item: item)
+        }
+        alertController.addAction(okay)
+        present(alertController, animated: true, completion: nil)
+    }
+
+    private func alertSuccessUpdate(item: Item) {
         let alertController = UIAlertController(title: "수정 완료", message: "아이템 수정에 성공하였습니다", preferredStyle: .alert)
         let okay = UIAlertAction(title: "확인", style: .default) { [weak self] _ in
             self?.navigationController?.popViewController(animated: true)
+            self?.delegate?.didEndRegister(item: item)
         }
         alertController.addAction(okay)
         present(alertController, animated: true, completion: nil)

@@ -51,6 +51,7 @@ final class ItemListViewController: UIViewController {
     // MARK: Properties
     private let viewModel: ItemListViewModel = .init()
     private var cellStyle: CellStyle = .list
+    private var selectedIndex: IndexPath?
 
     // MARK: Life Cycle Method
     override func viewDidLoad() {
@@ -135,6 +136,7 @@ final class ItemListViewController: UIViewController {
 
     @objc private func touchAddBarButtonItem(_ sender: UIBarButtonItem) {
         let itemEditViewController = ItemEditViewController(mode: .register)
+        itemEditViewController.delegate = self
         self.navigationController?.pushViewController(itemEditViewController, animated: true)
     }
 }
@@ -142,6 +144,7 @@ final class ItemListViewController: UIViewController {
 extension ItemListViewController: UICollectionViewDelegate {
     // MARK: CollectionViewDelegate Method
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        selectedIndex = indexPath
         let item = viewModel.items[indexPath.item]
         let itemDetailViewController = ItemDetailViewController(id: item.id)
         itemDetailViewController.delegate = self
@@ -230,6 +233,17 @@ extension ItemListViewController: ItemDetailViewControllerDelegate {
     func itemStateDidChanged() {
         viewModel.reset()
         collectionView.reloadData()
+        collectionView.scrollToItem(at: IndexPath(item: .zero, section: .zero), at: .top, animated: false)
+    }
+}
+
+extension ItemListViewController: ItemEditViewControllerDelegate {
+    func didEndRegister(item: Item) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            let detailViewController = ItemDetailViewController(id: item.id)
+            detailViewController.delegate = self
+            self.navigationController?.pushViewController(detailViewController, animated: true)
+        }
     }
 }
 
