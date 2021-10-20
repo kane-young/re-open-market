@@ -69,13 +69,14 @@ final class ItemDetailViewModel {
     private func loadImages(item: Item) {
         let dispatchGroup = DispatchGroup()
         guard let imagePaths = item.images else { return }
-        for imagePath in imagePaths {
+        var images: [UIImage] = Array(repeating: UIImage(), count: imagePaths.count)
+        for index in .zero..<imagePaths.count {
             dispatchGroup.enter()
             DispatchQueue(label: "ImageLoadQueue", attributes: .concurrent).async(group: dispatchGroup) { [weak self] in
-                self?.imageNetworkUseCase.retrieveImage(with: imagePath) { result in
+                self?.imageNetworkUseCase.retrieveImage(with: imagePaths[index]) { result in
                     switch result {
                     case .success(let image):
-                        self?.images.append(image)
+                        images[index] = image
                         dispatchGroup.leave()
                     case .failure(let error):
                         self?.state = .error(.imageUseCaseError(error))
@@ -85,6 +86,7 @@ final class ItemDetailViewModel {
         }
         dispatchGroup.notify(queue: DispatchQueue.global()) { [weak self] in
             guard let metaData = self?.metaData(for: item) else { return }
+            self?.images.append(contentsOf: images)
             self?.state = .update(metaData)
         }
     }
