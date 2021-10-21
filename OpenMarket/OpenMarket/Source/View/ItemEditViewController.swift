@@ -281,6 +281,7 @@ final class ItemEditViewController: UIViewController {
                                                 preferredStyle: .alert)
         alertController.addTextField { textField in
             textField.placeholder = Style.Alert.InputPassword.placeHolder
+            textField.isSecureTextEntry = true
         }
         let register: UIAlertAction = .init(title: Style.Alert.Register.title, style: .default) { [weak self] _ in
             guard let self = self else { return }

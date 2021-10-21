@@ -221,6 +221,7 @@ class ItemDetailViewController: UIViewController {
                                                 preferredStyle: .alert)
         alertController.addTextField { textField in
             textField.placeholder = Style.Alert.InputPassword.placeHolder
+            textField.isSecureTextEntry = true
         }
         let register: UIAlertAction = .init(title: Style.Alert.deleteActionTitle, style: .destructive) { [weak self] _ in
             guard let self = self else { return }
