@@ -82,10 +82,8 @@ final class ItemEditViewModel {
 
     func validate(titleText: String?, stockText: String?, currencyText: String?, priceText: String?,
                   discountedPriceText: String?, descriptionsText: String?) {
-        if let discountedPriceText = discountedPriceText,
-           let discountedPrice = Int(discountedPriceText),
-           let priceText = priceText,
-           let price = Int(priceText) {
+        if let discountedPriceText = discountedPriceText, let discountedPrice = Int(discountedPriceText),
+           let priceText = priceText, let price = Int(priceText) {
             if discountedPrice < price {
                 self.discountedPrice = discountedPrice
             } else {

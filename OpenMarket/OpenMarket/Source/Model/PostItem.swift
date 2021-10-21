@@ -28,7 +28,7 @@ struct PostItem: Multipartable {
              "price": self.price,
              "currency": self.currency,
              "stock": self.stock,
-             "discountedPrice": self.discountedPrice,
+             "discounted_price": self.discountedPrice,
              "images": self.images,
              "password": self.password
         ]

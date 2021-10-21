@@ -402,8 +402,8 @@
 		C33F1EE52719927800BDCA35 /* UseCase */ = {
 			isa = PBXGroup;
 			children = (
-				C33F1EE6271992AE00BDCA35 /* ItemEditNetoworkUseCaseProtocol.swift */,
 				C33F1EEA2719931100BDCA35 /* ItemEditNetworkUseCase.swift */,
+				C33F1EE6271992AE00BDCA35 /* ItemEditNetoworkUseCaseProtocol.swift */,
 				C33F1EE8271992DE00BDCA35 /* ItemEditUseCaseError.swift */,
 			);
 			path = UseCase;
