@@ -51,7 +51,7 @@ final class ItemListViewController: UIViewController {
     // MARK: Properties
     private let viewModel: ItemListViewModel = .init()
     private var cellStyle: CellStyle = .list
-    private var selectedIndex: IndexPath?
+    private var currentPosition: IndexPath?
 
     // MARK: Life Cycle Method
     override func viewDidLoad() {
@@ -89,6 +89,8 @@ final class ItemListViewController: UIViewController {
                 self?.activityIndicator.stopAnimating()
                 self?.collectionView.isHidden = false
                 self?.collectionView.reloadData()
+                self?.collectionView.scrollToItem(at: IndexPath(item: .zero, section: .zero),
+                                                  at: .top, animated: false)
             case .update(let indexPaths):
                 self?.collectionView.insertItems(at: indexPaths)
             case .error(let error):
@@ -134,6 +136,8 @@ final class ItemListViewController: UIViewController {
         default:
             return
         }
+        guard let currentPosition = currentPosition else { return }
+        collectionView.scrollToItem(at: currentPosition, at: .centeredVertically, animated: false)
     }
 
     @objc private func touchAddBarButtonItem(_ sender: UIBarButtonItem) {
@@ -146,7 +150,6 @@ final class ItemListViewController: UIViewController {
 extension ItemListViewController: UICollectionViewDelegate {
     // MARK: CollectionViewDelegate Method
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        selectedIndex = indexPath
         let item = viewModel.items[indexPath.item]
         let itemDetailViewController = ItemDetailViewController(id: item.id)
         itemDetailViewController.delegate = self
@@ -156,6 +159,12 @@ extension ItemListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
+        switch cellStyle {
+        case .list:
+            currentPosition = IndexPath(item: indexPath.item - 3, section: .zero)
+        case .grid:
+            currentPosition = IndexPath(item: indexPath.item - 2, section: .zero)
+        }
         if viewModel.items.count <= indexPath.item + Style.CollectionView.remainCellCount {
             viewModel.loadItems()
         }
@@ -232,13 +241,14 @@ extension ItemListViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension ItemListViewController: ItemDetailViewControllerDelegate {
+    // MARK: ItemDetailViewController Delegate Method - Detail View Controller을 통해서 수정을 했을 경우
     func itemStateDidChanged() {
         viewModel.reset()
-        collectionView.reloadData()
     }
 }
 
 extension ItemListViewController: ItemEditViewControllerDelegate {
+    // MARK: ItemEditViewController Delegate Method - List에서 Item 생성시
     func didEndRegister(item: Item) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             let detailViewController = ItemDetailViewController(id: item.id)

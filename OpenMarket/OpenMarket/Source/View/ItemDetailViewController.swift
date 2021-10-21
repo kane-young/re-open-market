@@ -326,10 +326,10 @@ extension ItemDetailViewController: UICollectionViewDelegateFlowLayout {
 extension ItemDetailViewController: ItemEditViewControllerDelegate {
     func didEndRegister(item: Item) {
         viewModel.reset()
+        delegate?.itemStateDidChanged()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             self?.viewModel.loadItem()
         }
-//        viewModel.reset()
     }
 }
 
