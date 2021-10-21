@@ -460,6 +460,7 @@ extension ItemEditViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         bar.isUserInteractionEnabled = true
         let done: UIBarButtonItem = .init(title: Style.CurrenyPickerView.buttonTitle, style: .plain,
                                    target: self, action: #selector(touchDoneBarButtonItem(_:)))
+        done.tintColor = Style.defaultTintColor
         let space: UIBarButtonItem = .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         bar.setItems([space, done], animated: false)
         bar.sizeToFit()

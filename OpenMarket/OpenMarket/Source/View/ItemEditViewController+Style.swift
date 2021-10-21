@@ -13,6 +13,7 @@ extension ItemEditViewController {
         static let maximumImageCount: Int = 5
         static let backgroundColor: UIColor = .systemBackground
         static let defaultFont: UIFont = .preferredFont(forTextStyle: .body)
+        static let defaultTintColor: UIColor = .label
         enum Views {
             static let verticalSpacing: CGFloat = 20
             static let horizontalSpacing: CGFloat = 10

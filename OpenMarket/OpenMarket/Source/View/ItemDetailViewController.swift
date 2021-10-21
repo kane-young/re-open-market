@@ -160,8 +160,7 @@ class ItemDetailViewController: UIViewController {
             case .error(let error):
                 self.alertErrorMessage(error)
             case .delete:
-                self.delegate?.itemStateDidChanged()
-                self.navigationController?.popViewController(animated: true)
+                self.alertSuccessDeleteItem()
             default:
                 break
             }
@@ -171,11 +170,22 @@ class ItemDetailViewController: UIViewController {
     private func configureNavigationBar() {
         let moreBarButtonItem: UIBarButtonItem = .init(image: Style.MoreBarButtonItem.image, style: .plain,
                                                        target: self, action: #selector(touchMenuBarButtonItem(_:)))
+        moreBarButtonItem.tintColor = Style.defaultTintColor
         navigationItem.rightBarButtonItem = moreBarButtonItem
     }
 
     @objc private func touchMenuBarButtonItem(_ sender: UIBarButtonItem) {
         alertUpdateOrDelete()
+    }
+
+    private func alertSuccessDeleteItem() {
+        let alertController: UIAlertController = .init(title: "삭제 되었습니다", message: "해당 아이템이 삭제 되었습니다", preferredStyle: .alert)
+        let okay: UIAlertAction = .init(title: "확인", style: .default) { [weak self] _ in
+            self?.delegate?.itemStateDidChanged()
+            self?.navigationController?.popViewController(animated: true)
+        }
+        alertController.addAction(okay)
+        present(alertController, animated: true, completion: nil)
     }
 
     private func alertUpdateOrDelete() {

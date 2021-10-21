@@ -76,6 +76,8 @@ final class ItemListViewController: UIViewController {
         navigationItem.rightBarButtonItem = addBarButtonItem
         segmentedControl.addTarget(self, action: #selector(segmentedControlChangedValue(_:)), for: .valueChanged)
         navigationItem.titleView = segmentedControl
+        navigationController?.navigationBar.tintColor = Style.defaultTintColor
+        navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.barTintColor = Style.defaultBackgroundColor
     }
