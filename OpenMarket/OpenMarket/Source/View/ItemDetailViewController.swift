@@ -108,10 +108,6 @@ class ItemDetailViewController: UIViewController {
         configureViews()
         configureConstraints()
         configureNavigationBar()
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         viewModel.loadItem()
     }
 
@@ -306,7 +302,7 @@ extension ItemDetailViewController: UICollectionViewDelegateFlowLayout {
 
 extension ItemDetailViewController: ItemEditViewControllerDelegate {
     func didEndRegister(item: Item) {
-        delegate?.itemStateDidChanged()
+        viewModel.reset()
     }
 }
 

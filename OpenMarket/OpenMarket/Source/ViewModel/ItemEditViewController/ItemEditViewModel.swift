@@ -56,7 +56,7 @@ final class ItemEditViewModel {
     }
     private var handler: ((State) -> Void)?
     private let useCase: ItemEditNetworkUseCaseProtocol
-    private let imageNetworkUseCase = ImageNetworkUseCase()
+    private let imageNetworkUseCase: ImageNetworkUseCase = .shared
 
     init(useCase: ItemEditNetworkUseCaseProtocol = ItemEditNetworkUseCase()) {
         self.useCase = useCase
@@ -126,12 +126,13 @@ final class ItemEditViewModel {
     func loadItem(id: Int) {
         let path = OpenMarketAPI.loadProduct(id: id).urlString
         useCase.request(path: path, with: nil, for: .get) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let item):
-                self?.id = item.id
-                self?.loadImages(item: item)
+                self.id = item.id
+                self.loadImages(item: item)
             case .failure(let error):
-                self?.state = .error(.editUseCaseError(error))
+                self.state = .error(.editUseCaseError(error))
             }
         }
     }
@@ -139,13 +140,14 @@ final class ItemEditViewModel {
     private func loadImages(item: Item) {
         let dispatchGroup = DispatchGroup()
         guard let imagePaths = item.images else { return }
-        for imagePath in imagePaths {
+        var images: [UIImage] = Array(repeating: UIImage(), count: imagePaths.count)
+        for index in .zero..<imagePaths.count {
             dispatchGroup.enter()
             DispatchQueue(label: "ImageLoadQueue", attributes: .concurrent).async(group: dispatchGroup) { [weak self] in
-                self?.imageNetworkUseCase.retrieveImage(with: imagePath) { result in
+                self?.imageNetworkUseCase.retrieveImage(with: imagePaths[index]) { result in
                     switch result {
                     case .success(let image):
-                        self?.images.append(image)
+                        images[index] = image
                         dispatchGroup.leave()
                     case .failure(let error):
                         self?.state = .error(.imageUseCaseError(error))
@@ -154,6 +156,7 @@ final class ItemEditViewModel {
             }
         }
         dispatchGroup.notify(queue: DispatchQueue.global()) { [weak self] in
+            self?.images.append(contentsOf: images)
             self?.state = .initial(item)
         }
     }

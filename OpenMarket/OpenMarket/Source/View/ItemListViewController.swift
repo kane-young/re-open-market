@@ -86,7 +86,7 @@ final class ItemListViewController: UIViewController {
             case .initial(let indexPaths):
                 self?.activityIndicator.stopAnimating()
                 self?.collectionView.isHidden = false
-                self?.collectionView.insertItems(at: indexPaths)
+                self?.collectionView.reloadData()
             case .update(let indexPaths):
                 self?.collectionView.insertItems(at: indexPaths)
             case .error(let error):

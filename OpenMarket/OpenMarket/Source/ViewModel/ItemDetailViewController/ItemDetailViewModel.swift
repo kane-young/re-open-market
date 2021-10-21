@@ -31,7 +31,7 @@ final class ItemDetailViewModel {
     // MARK: Properties
     private(set) var id: Int
     private let itemNetworkUseCase: ItemNetworkUseCaseProtocol
-    private let imageNetworkUseCase: ImageNetworkUseCase = .init()
+    private let imageNetworkUseCase: ImageNetworkUseCase = .shared
     private var handler: ((State) -> Void)?
     private var state: State = .initial {
         didSet {
@@ -54,7 +54,6 @@ final class ItemDetailViewModel {
     }
 
     func loadItem() {
-        images.removeAll()
         itemNetworkUseCase.retrieveItem(id: id) { [weak self] result in
             guard let self = self else { return }
             switch result {
@@ -89,6 +88,11 @@ final class ItemDetailViewModel {
             self?.images.append(contentsOf: images)
             self?.state = .update(metaData)
         }
+    }
+
+    func reset() {
+        images.removeAll()
+        loadItem()
     }
 
     private func metaData(for item: Item) -> MetaData {

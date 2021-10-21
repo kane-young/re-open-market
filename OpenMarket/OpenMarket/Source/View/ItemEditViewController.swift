@@ -211,8 +211,8 @@ final class ItemEditViewController: UIViewController {
     private func alertSuccessRegister(item: Item) {
         let alertController = UIAlertController(title: "등록 완료", message: "아이템 등록에 성공하였습니다", preferredStyle: .alert)
         let okay = UIAlertAction(title: "확인", style: .default) { [weak self] _ in
-            self?.navigationController?.popViewController(animated: false)
             self?.delegate?.didEndRegister(item: item)
+            self?.navigationController?.popViewController(animated: false)
         }
         alertController.addAction(okay)
         present(alertController, animated: true, completion: nil)
