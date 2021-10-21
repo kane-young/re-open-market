@@ -86,6 +86,12 @@ class ItemDetailViewController: UIViewController {
         label.numberOfLines = .zero
         return label
     }()
+    private let activityIndicator: UIActivityIndicatorView = {
+        let indicator: UIActivityIndicatorView = .init(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.color = Style.defaultTintColor
+        return indicator
+    }()
 
     // MARK: Properties
     private let viewModel: ItemDetailViewModel
@@ -114,6 +120,7 @@ class ItemDetailViewController: UIViewController {
     // MARK: Configure Views
     private func addSubviews() {
         view.addSubview(scrollView)
+        scrollView.addSubview(activityIndicator)
         scrollView.addSubview(titleLabel)
         scrollView.addSubview(collectionView)
         scrollView.addSubview(pageControl)
@@ -132,7 +139,10 @@ class ItemDetailViewController: UIViewController {
         viewModel.bind { [weak self] state in
             guard let self = self else { return }
             switch state {
+            case .initial:
+                self.activityIndicator.startAnimating()
             case .update(let metaData):
+                self.activityIndicator.stopAnimating()
                 self.discountedPriceLabel.isHidden = !metaData.isNeededDiscountedLabel
                 self.discountedPriceLabel.text = metaData.discountedPrice
                 self.stockLabel.textColor = metaData.stockLabelTextColor
@@ -251,7 +261,9 @@ class ItemDetailViewController: UIViewController {
                                                        constant: -Style.defaultViewsMargin),
             pageControl.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor,
                                                 constant: -Style.defaultViewsMargin),
-            pageControl.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor)
+            pageControl.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor),
+            activityIndicator.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor)
         ])
         stockLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
     }
@@ -303,6 +315,10 @@ extension ItemDetailViewController: UICollectionViewDelegateFlowLayout {
 extension ItemDetailViewController: ItemEditViewControllerDelegate {
     func didEndRegister(item: Item) {
         viewModel.reset()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            self?.viewModel.loadItem()
+        }
+//        viewModel.reset()
     }
 }
 

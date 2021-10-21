@@ -68,6 +68,12 @@ final class ItemEditViewController: UIViewController {
         stackView.spacing = Style.MoneyStackView.spacing
         return stackView
     }()
+    private let activityIndicator: UIActivityIndicatorView = {
+        let indicator: UIActivityIndicatorView = .init(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.color = .black
+        return indicator
+    }()
 
     // MARK: Properties
     private let mode: Mode
@@ -119,6 +125,7 @@ final class ItemEditViewController: UIViewController {
     }
 
     private func addSubviews() {
+        scrollView.addSubview(activityIndicator)
         scrollView.addSubview(photoCollectionView)
         scrollView.addSubview(collectionViewBorderView)
         scrollView.addSubview(titleTextField)
@@ -181,7 +188,10 @@ final class ItemEditViewController: UIViewController {
     private func viewModelBind() {
         viewModel.bind { [weak self] state in
             switch state {
+            case .first:
+                self?.activityIndicator.startAnimating()
             case .initial(let item):
+                self?.activityIndicator.stopAnimating()
                 self?.configureViewsForUpdate(item)
                 self?.photoCollectionView.reloadData()
             case .addPhoto(let indexPath):
@@ -193,6 +203,7 @@ final class ItemEditViewController: UIViewController {
             case .dissatisfied:
                 self?.alertDissatisfication()
             case .error(let error) where error == ItemEditViewModelError.editUseCaseError(.networkError(.invalidResponseStatuscode(404))):
+                self?.activityIndicator.stopAnimating()
                 self?.alertIncorrectPasswordMessage { _ in
                     self?.alertInputPassword()
                 }
@@ -359,7 +370,9 @@ final class ItemEditViewController: UIViewController {
             scrollView.widthAnchor.constraint(equalTo: view.widthAnchor),
             scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: view.widthAnchor),
             scrollView.contentLayoutGuide.topAnchor.constraint(equalTo: photoCollectionView.topAnchor),
-            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: descriptionsTextView.bottomAnchor)
+            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: descriptionsTextView.bottomAnchor),
+            activityIndicator.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor)
         ])
     }
 

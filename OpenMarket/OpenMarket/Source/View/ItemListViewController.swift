@@ -233,7 +233,6 @@ extension ItemListViewController: ItemDetailViewControllerDelegate {
     func itemStateDidChanged() {
         viewModel.reset()
         collectionView.reloadData()
-        collectionView.scrollToItem(at: IndexPath(item: .zero, section: .zero), at: .top, animated: false)
     }
 }
 

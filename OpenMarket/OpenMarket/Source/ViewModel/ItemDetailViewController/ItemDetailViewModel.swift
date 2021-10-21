@@ -10,6 +10,7 @@ import UIKit
 final class ItemDetailViewModel {
     // MARK: State
     enum State {
+        case empty
         case initial
         case delete
         case update(MetaData)
@@ -33,7 +34,7 @@ final class ItemDetailViewModel {
     private let itemNetworkUseCase: ItemNetworkUseCaseProtocol
     private let imageNetworkUseCase: ImageNetworkUseCase = .shared
     private var handler: ((State) -> Void)?
-    private var state: State = .initial {
+    private var state: State = .empty {
         didSet {
             DispatchQueue.main.async { [weak self] in
                 guard let state = self?.state else { return }
@@ -66,6 +67,7 @@ final class ItemDetailViewModel {
     }
 
     private func loadImages(item: Item) {
+        state = .initial
         let dispatchGroup = DispatchGroup()
         guard let imagePaths = item.images else { return }
         var images: [UIImage] = Array(repeating: UIImage(), count: imagePaths.count)
@@ -92,7 +94,6 @@ final class ItemDetailViewModel {
 
     func reset() {
         images.removeAll()
-        loadItem()
     }
 
     private func metaData(for item: Item) -> MetaData {

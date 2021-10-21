@@ -15,6 +15,7 @@ final class ItemEditViewModel {
     // MARK: State
     enum State {
         case empty
+        case first
         case initial(Item)
         case addPhoto(IndexPath)
         case deletePhoto(IndexPath)
@@ -106,6 +107,7 @@ final class ItemEditViewModel {
     }
 
     func registerItem(password: String) {
+        state = .first
         let imageDatas = images.map { $0.compress(target: 300) }
         guard let title = title, let stock = stock, let currency = currency, let price = price, let descriptions = descriptions else {
             return
@@ -122,6 +124,7 @@ final class ItemEditViewModel {
     }
 
     func loadItem(id: Int) {
+        state = .first
         let path = OpenMarketAPI.loadProduct(id: id).urlString
         useCase.request(path: path, with: nil, for: .get) { [weak self] result in
             guard let self = self else { return }
@@ -160,6 +163,7 @@ final class ItemEditViewModel {
     }
 
     func updateItem(password: String) {
+        state = .first
         let imageDatas = images.map { $0.compress(target: 300) }
         guard let title = title, let stock = stock, let currency = currency, let price = price, let descriptions = descriptions else {
             return
