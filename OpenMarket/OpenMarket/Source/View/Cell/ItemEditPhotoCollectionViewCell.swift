@@ -14,6 +14,7 @@ final class ItemEditPhotoCollectionViewCell: UICollectionViewCell {
     private let imageView: UIImageView = {
         let imageView: UIImageView = .init()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
         imageView.layer.cornerRadius = Style.defaultCornerRadius
         imageView.clipsToBounds = true
         return imageView

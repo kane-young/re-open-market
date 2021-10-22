@@ -14,29 +14,35 @@ final class ItemListCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
     private var thumbnailImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     private var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = Style.Label.titleTextColor
+        label.numberOfLines = .zero
         label.font = Style.stressedFont
         return label
     }()
     private var priceLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = Style.Label.defaultTextColor
         label.font = Style.defaultFont
         return label
     }()
     private var discountedPriceLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = Style.Label.defaultTextColor
         label.font = Style.defaultFont
         return label
     }()
     private var stockLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = Style.Label.defaultTextColor
         label.font = Style.defaultFont
         return label
     }()
@@ -45,13 +51,6 @@ final class ItemListCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
         stackView.distribution = .fill
-        stackView.spacing = Style.StackView.defaultSpacing
-        return stackView
-    }()
-    private lazy var itemInfoStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, priceLabelsStackView])
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
         stackView.spacing = Style.StackView.defaultSpacing
         return stackView
     }()
@@ -110,10 +109,10 @@ final class ItemListCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
     }
 
     private func addSubViews() {
+        contentView.addSubview(priceLabelsStackView)
         contentView.addSubview(thumbnailImageView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(stockLabel)
-        contentView.addSubview(itemInfoStackView)
     }
 
     private func configureConstraints() {
@@ -127,16 +126,21 @@ final class ItemListCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
             thumbnailImageView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor,
                                                        constant: -Style.Views.defaultMargin),
             thumbnailImageView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor,
-                                                         constant: -Style.Views.defaultMargin),
-            itemInfoStackView.topAnchor.constraint(equalTo: thumbnailImageView.topAnchor),
-            itemInfoStackView.leadingAnchor.constraint(equalTo: thumbnailImageView.trailingAnchor,
-                                                       constant: Style.Views.defaultMargin),
-            itemInfoStackView.bottomAnchor.constraint(equalTo: thumbnailImageView.bottomAnchor),
-            itemInfoStackView.trailingAnchor.constraint(equalTo: stockLabel.leadingAnchor,
-                                                        constant: -Style.Views.defaultMargin),
+                                                         constant: -20),
+            titleLabel.topAnchor.constraint(equalTo: thumbnailImageView.topAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: stockLabel.leadingAnchor,
+                                                 constant: -Style.Views.defaultMargin),
+            titleLabel.bottomAnchor.constraint(lessThanOrEqualTo: priceLabelsStackView.topAnchor,
+                                               constant: -Style.Views.defaultMargin),
             stockLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,
                                                  constant: -Style.Views.defaultMargin),
-            stockLabel.topAnchor.constraint(equalTo: thumbnailImageView.topAnchor)
+            stockLabel.topAnchor.constraint(equalTo: thumbnailImageView.topAnchor),
+            priceLabelsStackView.leadingAnchor.constraint(equalTo: thumbnailImageView.trailingAnchor,
+                                                          constant: 20),
+            priceLabelsStackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,
+                                                           constant: -Style.Views.defaultMargin),
+            priceLabelsStackView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor,
+                                                         constant: -Style.Views.defaultMargin)
         ])
         discountedPriceLabel.setContentCompressionResistancePriority(Style.Priority.veryHigh, for: .horizontal)
         priceLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -148,12 +152,15 @@ final class ItemListCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
 extension ItemListCollectionViewCell {
     // MARK: Style
     private enum Style {
-        static let stressedFont: UIFont = .preferredFont(forTextStyle: .title2)
-        static let defaultFont: UIFont = .preferredFont(forTextStyle: .body)
+        static let defaultFont: UIFont = .preferredFont(forTextStyle: .caption1)
+        static let stressedFont: UIFont = .preferredFont(forTextStyle: .body)
         static let defaultBackgroundColor: UIColor = .systemBackground
-        static let defaultTextColor: UIColor = .label
+        enum Label {
+            static let titleTextColor: UIColor = .label
+            static let defaultTextColor: UIColor = .systemGray
+        }
         enum StackView {
-            static let defaultSpacing: CGFloat = 5
+            static let defaultSpacing: CGFloat = 20
         }
         enum Views {
             static let defaultMargin: CGFloat = 10

@@ -14,6 +14,7 @@ final class ItemGridCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
     private var thumbnailImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     private var titleLabel: UILabel = {
@@ -133,9 +134,9 @@ final class ItemGridCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
             titleLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,
                                                 constant: Style.Views.defaultMargin),
             priceLabelsStackView.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
-            priceLabelsStackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor,
+            priceLabelsStackView.topAnchor.constraint(greaterThanOrEqualTo: titleLabel.bottomAnchor,
                                                       constant: Style.Views.defaultMargin),
-            priceLabelsStackView.bottomAnchor.constraint(equalTo: stockLabel.topAnchor,
+            priceLabelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: stockLabel.topAnchor,
                                                          constant: -Style.Views.defaultMargin),
             priceLabelsStackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,
                                                           constant: Style.Views.defaultMargin),
@@ -152,8 +153,8 @@ final class ItemGridCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
 extension ItemGridCollectionViewCell {
     // MARK: Style
     enum Style {
-        static let defaultFont: UIFont = .preferredFont(forTextStyle: .body)
-        static let stressedFont: UIFont = .preferredFont(forTextStyle: .title2)
+        static let defaultFont: UIFont = .preferredFont(forTextStyle: .caption1)
+        static let stressedFont: UIFont = .preferredFont(forTextStyle: .body)
         static let defaultBackgroundColor: UIColor = .systemBackground
         enum StackView {
             static let spacing: CGFloat = 5

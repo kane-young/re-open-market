@@ -105,7 +105,7 @@ final class ItemListCellViewModel {
     }
 
     private func priceLabelTextColor(_ isNeededDiscountedLabel: Bool) -> UIColor {
-        return isNeededDiscountedLabel ? .label : .systemRed
+        return isNeededDiscountedLabel ? Format.Stock.defaultColor : Format.Stock.discountedPriceTextColor
     }
 
     private func originalPriceText() -> NSAttributedString {
@@ -144,7 +144,8 @@ extension ItemListCellViewModel {
         enum Stock {
             static let standardCount: Int = 1000
             static let soldOutColor: UIColor = .systemYellow
-            static let defaultColor: UIColor = .label
+            static let defaultColor: UIColor = .systemGray
+            static let discountedPriceTextColor: UIColor = .systemRed
             static let soldOutText: String = "품절"
             static let preText: String = "수량 : "
             static let excessiveStockText: String = "\(preText)999+"

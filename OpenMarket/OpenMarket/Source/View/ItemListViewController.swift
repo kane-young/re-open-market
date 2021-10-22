@@ -77,8 +77,7 @@ final class ItemListViewController: UIViewController {
         segmentedControl.addTarget(self, action: #selector(segmentedControlChangedValue(_:)), for: .valueChanged)
         navigationItem.titleView = segmentedControl
         navigationController?.navigationBar.tintColor = Style.defaultTintColor
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.isTranslucent = true
         navigationController?.navigationBar.barTintColor = Style.defaultBackgroundColor
     }
 
@@ -267,7 +266,7 @@ extension ItemListViewController {
             static let gridItem = "GRID"
         }
         enum CollectionView {
-            static let listLayoutMinimumLineSpacing: CGFloat = .zero
+            static let listLayoutMinimumLineSpacing: CGFloat = 10
             static let gridLayoutMinimumLineSpacing: CGFloat = 10
             static let listLayoutInsets: UIEdgeInsets = .zero
             static let gridLayoutInsets: UIEdgeInsets = .init(top: 10, left: 10, bottom: 10, right: 10)
@@ -278,7 +277,7 @@ extension ItemListViewController {
             static let listHeightRatio: CGFloat = 1/6
             static let gridWidthRatio: CGFloat = 1/2
             static let gridWidthConstant: CGFloat = -20
-            static let gridHeightRatio: CGFloat = 1/2
+            static let gridHeightRatio: CGFloat = 2/5
             static let gridHeightConstant: CGFloat = -20
         }
     }
