@@ -56,11 +56,13 @@ final class ItemEditViewModel {
         }
     }
     private var handler: ((State) -> Void)?
-    private let useCase: ItemEditNetworkUseCaseProtocol
-    private let imageNetworkUseCase: ImageNetworkUseCase = .shared
+    private let itemEditNetworkUseCase: ItemEditNetworkUseCaseProtocol
+    private let imageNetworkUseCase: ImageNetworkUseCaseProtocol
 
-    init(useCase: ItemEditNetworkUseCaseProtocol = ItemEditNetworkUseCase()) {
-        self.useCase = useCase
+    init(itemEditNetworkUseCase: ItemEditNetworkUseCaseProtocol = ItemEditNetworkUseCase(),
+         imageNetworkUseCase: ImageNetworkUseCaseProtocol = ImageNetworkUseCase.shared) {
+        self.itemEditNetworkUseCase = itemEditNetworkUseCase
+        self.imageNetworkUseCase = imageNetworkUseCase
     }
 
     // MARK: Instance Method
@@ -113,7 +115,8 @@ final class ItemEditViewModel {
             return
         }
         let postItem = PostItem(title: title, descriptions: descriptions, price: price, currency: currency, stock: stock, discountedPrice: discountedPrice, images: imageDatas, password: password)
-        useCase.request(path: OpenMarketAPI.postProduct.urlString, with: postItem, for: .post) { [weak self] result in
+        itemEditNetworkUseCase.request(path: OpenMarketAPI.postProduct.urlString, with: postItem, for: .post) {
+            [weak self] result in
             switch result {
             case .success(let item):
                 self?.state = .register(item)
@@ -126,7 +129,7 @@ final class ItemEditViewModel {
     func loadItem(id: Int) {
         state = .loading
         let path = OpenMarketAPI.loadProduct(id: id).urlString
-        useCase.request(path: path, with: nil, for: .get) { [weak self] result in
+        itemEditNetworkUseCase.request(path: path, with: nil, for: .get) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let item):
@@ -171,7 +174,7 @@ final class ItemEditViewModel {
         let updateItem = PatchItem(title: title, descriptions: descriptions, price: price, currency: currency, stock: stock, discountedPrice: discountedPrice, images: imageDatas, password: password)
         guard let id = id else { return }
         let path = OpenMarketAPI.patchProduct(id: id).urlString
-        useCase.request(path: path, with: updateItem, for: .patch) { [weak self] result in
+        itemEditNetworkUseCase.request(path: path, with: updateItem, for: .patch) { [weak self] result in
             switch result {
             case .success(let item):
                 self?.state = .update(item)
