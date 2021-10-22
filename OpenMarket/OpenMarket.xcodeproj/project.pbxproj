@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C310739C27103DF400EFFF91 /* ItemEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C310739B27103DF400EFFF91 /* ItemEditViewController.swift */; };
 		C32EDB8426FC904B00F6BC53 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDB8326FC904B00F6BC53 /* AppDelegate.swift */; };
 		C32EDB8626FC904B00F6BC53 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDB8526FC904B00F6BC53 /* SceneDelegate.swift */; };
 		C32EDB8826FC904B00F6BC53 /* ItemListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDB8726FC904B00F6BC53 /* ItemListViewController.swift */; };
@@ -29,6 +30,7 @@
 		C32EDBD92700023500F6BC53 /* NetworkManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBD82700023500F6BC53 /* NetworkManagerTest.swift */; };
 		C32EDBDC2700029400F6BC53 /* MockURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBDB2700029400F6BC53 /* MockURLProtocol.swift */; };
 		C32EDBE027002B4600F6BC53 /* RequestMakerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBDF27002B4600F6BC53 /* RequestMakerTest.swift */; };
+		C355A6892715BB3300AE2000 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C355A6882715BB3300AE2000 /* UIImage+Extension.swift */; };
 		C35943DA27059B1600146FFC /* ItemCellDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35943D927059B1600146FFC /* ItemCellDisplayable.swift */; };
 		C35943E127059C4300146FFC /* ThumbnailUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35943E027059C4300146FFC /* ThumbnailUseCaseProtocol.swift */; };
 		C35943E327059C9F00146FFC /* ThumbnailUseCaseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35943E227059C9F00146FFC /* ThumbnailUseCaseError.swift */; };
@@ -59,6 +61,12 @@
 		C3916AC3270B04F6005E5C24 /* ItemListNetworkUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3916AC2270B04F6005E5C24 /* ItemListNetworkUseCaseTests.swift */; };
 		C3916AC5270B29CA005E5C24 /* StubNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3916AC4270B29CA005E5C24 /* StubNetworkManager.swift */; };
 		C3916AC7270B3B36005E5C24 /* ThumbnailUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3916AC6270B3B36005E5C24 /* ThumbnailUseCaseTests.swift */; };
+		C3E76FC12712AFB600755E07 /* ItemPhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FC02712AFB600755E07 /* ItemPhotoCollectionViewCell.swift */; };
+		C3E76FCB2712D2AF00755E07 /* AddPhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FCA2712D2AF00755E07 /* AddPhotoCollectionViewCell.swift */; };
+		C3E76FD12712E79000755E07 /* ItemPhotoCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FD02712E79000755E07 /* ItemPhotoCellViewModel.swift */; };
+		C3E76FD32712F56200755E07 /* ItemEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FD22712F56200755E07 /* ItemEditViewModel.swift */; };
+		C3E76FD52713248B00755E07 /* ItemEditViewModelState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FD42713248B00755E07 /* ItemEditViewModelState.swift */; };
+		C3E76FD7271324B500755E07 /* ItemPhotoCellViewModelState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FD6271324B500755E07 /* ItemPhotoCellViewModelState.swift */; };
 		D0D420A34F274896FCE5389A /* Pods_OpenMarket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C1CCCB9FD817E8E78A31D5 /* Pods_OpenMarket.framework */; };
 /* End PBXBuildFile section */
 
@@ -76,6 +84,7 @@
 		01C1CCCB9FD817E8E78A31D5 /* Pods_OpenMarket.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenMarket.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F53E3EC9B88F9C7C7D71BF7 /* Pods-OpenMarket.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenMarket.debug.xcconfig"; path = "Target Support Files/Pods-OpenMarket/Pods-OpenMarket.debug.xcconfig"; sourceTree = "<group>"; };
 		61CDA78FE88213494D028A3D /* Pods-OpenMarket.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenMarket.release.xcconfig"; path = "Target Support Files/Pods-OpenMarket/Pods-OpenMarket.release.xcconfig"; sourceTree = "<group>"; };
+		C310739B27103DF400EFFF91 /* ItemEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditViewController.swift; sourceTree = "<group>"; };
 		C32EDB8026FC904B00F6BC53 /* OpenMarket.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenMarket.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C32EDB8326FC904B00F6BC53 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C32EDB8526FC904B00F6BC53 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -102,6 +111,7 @@
 		C32EDBD82700023500F6BC53 /* NetworkManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManagerTest.swift; sourceTree = "<group>"; };
 		C32EDBDB2700029400F6BC53 /* MockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
 		C32EDBDF27002B4600F6BC53 /* RequestMakerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestMakerTest.swift; sourceTree = "<group>"; };
+		C355A6882715BB3300AE2000 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		C35943D927059B1600146FFC /* ItemCellDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCellDisplayable.swift; sourceTree = "<group>"; };
 		C35943E027059C4300146FFC /* ThumbnailUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailUseCaseProtocol.swift; sourceTree = "<group>"; };
 		C35943E227059C9F00146FFC /* ThumbnailUseCaseError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailUseCaseError.swift; sourceTree = "<group>"; };
@@ -132,6 +142,12 @@
 		C3916AC2270B04F6005E5C24 /* ItemListNetworkUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListNetworkUseCaseTests.swift; sourceTree = "<group>"; };
 		C3916AC4270B29CA005E5C24 /* StubNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubNetworkManager.swift; sourceTree = "<group>"; };
 		C3916AC6270B3B36005E5C24 /* ThumbnailUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailUseCaseTests.swift; sourceTree = "<group>"; };
+		C3E76FC02712AFB600755E07 /* ItemPhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemPhotoCollectionViewCell.swift; sourceTree = "<group>"; };
+		C3E76FCA2712D2AF00755E07 /* AddPhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPhotoCollectionViewCell.swift; sourceTree = "<group>"; };
+		C3E76FD02712E79000755E07 /* ItemPhotoCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemPhotoCellViewModel.swift; sourceTree = "<group>"; };
+		C3E76FD22712F56200755E07 /* ItemEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditViewModel.swift; sourceTree = "<group>"; };
+		C3E76FD42713248B00755E07 /* ItemEditViewModelState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditViewModelState.swift; sourceTree = "<group>"; };
+		C3E76FD6271324B500755E07 /* ItemPhotoCellViewModelState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemPhotoCellViewModelState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,7 +194,7 @@
 			path = Resource;
 			sourceTree = "<group>";
 		};
-		C310739A270F4A7500EFFF91 /* Cell */ = {
+		C310739A270F4A7500EFFF91 /* ListCell */ = {
 			isa = PBXGroup;
 			children = (
 				C37EA62D2702FE91000518A0 /* ItemListCellViewModel.swift */,
@@ -186,7 +202,36 @@
 				C35943EC27059FC600146FFC /* ItemListCellViewModelState.swift */,
 				C35943DD27059BA700146FFC /* UseCase */,
 			);
-			path = Cell;
+			path = ListCell;
+			sourceTree = "<group>";
+		};
+		C32A71922714197A00E3B329 /* PhotoCell */ = {
+			isa = PBXGroup;
+			children = (
+				C3E76FD02712E79000755E07 /* ItemPhotoCellViewModel.swift */,
+				C3E76FD6271324B500755E07 /* ItemPhotoCellViewModelState.swift */,
+			);
+			path = PhotoCell;
+			sourceTree = "<group>";
+		};
+		C32A7193271419A800E3B329 /* ItemListViewController */ = {
+			isa = PBXGroup;
+			children = (
+				C35943DE27059BBB00146FFC /* UseCase */,
+				C37EA627270179C3000518A0 /* ItemListViewModel.swift */,
+				C35943E827059F6200146FFC /* ItemListViewModelState.swift */,
+				C35943EA27059F8000146FFC /* ItemListViewModelError.swift */,
+			);
+			path = ItemListViewController;
+			sourceTree = "<group>";
+		};
+		C32A719427141D8500E3B329 /* ItemEditViewController */ = {
+			isa = PBXGroup;
+			children = (
+				C3E76FD22712F56200755E07 /* ItemEditViewModel.swift */,
+				C3E76FD42713248B00755E07 /* ItemEditViewModelState.swift */,
+			);
+			path = ItemEditViewController;
 			sourceTree = "<group>";
 		};
 		C32EDB7726FC904B00F6BC53 = {
@@ -255,6 +300,7 @@
 			isa = PBXGroup;
 			children = (
 				C32EDB8726FC904B00F6BC53 /* ItemListViewController.swift */,
+				C310739B27103DF400EFFF91 /* ItemEditViewController.swift */,
 				C35943D827059AF800146FFC /* Cell */,
 			);
 			path = View;
@@ -265,6 +311,7 @@
 			children = (
 				C32EDBC326FD9BF400F6BC53 /* Data+Extension.swift */,
 				C37EA631270341C3000518A0 /* NSAttributedString+Extension.swift */,
+				C355A6882715BB3300AE2000 /* UIImage+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -334,6 +381,8 @@
 		C35943D827059AF800146FFC /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				C3E76FC02712AFB600755E07 /* ItemPhotoCollectionViewCell.swift */,
+				C3E76FCA2712D2AF00755E07 /* AddPhotoCollectionViewCell.swift */,
 				C37EA62B2702FD6A000518A0 /* ItemListCollectionViewCell.swift */,
 				C37EA6332704444C000518A0 /* ItemGridCollectionViewCell.swift */,
 				C35943D927059B1600146FFC /* ItemCellDisplayable.swift */,
@@ -344,11 +393,10 @@
 		C35943DC27059B8900146FFC /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				C310739A270F4A7500EFFF91 /* Cell */,
-				C37EA627270179C3000518A0 /* ItemListViewModel.swift */,
-				C35943E827059F6200146FFC /* ItemListViewModelState.swift */,
-				C35943EA27059F8000146FFC /* ItemListViewModelError.swift */,
-				C35943DE27059BBB00146FFC /* UseCase */,
+				C32A71922714197A00E3B329 /* PhotoCell */,
+				C310739A270F4A7500EFFF91 /* ListCell */,
+				C32A7193271419A800E3B329 /* ItemListViewController */,
+				C32A719427141D8500E3B329 /* ItemEditViewController */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -563,8 +611,13 @@
 			files = (
 				C35943EB27059F8000146FFC /* ItemListViewModelError.swift in Sources */,
 				C35943E127059C4300146FFC /* ThumbnailUseCaseProtocol.swift in Sources */,
+				C3E76FD12712E79000755E07 /* ItemPhotoCellViewModel.swift in Sources */,
+				C3E76FCB2712D2AF00755E07 /* AddPhotoCollectionViewCell.swift in Sources */,
 				C32EDBA826FC950000F6BC53 /* PatchItem.swift in Sources */,
 				C37EA62E2702FE91000518A0 /* ItemListCellViewModel.swift in Sources */,
+				C3E76FD7271324B500755E07 /* ItemPhotoCellViewModelState.swift in Sources */,
+				C3E76FC12712AFB600755E07 /* ItemPhotoCollectionViewCell.swift in Sources */,
+				C3E76FD52713248B00755E07 /* ItemEditViewModelState.swift in Sources */,
 				C32EDBD326FEB88F00F6BC53 /* OpenMarketAPI.swift in Sources */,
 				C37EA63027033E0A000518A0 /* ThumbnailUseCase.swift in Sources */,
 				C32EDB8826FC904B00F6BC53 /* ItemListViewController.swift in Sources */,
@@ -582,9 +635,12 @@
 				C35943E527059CD900146FFC /* ItemListUseCaseError.swift in Sources */,
 				C35943DA27059B1600146FFC /* ItemCellDisplayable.swift in Sources */,
 				C37EA632270341C3000518A0 /* NSAttributedString+Extension.swift in Sources */,
+				C3E76FD32712F56200755E07 /* ItemEditViewModel.swift in Sources */,
+				C355A6892715BB3300AE2000 /* UIImage+Extension.swift in Sources */,
 				C32EDBAE26FC954500F6BC53 /* ItemList.swift in Sources */,
 				C32EDBD126FEB64000F6BC53 /* NetworkError.swift in Sources */,
 				C37EA6342704444C000518A0 /* ItemGridCollectionViewCell.swift in Sources */,
+				C310739C27103DF400EFFF91 /* ItemEditViewController.swift in Sources */,
 				C35943EF27059FE300146FFC /* ItemListCellViewModelError.swift in Sources */,
 				C32EDBAC26FC953E00F6BC53 /* Item.swift in Sources */,
 				C37EA628270179C3000518A0 /* ItemListViewModel.swift in Sources */,
