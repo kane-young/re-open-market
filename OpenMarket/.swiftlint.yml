@@ -1,6 +1,11 @@
 disabled_rules:
   - line_length
   - nesting
+  - closure_parameter_position
+  - function_parameter_count
+  - cyclomatic_complexity
+  - file_length
+  - type_body_length
 excluded:
   - OpenMarketTests/
   - Pods/
