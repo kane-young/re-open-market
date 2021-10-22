@@ -7,11 +7,17 @@
 
 import UIKit
 
+protocol ItemEditViewControllerDelegate: AnyObject {
+    func didSuccessEdit(item: Item)
+}
+
 final class ItemEditViewController: UIViewController {
+    // MARK: Cell Layout Mode
     enum Mode {
         case register
         case update
     }
+
     // MARK: Views Properties
     private let discountedPriceTextField: UITextField = .init()
     private let currencyTextField: UITextField = .init()
@@ -26,7 +32,7 @@ final class ItemEditViewController: UIViewController {
     private let stockBorderView: UIView = .init()
     private var scrollViewBottomAnchor: NSLayoutConstraint?
     private let scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
+        let scrollView: UIScrollView = .init()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.isDirectionalLockEnabled = true
@@ -34,13 +40,13 @@ final class ItemEditViewController: UIViewController {
         return scrollView
     }()
     private let photoCollectionView: UICollectionView = {
-        let flowLayout = UICollectionViewFlowLayout()
+        let flowLayout: UICollectionViewFlowLayout = .init()
         flowLayout.scrollDirection = .horizontal
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        let collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: flowLayout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.isDirectionalLockEnabled = true
-        collectionView.register(ItemPhotoCollectionViewCell.self,
-                                forCellWithReuseIdentifier: ItemPhotoCollectionViewCell.identifier)
+        collectionView.register(ItemEditPhotoCollectionViewCell.self,
+                                forCellWithReuseIdentifier: ItemEditPhotoCollectionViewCell.identifier)
         collectionView.register(AddPhotoCollectionViewCell.self,
                                 forCellWithReuseIdentifier: AddPhotoCollectionViewCell.identifier)
         collectionView.backgroundColor = Style.backgroundColor
@@ -48,28 +54,36 @@ final class ItemEditViewController: UIViewController {
         return collectionView
     }()
     private lazy var priceStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [priceTextField, discountedPriceTextField])
+        let stackView: UIStackView = .init(arrangedSubviews: [priceTextField, discountedPriceTextField])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
-        stackView.spacing = Style.verticalSpacing * 2
+        stackView.spacing = Style.Views.verticalSpacing * 2
         return stackView
     }()
     private lazy var moneyStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [currencyTextField, priceStackView])
+        let stackView: UIStackView = .init(arrangedSubviews: [currencyTextField, priceStackView])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
         stackView.spacing = Style.MoneyStackView.spacing
         return stackView
     }()
+    private let activityIndicator: UIActivityIndicatorView = {
+        let indicator: UIActivityIndicatorView = .init(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.color = .black
+        return indicator
+    }()
 
     // MARK: Properties
     private let mode: Mode
-    private(set) var viewModel: ItemEditViewModel = .init()
+    private let viewModel: ItemEditViewModel
+    weak var delegate: ItemEditViewControllerDelegate?
 
     // MARK: Initializer
-    init(mode: Mode) {
+    init(mode: Mode, viewModel: ItemEditViewModel = ItemEditViewModel()) {
         self.mode = mode
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -111,6 +125,7 @@ final class ItemEditViewController: UIViewController {
     }
 
     private func addSubviews() {
+        scrollView.addSubview(activityIndicator)
         scrollView.addSubview(photoCollectionView)
         scrollView.addSubview(collectionViewBorderView)
         scrollView.addSubview(titleTextField)
@@ -132,7 +147,6 @@ final class ItemEditViewController: UIViewController {
         priceTextField.translatesAutoresizingMaskIntoConstraints = false
         discountedPriceTextField.placeholder = Style.DiscountedPriceTextField.placeHolder
         currencyTextField.placeholder = Style.CurrencyTextField.placeHolder
-        descriptionsTextView.text = Style.DescriptionsTextView.placeHolder
         titleTextField.placeholder = Style.TitleTextField.placeHolder
         stockTextField.placeholder = Style.StockTextField.placeHolder
         priceTextField.placeholder = Style.PriceTextField.placeHolder
@@ -148,13 +162,16 @@ final class ItemEditViewController: UIViewController {
         titleTextField.adjustsFontForContentSizeCategory = true
         stockTextField.adjustsFontForContentSizeCategory = true
         priceTextField.adjustsFontForContentSizeCategory = true
-        discountedPriceTextField.keyboardType = .decimalPad
-        stockTextField.keyboardType = .decimalPad
-        priceTextField.keyboardType = .decimalPad
+        discountedPriceTextField.keyboardType = .numberPad
+        stockTextField.keyboardType = .numberPad
+        priceTextField.keyboardType = .numberPad
         currencyTextField.textAlignment = .center
-        descriptionsTextView.textColor = Style.DescriptionsTextView.placeHolderTextColor
         descriptionsTextView.showsVerticalScrollIndicator = false
         descriptionsTextView.isScrollEnabled = false
+        if mode == .register {
+            descriptionsTextView.text = Style.DescriptionsTextView.placeHolder
+            descriptionsTextView.textColor = Style.DescriptionsTextView.placeHolderTextColor
+        }
     }
 
     private func configureBorderViews() {
@@ -171,62 +188,124 @@ final class ItemEditViewController: UIViewController {
     private func viewModelBind() {
         viewModel.bind { [weak self] state in
             switch state {
+            case .loading:
+                self?.activityIndicator.startAnimating()
+            case .initial(let item):
+                self?.configureViewsForUpdate(item)
             case .addPhoto(let indexPath):
                 self?.photoCollectionView.insertItems(at: [indexPath])
             case .deletePhoto(let indexPath):
                 self?.photoCollectionView.deleteItems(at: [indexPath])
             case .satisfied:
-                self?.alertRegister()
+                self?.alertInputPassword()
             case .dissatisfied:
                 self?.alertDissatisfication()
+            case .error(let error) where error == ItemEditViewModelError.editUseCaseError(.networkError(.invalidResponseStatuscode(404))):
+                self?.activityIndicator.stopAnimating()
+                self?.alertIncorrectPasswordMessage { _ in
+                    self?.alertInputPassword()
+                }
             case .error(let error):
-                self?.alertErrorMessage(error: error)
+                self?.alertErrorMessage(error)
+            case .register(let item):
+                self?.alertSuccessRegister(item: item)
+            case .update(let item):
+                self?.alertSuccessUpdate(item: item)
             default:
                 break
             }
         }
     }
 
+    private func alertSuccessRegister(item: Item) {
+        let alertController = UIAlertController(title: Style.Alert.Register.title,
+                                                message: Style.Alert.Register.message, preferredStyle: .alert)
+        let okay = UIAlertAction(title: Style.Alert.Action.okayTitle, style: .default) { [weak self] _ in
+            self?.delegate?.didSuccessEdit(item: item)
+            self?.navigationController?.popViewController(animated: false)
+        }
+        alertController.addAction(okay)
+        present(alertController, animated: true, completion: nil)
+    }
+
+    private func alertSuccessUpdate(item: Item) {
+        let alertController = UIAlertController(title: Style.Alert.Update.title,
+                                                message: Style.Alert.Update.message, preferredStyle: .alert)
+        let okay = UIAlertAction(title: Style.Alert.Action.okayTitle, style: .default) { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+            self?.delegate?.didSuccessEdit(item: item)
+        }
+        alertController.addAction(okay)
+        present(alertController, animated: true, completion: nil)
+    }
+
+    private func configureViewsForUpdate(_ item: Item) {
+        activityIndicator.stopAnimating()
+        photoCollectionView.reloadData()
+        titleTextField.text = item.title
+        currencyTextField.text = item.currency
+        priceTextField.text = String(item.price)
+        stockTextField.text = String(item.stock)
+        descriptionsTextView.text = item.descriptions
+        if let discountedPrice = item.discountedPrice {
+            discountedPriceTextField.text = String(discountedPrice)
+        }
+    }
+
     private func configureNavigationBar() {
-        let doneButton = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(touchRegisterItemButton(_:)))
-        navigationItem.rightBarButtonItem = doneButton
+        switch mode {
+        case .register:
+            let doneButton: UIBarButtonItem = .init(title: Style.RightBarButtonItem.registerTitle, style: .plain,
+                                             target: self, action: #selector(touchRegisterItemButton(_:)))
+            navigationItem.rightBarButtonItem = doneButton
+        case .update:
+            let updateButton: UIBarButtonItem = .init(title: Style.RightBarButtonItem.updateTitle, style: .plain,
+                                                      target: self, action: #selector(touchUpdateItemButton(_:)))
+            navigationItem.rightBarButtonItem = updateButton
+        }
     }
 
     @objc private func touchRegisterItemButton(_ sender: UIBarButtonItem) {
-        viewModel.validate(title: titleTextField.text, stock: stockTextField.text,
-                           currency: currencyTextField.text, price: priceTextField.text,
-                           discountedPrice: discountedPriceTextField.text, descriptions: descriptionsTextView.text)
+        viewModel.validate(titleText: titleTextField.text, stockText: stockTextField.text,
+                           currencyText: currencyTextField.text, priceText: priceTextField.text,
+                           discountedPriceText: discountedPriceTextField.text, descriptionsText: descriptionsTextView.text)
     }
 
-    private func alertRegister() {
-        let alertController = UIAlertController(title: "비밀번호 입력", message: "등록자 인증을 위한 비밀번호이 필요합니다", preferredStyle: .alert)
+    @objc private func touchUpdateItemButton(_ sender: UIBarButtonItem) {
+        viewModel.validate(titleText: titleTextField.text, stockText: stockTextField.text,
+                           currencyText: currencyTextField.text, priceText: priceTextField.text,
+                           discountedPriceText: discountedPriceTextField.text, descriptionsText: descriptionsTextView.text)
+    }
+
+    private func alertInputPassword() {
+        let alertController: UIAlertController = .init(title: Style.Alert.InputPassword.title,
+                                                message: Style.Alert.InputPassword.message,
+                                                preferredStyle: .alert)
         alertController.addTextField { textField in
-            textField.placeholder = "비밀번호"
+            textField.placeholder = Style.Alert.InputPassword.placeHolder
+            textField.isSecureTextEntry = true
         }
-        guard let password = alertController.textFields?[0].text else {
-            return
-        }
-        let register = UIAlertAction(title: "등록", style: .default) { [weak self] _ in
+        let register: UIAlertAction = .init(title: Style.Alert.Register.title, style: .default) { [weak self] _ in
             guard let self = self else { return }
-            self.viewModel.registerItem(password: password)
+            guard let password = alertController.textFields?[0].text else { return }
+            switch self.mode {
+            case .register:
+                self.viewModel.registerItem(password: password)
+            case .update:
+                self.viewModel.updateItem(password: password)
+            }
         }
-        let cancel = UIAlertAction(title: "취소", style: .default, handler: nil)
+        let cancel: UIAlertAction = .init(title: Style.Alert.Action.cancelTitle, style: .default, handler: nil)
         alertController.addAction(register)
         alertController.addAction(cancel)
         present(alertController, animated: true, completion: nil)
     }
 
-    private func alertErrorMessage(error: ItemEditViewModelError) {
-        let alertController = UIAlertController(title: "에러 발생", message: "\(error.localizedDescription)", preferredStyle: .alert)
-        let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
-        alertController.addAction(cancel)
-        present(alertController, animated: true, completion: nil)
-    }
-
     private func alertDissatisfication() {
-        let alertController = UIAlertController(title: "필수 요소 작성 불만족", message: "할인 가격을 제외한 모든 요소를 채워주세요", preferredStyle: .alert)
-        let okay = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(okay)
+        let alertController: UIAlertController = .init(title: Style.Alert.Dissatisfication.title,
+                                                message: Style.Alert.Dissatisfication.message, preferredStyle: .alert)
+        let cancel: UIAlertAction = .init(title: Style.Alert.Action.cancelTitle, style: .default, handler: nil)
+        alertController.addAction(cancel)
         present(alertController, animated: true, completion: nil)
     }
 
@@ -294,7 +373,9 @@ final class ItemEditViewController: UIViewController {
             scrollView.widthAnchor.constraint(equalTo: view.widthAnchor),
             scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: view.widthAnchor),
             scrollView.contentLayoutGuide.topAnchor.constraint(equalTo: photoCollectionView.topAnchor),
-            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: descriptionsTextView.bottomAnchor)
+            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: descriptionsTextView.bottomAnchor),
+            activityIndicator.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor)
         ])
     }
 
@@ -304,33 +385,33 @@ final class ItemEditViewController: UIViewController {
             photoCollectionView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             photoCollectionView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             photoCollectionView.bottomAnchor.constraint(equalTo: collectionViewBorderView.topAnchor,
-                                                        constant: -Style.verticalSpacing),
-            photoCollectionView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.15)
+                                                        constant: -Style.Views.verticalSpacing),
+            photoCollectionView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.2)
         ])
     }
 
     private func configureBorderViewsConstraints() {
         NSLayoutConstraint.activate([
             collectionViewBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
-                                                              constant: Style.horizontalSpacing),
+                                                              constant: Style.Views.horizontalSpacing),
             collectionViewBorderView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
-                                                               constant: -Style.horizontalSpacing),
+                                                               constant: -Style.Views.horizontalSpacing),
             collectionViewBorderView.bottomAnchor.constraint(equalTo: titleTextField.topAnchor,
-                                                             constant: -Style.verticalSpacing),
+                                                             constant: -Style.Views.verticalSpacing),
             titleBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
-                                                     constant: Style.horizontalSpacing),
+                                                     constant: Style.Views.horizontalSpacing),
             titleBorderView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
-                                                      constant: -Style.horizontalSpacing),
-            titleBorderView.bottomAnchor.constraint(equalTo: stockTextField.topAnchor, constant: -Style.verticalSpacing),
-            stockBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: Style.horizontalSpacing),
+                                                      constant: -Style.Views.horizontalSpacing),
+            titleBorderView.bottomAnchor.constraint(equalTo: stockTextField.topAnchor, constant: -Style.Views.verticalSpacing),
+            stockBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: Style.Views.horizontalSpacing),
             stockBorderView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
-                                                      constant: -Style.horizontalSpacing),
-            stockBorderView.bottomAnchor.constraint(equalTo: moneyStackView.topAnchor, constant: -Style.verticalSpacing),
-            priceBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: Style.horizontalSpacing),
+                                                      constant: -Style.Views.horizontalSpacing),
+            stockBorderView.bottomAnchor.constraint(equalTo: moneyStackView.topAnchor, constant: -Style.Views.verticalSpacing),
+            priceBorderView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: Style.Views.horizontalSpacing),
             priceBorderView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
-                                                      constant: -Style.horizontalSpacing),
+                                                      constant: -Style.Views.horizontalSpacing),
             priceBorderView.bottomAnchor.constraint(equalTo: descriptionsTextView.topAnchor,
-                                                    constant: -Style.verticalSpacing),
+                                                    constant: -Style.Views.verticalSpacing),
             collectionViewBorderView.heightAnchor.constraint(equalToConstant: Style.BorderView.height),
             titleBorderView.heightAnchor.constraint(equalToConstant: Style.BorderView.height),
             stockBorderView.heightAnchor.constraint(equalToConstant: Style.BorderView.height),
@@ -340,23 +421,29 @@ final class ItemEditViewController: UIViewController {
 
     private func configureInputViewsConstraints() {
         NSLayoutConstraint.activate([
-            titleTextField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: Style.horizontalSpacing),
+            titleTextField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
+                                                    constant: Style.Views.horizontalSpacing),
             titleTextField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
-                                                     constant: -Style.horizontalSpacing),
-            titleTextField.bottomAnchor.constraint(equalTo: titleBorderView.topAnchor, constant: -Style.verticalSpacing),
-            stockTextField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: Style.horizontalSpacing),
+                                                     constant: -Style.Views.horizontalSpacing),
+            titleTextField.bottomAnchor.constraint(equalTo: titleBorderView.topAnchor,
+                                                   constant: -Style.Views.verticalSpacing),
+            stockTextField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
+                                                    constant: Style.Views.horizontalSpacing),
             stockTextField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
-                                                     constant: -Style.horizontalSpacing),
-            stockTextField.bottomAnchor.constraint(equalTo: stockBorderView.topAnchor, constant: -Style.verticalSpacing),
+                                                     constant: -Style.Views.horizontalSpacing),
+            stockTextField.bottomAnchor.constraint(equalTo: stockBorderView.topAnchor,
+                                                   constant: -Style.Views.verticalSpacing),
             currencyTextField.widthAnchor.constraint(equalToConstant: Style.CurrencyTextField.width),
-            moneyStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: Style.horizontalSpacing),
+            moneyStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
+                                                    constant: Style.Views.horizontalSpacing),
             moneyStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
-                                                     constant: -Style.horizontalSpacing),
-            moneyStackView.bottomAnchor.constraint(equalTo: priceBorderView.topAnchor, constant: -Style.verticalSpacing),
+                                                     constant: -Style.Views.horizontalSpacing),
+            moneyStackView.bottomAnchor.constraint(equalTo: priceBorderView.topAnchor,
+                                                   constant: -Style.Views.verticalSpacing),
             descriptionsTextView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
-                                                          constant: Style.horizontalSpacing),
+                                                          constant: Style.Views.horizontalSpacing),
             descriptionsTextView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
-                                                           constant: -Style.horizontalSpacing),
+                                                           constant: -Style.Views.horizontalSpacing),
             descriptionsTextView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
         ])
     }
@@ -365,17 +452,19 @@ final class ItemEditViewController: UIViewController {
 extension ItemEditViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     // MARK: Currency TextField - ToolBar(UIPickerView)
     private func configureCurrencyTextFieldToolBar() {
-        let pickerView = UIPickerView()
+        let pickerView: UIPickerView = .init()
         pickerView.translatesAutoresizingMaskIntoConstraints = false
         pickerView.delegate = self
         pickerView.dataSource = self
         currencyTextField.inputView = pickerView
-        let bar = UIToolbar()
+        let bar: UIToolbar = .init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         bar.translatesAutoresizingMaskIntoConstraints = false
         bar.sizeToFit()
         bar.isUserInteractionEnabled = true
-        let done = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(touchDoneBarButtonItem(_:)))
-        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let done: UIBarButtonItem = .init(title: Style.CurrenyPickerView.buttonTitle, style: .plain,
+                                   target: self, action: #selector(touchDoneBarButtonItem(_:)))
+        done.tintColor = Style.defaultTintColor
+        let space: UIBarButtonItem = .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         bar.setItems([space, done], animated: false)
         bar.sizeToFit()
         currencyTextField.inputAccessoryView = bar
@@ -434,11 +523,11 @@ extension ItemEditViewController: UICollectionViewDataSource {
             viewModel.delegate = addPhotoCell
             cell = addPhotoCell
         } else {
-            guard let photoCell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemPhotoCollectionViewCell.identifier, for: indexPath) as? ItemPhotoCollectionViewCell else {
+            guard let photoCell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemEditPhotoCollectionViewCell.identifier, for: indexPath) as? ItemEditPhotoCollectionViewCell else {
                 return UICollectionViewCell()
             }
             photoCell.addDeleteButtonTarget(target: self, action: #selector(touchDeletePhotoButton(_:)), for: .touchUpInside)
-            photoCell.bind(ItemPhotoCellViewModel(image: viewModel.images[indexPath.item-1]))
+            photoCell.bind(PhotoCellViewModel(image: viewModel.images[indexPath.item-1]))
             photoCell.configureCell()
             cell = photoCell
         }
@@ -446,10 +535,10 @@ extension ItemEditViewController: UICollectionViewDataSource {
     }
 
     @objc private func touchDeletePhotoButton(_ sender: UIButton) {
-        for index in 0..<viewModel.images.count {
-            let indexPath = IndexPath(item: index + 1, section: 0)
-            guard let cell = photoCollectionView.cellForItem(at: indexPath) as? ItemPhotoCollectionViewCell else { return }
-            if cell.deleteButton == sender {
+        for index in .zero..<viewModel.images.count {
+            let indexPath = IndexPath(item: index + 1, section: .zero)
+            guard let cell = photoCollectionView.cellForItem(at: indexPath) as? ItemEditPhotoCollectionViewCell else { continue }
+            if cell.deleteButton === sender {
                 viewModel.deleteImage(indexPath)
             }
         }
@@ -459,8 +548,8 @@ extension ItemEditViewController: UICollectionViewDataSource {
 extension ItemEditViewController: UICollectionViewDelegate {
     // MARK: PhotoCollectionView Delegate Method
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.item == 0 {
-            if viewModel.images.count >= 5 {
+        if indexPath.item == .zero {
+            if viewModel.images.count >= Style.maximumImageCount {
                 alertExcessImagesCount()
                 return
             }
@@ -471,9 +560,10 @@ extension ItemEditViewController: UICollectionViewDelegate {
     }
 
     private func alertExcessImagesCount() {
-        let alertController = UIAlertController(title: "이미지 등록 개수 초과", message: "이미지는 최대 5개까지만 추가할 수 있습니다", preferredStyle: .alert)
-        let okay = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(okay)
+        let alertController = UIAlertController(title: Style.Alert.ExcessImageCount.title,
+                                                message: Style.Alert.ExcessImageCount.message, preferredStyle: .alert)
+        let cancel = UIAlertAction(title: Style.Alert.Action.cancelTitle, style: .default, handler: nil)
+        alertController.addAction(cancel)
         present(alertController, animated: true, completion: nil)
     }
 }
@@ -505,60 +595,12 @@ extension ItemEditViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return Style.verticalSpacing
+        return Style.Views.verticalSpacing
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
         return Style.PhotoCollectionView.edgeInsets
-    }
-}
-
-extension ItemEditViewController {
-    enum Style {
-        static let backgroundColor = UIColor.systemBackground
-        static let defaultFont = UIFont.preferredFont(forTextStyle: .body)
-        static let verticalSpacing: CGFloat = 20
-        static let horizontalSpacing: CGFloat = 10
-        enum PhotoCollectionView {
-            static let cellSizeRatio: CGFloat = 3/4
-            static let edgeInsets: UIEdgeInsets = .init(top: 20, left: 20, bottom: 0, right: 20)
-        }
-        enum TitleTextField {
-            static let placeHolder = "제품명"
-        }
-        enum StockTextField {
-            static let placeHolder = "제품 수량"
-        }
-        enum CurrencyTextField {
-            static let placeHolder = "화폐"
-            static let width: CGFloat = 80
-        }
-        enum PriceTextField {
-            static let placeHolder = "제품 가격"
-        }
-        enum DiscountedPriceTextField {
-            static let placeHolder = "할인 가격(선택 사항)"
-        }
-        enum DescriptionsTextView {
-            static let placeHolder = "제품 설명을 입력하세요"
-            static let placeHolderTextColor = UIColor.lightGray
-            static let defaultTextColor = UIColor.black
-            static let spacingForKeyboard: CGFloat = 30
-        }
-        enum MoneyStackView {
-            static let spacing: CGFloat = 5
-        }
-        enum CurrenyPickerView {
-            static let numberOfRows = 1
-        }
-        enum BorderView {
-            static let backgroundColor = UIColor.systemGray4
-            static let height: CGFloat = 1
-        }
-        enum TextField {
-            static let tintColor = UIColor.clear
-        }
     }
 }

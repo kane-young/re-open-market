@@ -7,10 +7,17 @@
 
 import UIKit
 
-final class ItemPhotoCellViewModel {
+final class PhotoCellViewModel {
+    // MARK: State
+    enum State {
+        case empty
+        case update(UIImage)
+    }
+
+    // MARK: Properties
     private let image: UIImage
-    private var handler: ((ItemPhotoCellViewModelState) -> Void)?
-    private var state: ItemPhotoCellViewModelState = .initial {
+    private var handler: ((State) -> Void)?
+    private var state: State = .empty {
         didSet {
             DispatchQueue.main.async { [weak self] in
                 guard let state = self?.state else {
@@ -25,7 +32,8 @@ final class ItemPhotoCellViewModel {
         self.image = image
     }
 
-    func bind(_ handler: @escaping (ItemPhotoCellViewModelState) -> Void) {
+    // MARK: Instance Method
+    func bind(_ handler: @escaping (State) -> Void) {
         self.handler = handler
     }
 

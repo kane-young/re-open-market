@@ -8,19 +8,29 @@
 import UIKit
 
 final class ItemListViewModel {
+    // MARK: State
+    enum State {
+        case empty
+        case initial
+        case update([IndexPath])
+        case error(ItemListViewModelError)
+    }
+
+    // MARK: Properties
     private let useCase: ItemListNetworkUseCaseProtocol
     private(set) var items: [Item] = [] {
         didSet {
-            let indexPath = (oldValue.count..<items.count).map { IndexPath(item: $0, section: 0) }
+            if oldValue.count > items.count { return }
+            let indexPaths = (oldValue.count..<items.count).map { IndexPath(item: $0, section: .zero) }
             if oldValue.count == .zero {
-                state = .initial(indexPath)
+                state = .initial
             } else {
-                state = .update(indexPath)
+                state = .update(indexPaths)
             }
         }
     }
-    private var handler: ((ItemListViewModelState) -> Void)?
-    private var state: ItemListViewModelState = .empty {
+    private var handler: ((State) -> Void)?
+    private var state: State = .empty {
         didSet {
             DispatchQueue.main.async { [weak self] in
                 guard let state = self?.state else { return }
@@ -33,7 +43,8 @@ final class ItemListViewModel {
         self.useCase = useCase
     }
 
-    func bind(handler: @escaping (ItemListViewModelState) -> Void) {
+    // MARK: Instance Method
+    func bind(handler: @escaping (State) -> Void) {
         self.handler = handler
     }
 
@@ -46,5 +57,11 @@ final class ItemListViewModel {
                 self?.state = .error(.useCaseError(error))
             }
         }
+    }
+
+    func reset() {
+        items.removeAll()
+        useCase.reset()
+        loadItems()
     }
 }

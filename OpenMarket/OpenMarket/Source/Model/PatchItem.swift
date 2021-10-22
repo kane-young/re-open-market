@@ -19,12 +19,12 @@ struct PatchItem: Multipartable {
 
     var dictionary: [String: Any?] {
         [
-            "title": self.title,
+             "title": self.title,
              "descriptions": self.descriptions,
              "price": self.price,
              "currency": self.currency,
              "stock": self.stock,
-             "discountedPrice": self.discountedPrice,
+             "discounted_price": self.discountedPrice,
              "images": self.images,
              "password": self.password
         ]

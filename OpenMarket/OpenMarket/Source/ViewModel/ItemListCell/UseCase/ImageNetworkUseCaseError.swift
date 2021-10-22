@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ThumbnailUseCaseError: Error {
+enum ImageNetworkUseCaseError: Error {
     case networkError(NetworkError)
     case convertDataToImageError
     case invalidURL
@@ -24,7 +24,7 @@ enum ThumbnailUseCaseError: Error {
     }
 }
 
-extension ThumbnailUseCaseError: Equatable {
+extension ImageNetworkUseCaseError: Equatable {
     static func == (lhs: Self, rhs: Self) -> Bool {
         return lhs.localizedDescription == rhs.localizedDescription
     }

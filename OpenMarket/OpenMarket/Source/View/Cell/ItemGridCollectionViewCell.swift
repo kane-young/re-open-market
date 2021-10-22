@@ -10,37 +10,39 @@ import UIKit
 final class ItemGridCollectionViewCell: UICollectionViewCell, ItemCellDisplayable {
     static let identifier: String = "ItemGridCell"
 
+    // MARK: View Properties
     private var thumbnailImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     private var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = .zero
         label.textAlignment = .center
-        label.font = .preferredFont(forTextStyle: .title2)
+        label.font = Style.stressedFont
         return label
     }()
     private var priceLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .body)
+        label.font = Style.defaultFont
         label.textAlignment = .center
-        label.textColor = .systemRed
         return label
     }()
     private var discountedPriceLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .body)
+        label.font = Style.defaultFont
         label.textAlignment = .center
         return label
     }()
     private var stockLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .body)
+        label.font = Style.defaultFont
         label.textAlignment = .center
         return label
     }()
@@ -49,10 +51,11 @@ final class ItemGridCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
-        stackView.spacing = Style.StackView.defaultSpacing
+        stackView.spacing = Style.StackView.spacing
         return stackView
     }()
 
+    // MARK: Property
     private var viewModel: ItemListCellViewModel?
 
     required init?(coder: NSCoder) {
@@ -61,31 +64,34 @@ final class ItemGridCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configureViews()
+        addSubViews()
+        configureView()
         configureConstraints()
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        thumbnailImageView.image = nil
-        titleLabel.text = nil
-        priceLabel.text = nil
-        stockLabel.text = nil
         discountedPriceLabel.text = nil
+        thumbnailImageView.image = nil
+        priceLabel.attributedText = nil
+        titleLabel.text = nil
+        stockLabel.text = nil
     }
 
+    // MARK: Instance Method
     func bind(_ viewModel: ItemListCellViewModel) {
         self.viewModel = viewModel
         viewModel.bind { [weak self] state in
             switch state {
             case .update(let metaData):
-                self?.thumbnailImageView.image = metaData.thumbnail
-                self?.titleLabel.text = metaData.title
-                self?.priceLabel.text = metaData.originalPrice
-                self?.stockLabel.text = metaData.stock
-                self?.stockLabel.textColor = metaData.stockLabelTextColor
                 self?.discountedPriceLabel.isHidden = metaData.isneededDiscountedLabel
-                self?.discountedPriceLabel.attributedText = metaData.discountedPrice
+                self?.discountedPriceLabel.text = metaData.discountedPrice
+                self?.thumbnailImageView.image = metaData.thumbnail
+                self?.priceLabel.attributedText = metaData.originalPrice
+                self?.priceLabel.textColor = metaData.priceLabelTextColor
+                self?.stockLabel.textColor = metaData.stockLabelTextColor
+                self?.titleLabel.text = metaData.title
+                self?.stockLabel.text = metaData.stock
             case .error(_):
                 self?.thumbnailImageView.image = nil
             default:
@@ -98,15 +104,18 @@ final class ItemGridCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
         viewModel?.configureCell()
     }
 
-    private func configureViews() {
+    private func configureView() {
+        contentView.backgroundColor = Style.defaultBackgroundColor
+        layer.borderColor = Style.Views.borderColor
+        layer.borderWidth = Style.Views.borderWidth
+        layer.cornerRadius = Style.Views.cornerRadius
+    }
+
+    private func addSubViews() {
         contentView.addSubview(thumbnailImageView)
         contentView.addSubview(priceLabelsStackView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(stockLabel)
-        layer.borderColor = UIColor.systemGray3.cgColor
-        layer.borderWidth = Style.borderWidth
-        layer.cornerRadius = Style.cornerRadius
-        contentView.backgroundColor = .systemBackground
     }
 
     private func configureConstraints() {
@@ -125,32 +134,36 @@ final class ItemGridCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
             titleLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,
                                                 constant: Style.Views.defaultMargin),
             priceLabelsStackView.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
-            priceLabelsStackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor,
+            priceLabelsStackView.topAnchor.constraint(greaterThanOrEqualTo: titleLabel.bottomAnchor,
                                                       constant: Style.Views.defaultMargin),
-            priceLabelsStackView.bottomAnchor.constraint(equalTo: stockLabel.topAnchor,
+            priceLabelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: stockLabel.topAnchor,
                                                          constant: -Style.Views.defaultMargin),
             priceLabelsStackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,
                                                           constant: Style.Views.defaultMargin),
-            stockLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,
-                                                constant: Style.Views.defaultMargin),
             stockLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor,
                                                constant: -Style.Views.defaultMargin),
             stockLabel.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor)
         ])
         titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         stockLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
     }
 }
 
 extension ItemGridCollectionViewCell {
+    // MARK: Style
     enum Style {
-        static let borderWidth: CGFloat = 1.0
-        static let cornerRadius: CGFloat = 15
+        static let defaultFont: UIFont = .preferredFont(forTextStyle: .caption1)
+        static let stressedFont: UIFont = .preferredFont(forTextStyle: .body)
+        static let defaultBackgroundColor: UIColor = .systemBackground
         enum StackView {
-            static let defaultSpacing: CGFloat = 5
+            static let spacing: CGFloat = 5
         }
         enum Views {
+            static let borderColor: CGColor = UIColor.systemGray3.cgColor
             static let defaultMargin: CGFloat = 10
+            static let borderWidth: CGFloat = 1.0
+            static let cornerRadius: CGFloat = 15
         }
         enum ImageView {
             static let sizeRatio: CGFloat = 0.5

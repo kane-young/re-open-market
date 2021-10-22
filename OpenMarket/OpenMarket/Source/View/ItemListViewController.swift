@@ -8,39 +8,40 @@
 import UIKit
 
 final class ItemListViewController: UIViewController {
+    // MARK: CellStyle
     private enum CellStyle {
         case list
         case grid
     }
 
-    // MARK: UI Properties
+    // MARK: Views Properties
     private let addBarButtonItem: UIBarButtonItem = {
         let barButtonItem: UIBarButtonItem = .init(systemItem: .add)
-        barButtonItem.tintColor = .label
+        barButtonItem.tintColor = Style.defaultTintColor
         return barButtonItem
     }()
-    private var segmentedControl: UISegmentedControl = {
+    private let segmentedControl: UISegmentedControl = {
         let segmentedControl: UISegmentedControl = .init(items: [Style.SegmentedControl.listItem,
                                                                  Style.SegmentedControl.gridItem])
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
-        segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.systemBackground], for: .selected)
-        segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.label], for: .normal)
-        segmentedControl.selectedSegmentTintColor = .label
-        segmentedControl.backgroundColor = .systemBackground
-        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.setTitleTextAttributes([.foregroundColor: Style.defaultBackgroundColor], for: .selected)
+        segmentedControl.setTitleTextAttributes([.foregroundColor: Style.defaultTintColor], for: .normal)
+        segmentedControl.selectedSegmentTintColor = Style.defaultTintColor
+        segmentedControl.backgroundColor = Style.defaultBackgroundColor
+        segmentedControl.selectedSegmentIndex = .zero
         return segmentedControl
     }()
-    private var activityIndicator: UIActivityIndicatorView = {
+    private let activityIndicator: UIActivityIndicatorView = {
         let indicator: UIActivityIndicatorView = .init()
-        indicator.color = Style.reverseDefaultColor
+        indicator.color = Style.defaultTintColor
         indicator.style = .large
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
     }()
-    private var collectionView: UICollectionView = {
+    private let collectionView: UICollectionView = {
         let flowLayout: UICollectionViewFlowLayout = .init()
         let collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: flowLayout)
-        collectionView.backgroundColor = Style.defaultColor
+        collectionView.backgroundColor = Style.defaultBackgroundColor
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.register(ItemListCollectionViewCell.self, forCellWithReuseIdentifier: ItemListCollectionViewCell.identifier)
         collectionView.register(ItemGridCollectionViewCell.self, forCellWithReuseIdentifier: ItemGridCollectionViewCell.identifier)
@@ -50,6 +51,7 @@ final class ItemListViewController: UIViewController {
     // MARK: Properties
     private let viewModel: ItemListViewModel = .init()
     private var cellStyle: CellStyle = .list
+    private var currentPosition: IndexPath?
 
     // MARK: Life Cycle Method
     override func viewDidLoad() {
@@ -74,28 +76,24 @@ final class ItemListViewController: UIViewController {
         navigationItem.rightBarButtonItem = addBarButtonItem
         segmentedControl.addTarget(self, action: #selector(segmentedControlChangedValue(_:)), for: .valueChanged)
         navigationItem.titleView = segmentedControl
-        navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.barTintColor = Style.defaultColor
+        navigationController?.navigationBar.tintColor = Style.defaultTintColor
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.navigationBar.barTintColor = Style.defaultBackgroundColor
     }
 
     private func viewModelBind() {
         viewModel.bind { [weak self] state in
             switch state {
-            case .initial(let indexPaths):
+            case .initial:
                 self?.activityIndicator.stopAnimating()
                 self?.collectionView.isHidden = false
-                self?.collectionView.insertItems(at: indexPaths)
+                self?.collectionView.reloadData()
+                self?.collectionView.scrollToItem(at: IndexPath(item: .zero, section: .zero),
+                                                  at: .top, animated: false)
             case .update(let indexPaths):
                 self?.collectionView.insertItems(at: indexPaths)
             case .error(let error):
-                let alertController = UIAlertController(title: Style.AlertMessage.title,
-                                                        message: error.message,
-                                                        preferredStyle: .alert)
-                let okay = UIAlertAction(title: Style.AlertMessage.alertActionTitle,
-                                         style: .default,
-                                         handler: nil)
-                alertController.addAction(okay)
-                self?.present(alertController, animated: true, completion: nil)
+                self?.alertErrorMessage(error)
             default:
                 break
             }
@@ -106,7 +104,7 @@ final class ItemListViewController: UIViewController {
     }
 
     private func configureView() {
-        self.view.backgroundColor = Style.defaultColor
+        self.view.backgroundColor = Style.defaultBackgroundColor
     }
 
     private func configureCollectionView() {
@@ -137,10 +135,13 @@ final class ItemListViewController: UIViewController {
         default:
             return
         }
+        guard let currentPosition = currentPosition else { return }
+        collectionView.scrollToItem(at: currentPosition, at: .centeredVertically, animated: false)
     }
 
     @objc private func touchAddBarButtonItem(_ sender: UIBarButtonItem) {
         let itemEditViewController = ItemEditViewController(mode: .register)
+        itemEditViewController.delegate = self
         self.navigationController?.pushViewController(itemEditViewController, animated: true)
     }
 }
@@ -148,11 +149,21 @@ final class ItemListViewController: UIViewController {
 extension ItemListViewController: UICollectionViewDelegate {
     // MARK: CollectionViewDelegate Method
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let item = viewModel.items[indexPath.item]
+        let itemDetailViewController = ItemDetailViewController(id: item.id)
+        itemDetailViewController.delegate = self
+        navigationController?.pushViewController(itemDetailViewController, animated: true)
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
+        switch cellStyle {
+        case .list:
+            currentPosition = IndexPath(item: indexPath.item - 3, section: .zero)
+        case .grid:
+            currentPosition = IndexPath(item: indexPath.item - 2, section: .zero)
+        }
         if viewModel.items.count <= indexPath.item + Style.CollectionView.remainCellCount {
             viewModel.loadItems()
         }
@@ -210,9 +221,9 @@ extension ItemListViewController: UICollectionViewDelegateFlowLayout {
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         switch cellStyle {
         case .list:
-            return Style.CollectionView.gridLayoutMinimumLineSpacing
-        case .grid:
             return Style.CollectionView.listLayoutMinimumLineSpacing
+        case .grid:
+            return Style.CollectionView.gridLayoutMinimumLineSpacing
         }
     }
 
@@ -228,31 +239,35 @@ extension ItemListViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+extension ItemListViewController: ItemDetailViewControllerDelegate {
+    // MARK: ItemDetailViewController Delegate Method - Detail View Controller을 통해서 수정을 했을 경우
+    func itemStateDidChanged() {
+        viewModel.reset()
+    }
+}
+
+extension ItemListViewController: ItemEditViewControllerDelegate {
+    // MARK: ItemEditViewController Delegate Method - List에서 Item 생성시
+    func didSuccessEdit(item: Item) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            let detailViewController = ItemDetailViewController(id: item.id)
+            detailViewController.delegate = self
+            self.navigationController?.pushViewController(detailViewController, animated: true)
+        }
+    }
+}
+
 extension ItemListViewController {
     private enum Style {
-        static let defaultColor: UIColor = .systemBackground
-        static let reverseDefaultColor: UIColor = .label
+        static let defaultBackgroundColor: UIColor = .systemBackground
+        static let defaultTintColor: UIColor = .label
         enum SegmentedControl {
             static let listItem = "LIST"
             static let gridItem = "GRID"
         }
-        enum NavigationBar {
-            static let title = "오픈마켓"
-        }
-        enum BarButtonItem {
-            static let gridImage = UIImage(systemName: "square.grid.2x2")
-            static let plusImage = UIImage(systemName: "plus")
-            static let listImage = UIImage(systemName: "list.dash")
-            static let tintColor = UIColor.black
-        }
-        enum AlertMessage {
-            static let title = "에러 발생"
-            static let alertActionTitle = "OK"
-        }
         enum CollectionView {
-            static let backgroundColor = UIColor.white
             static let listLayoutMinimumLineSpacing: CGFloat = 10
-            static let gridLayoutMinimumLineSpacing: CGFloat = 0
+            static let gridLayoutMinimumLineSpacing: CGFloat = 10
             static let listLayoutInsets: UIEdgeInsets = .zero
             static let gridLayoutInsets: UIEdgeInsets = .init(top: 10, left: 10, bottom: 10, right: 10)
             static let remainCellCount: Int = 10
@@ -262,7 +277,7 @@ extension ItemListViewController {
             static let listHeightRatio: CGFloat = 1/6
             static let gridWidthRatio: CGFloat = 1/2
             static let gridWidthConstant: CGFloat = -20
-            static let gridHeightRatio: CGFloat = 1/2
+            static let gridHeightRatio: CGFloat = 2/5
             static let gridHeightConstant: CGFloat = -20
         }
     }

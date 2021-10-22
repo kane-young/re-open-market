@@ -14,7 +14,7 @@ protocol MultiPartFormProtocol {
 final class MultiPartForm: MultiPartFormProtocol {
     private enum Format {
         static let contentDisposition = "Content-Disposition: "
-        static let contentType = "Content-Type"
+        static let contentType = "Content-Type: "
         static let formData = "form-data"
         static let crlf = "\r\n"
 
@@ -22,7 +22,7 @@ final class MultiPartForm: MultiPartFormProtocol {
             return "; name=\"\(string)\""
         }
         static func fileName(_ string: String) -> String {
-            return "; fileName=\"\(string)\""
+            return "; filename=\"\(string)\""
         }
         static func starting(_ boundary: String) -> String {
             return "--\(boundary)\(crlf)"
@@ -78,13 +78,13 @@ final class MultiPartForm: MultiPartFormProtocol {
                                contentType: MimeType? = nil) -> Data {
         var header = Format.contentDisposition + Format.formData + Format.name(name)
         if let fileName = fileName {
-            header += Format.fileName(fileName)
+            header += Format.fileName(fileName) + Format.crlf
+        } else {
+            header += Format.crlf + Format.crlf
         }
-        header += Format.crlf
-        if let contentType = contentType {
-            header += Format.contentType + "\(contentType)" + Format.crlf
+        if let mimeType = contentType {
+            header += Format.contentType + "\(mimeType)" + Format.crlf + Format.crlf
         }
-        header += Format.crlf
         return Data(header.utf8)
     }
 }
