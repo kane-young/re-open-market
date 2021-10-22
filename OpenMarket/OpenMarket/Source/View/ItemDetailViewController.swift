@@ -193,7 +193,7 @@ final class ItemDetailViewController: UIViewController {
             scrollView.contentLayoutGuide.topAnchor.constraint(equalTo: titleLabel.topAnchor,
                                                                constant: -Style.defaultViewsMargin),
             scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: descriptionLabel.bottomAnchor,
-                                                                  constant: -Style.defaultViewsMargin)
+                                                                  constant: Style.defaultViewsMargin)
         ])
     }
 
