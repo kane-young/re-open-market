@@ -344,8 +344,8 @@
 				C35943DF27059BFA00146FFC /* Enum */,
 				C32EDBCF26FEB63500F6BC53 /* Error */,
 				C32EDBCD26FEB3DE00F6BC53 /* NetworkManager.swift */,
-				C32EDBC126FC9E9300F6BC53 /* MultiPartForm.swift */,
 				C32EDBD626FF69EA00F6BC53 /* RequestMaker.swift */,
+				C32EDBC126FC9E9300F6BC53 /* MultiPartForm.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";

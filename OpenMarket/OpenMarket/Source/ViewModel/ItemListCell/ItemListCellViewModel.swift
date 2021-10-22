@@ -30,7 +30,6 @@ final class ItemListCellViewModel {
     // MARK: Properties
     private let item: Item
     private let useCase: ImageNetworkUseCaseProtocol
-    private var imageTask: URLSessionDataTask?
     private var handler: ((State) -> Void)?
     private var state: State = .empty {
         didSet {
@@ -63,7 +62,7 @@ final class ItemListCellViewModel {
             state = .error(.emptyPath)
             return
         }
-        imageTask = useCase.retrieveImage(with: urlString, completionHandler: { [weak self] result in
+        useCase.retrieveImage(with: urlString, completionHandler: { [weak self] result in
             switch result {
             case .success(let image):
                 guard case var .update(metaData) = self?.state else { return }
