@@ -8,7 +8,7 @@
 import UIKit
 
 protocol ItemEditViewControllerDelegate: AnyObject {
-    func didEndRegister(item: Item)
+    func didSuccessEdit(item: Item)
 }
 
 final class ItemEditViewController: UIViewController {
@@ -188,12 +188,10 @@ final class ItemEditViewController: UIViewController {
     private func viewModelBind() {
         viewModel.bind { [weak self] state in
             switch state {
-            case .first:
+            case .loading:
                 self?.activityIndicator.startAnimating()
             case .initial(let item):
-                self?.activityIndicator.stopAnimating()
                 self?.configureViewsForUpdate(item)
-                self?.photoCollectionView.reloadData()
             case .addPhoto(let indexPath):
                 self?.photoCollectionView.insertItems(at: [indexPath])
             case .deletePhoto(let indexPath):
@@ -220,9 +218,10 @@ final class ItemEditViewController: UIViewController {
     }
 
     private func alertSuccessRegister(item: Item) {
-        let alertController = UIAlertController(title: "등록 완료", message: "아이템 등록에 성공하였습니다", preferredStyle: .alert)
-        let okay = UIAlertAction(title: "확인", style: .default) { [weak self] _ in
-            self?.delegate?.didEndRegister(item: item)
+        let alertController = UIAlertController(title: Style.Alert.Register.title,
+                                                message: Style.Alert.Register.message, preferredStyle: .alert)
+        let okay = UIAlertAction(title: Style.Alert.Action.okayTitle, style: .default) { [weak self] _ in
+            self?.delegate?.didSuccessEdit(item: item)
             self?.navigationController?.popViewController(animated: false)
         }
         alertController.addAction(okay)
@@ -230,16 +229,19 @@ final class ItemEditViewController: UIViewController {
     }
 
     private func alertSuccessUpdate(item: Item) {
-        let alertController = UIAlertController(title: "수정 완료", message: "아이템 수정에 성공하였습니다", preferredStyle: .alert)
-        let okay = UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+        let alertController = UIAlertController(title: Style.Alert.Update.title,
+                                                message: Style.Alert.Update.message, preferredStyle: .alert)
+        let okay = UIAlertAction(title: Style.Alert.Action.okayTitle, style: .default) { [weak self] _ in
             self?.navigationController?.popViewController(animated: true)
-            self?.delegate?.didEndRegister(item: item)
+            self?.delegate?.didSuccessEdit(item: item)
         }
         alertController.addAction(okay)
         present(alertController, animated: true, completion: nil)
     }
 
     private func configureViewsForUpdate(_ item: Item) {
+        activityIndicator.stopAnimating()
+        photoCollectionView.reloadData()
         titleTextField.text = item.title
         currencyTextField.text = item.currency
         priceTextField.text = String(item.price)
@@ -293,7 +295,7 @@ final class ItemEditViewController: UIViewController {
                 self.viewModel.updateItem(password: password)
             }
         }
-        let cancel: UIAlertAction = .init(title: Style.Alert.Cancel.title, style: .default, handler: nil)
+        let cancel: UIAlertAction = .init(title: Style.Alert.Action.cancelTitle, style: .default, handler: nil)
         alertController.addAction(register)
         alertController.addAction(cancel)
         present(alertController, animated: true, completion: nil)
@@ -302,7 +304,7 @@ final class ItemEditViewController: UIViewController {
     private func alertDissatisfication() {
         let alertController: UIAlertController = .init(title: Style.Alert.Dissatisfication.title,
                                                 message: Style.Alert.Dissatisfication.message, preferredStyle: .alert)
-        let cancel: UIAlertAction = .init(title: Style.Alert.Cancel.title, style: .default, handler: nil)
+        let cancel: UIAlertAction = .init(title: Style.Alert.Action.cancelTitle, style: .default, handler: nil)
         alertController.addAction(cancel)
         present(alertController, animated: true, completion: nil)
     }
@@ -525,7 +527,7 @@ extension ItemEditViewController: UICollectionViewDataSource {
                 return UICollectionViewCell()
             }
             photoCell.addDeleteButtonTarget(target: self, action: #selector(touchDeletePhotoButton(_:)), for: .touchUpInside)
-            photoCell.bind(ItemEditPhotoCellViewModel(image: viewModel.images[indexPath.item-1]))
+            photoCell.bind(PhotoCellViewModel(image: viewModel.images[indexPath.item-1]))
             photoCell.configureCell()
             cell = photoCell
         }
@@ -533,8 +535,8 @@ extension ItemEditViewController: UICollectionViewDataSource {
     }
 
     @objc private func touchDeletePhotoButton(_ sender: UIButton) {
-        for index in 0..<viewModel.images.count {
-            let indexPath = IndexPath(item: index + 1, section: 0)
+        for index in .zero..<viewModel.images.count {
+            let indexPath = IndexPath(item: index + 1, section: .zero)
             guard let cell = photoCollectionView.cellForItem(at: indexPath) as? ItemEditPhotoCollectionViewCell else { continue }
             if cell.deleteButton === sender {
                 viewModel.deleteImage(indexPath)
@@ -560,7 +562,7 @@ extension ItemEditViewController: UICollectionViewDelegate {
     private func alertExcessImagesCount() {
         let alertController = UIAlertController(title: Style.Alert.ExcessImageCount.title,
                                                 message: Style.Alert.ExcessImageCount.message, preferredStyle: .alert)
-        let cancel = UIAlertAction(title: Style.Alert.Cancel.title, style: .default, handler: nil)
+        let cancel = UIAlertAction(title: Style.Alert.Action.cancelTitle, style: .default, handler: nil)
         alertController.addAction(cancel)
         present(alertController, animated: true, completion: nil)
     }

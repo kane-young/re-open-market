@@ -60,11 +60,21 @@ extension ItemEditViewController {
             static let height: CGFloat = 1
         }
         enum TextField {
-            static let tintColor = UIColor.clear
+            static let tintColor: UIColor = UIColor.clear
         }
         enum Alert {
+            enum Action {
+                static let registerTitle: String = "등록"
+                static let cancelTitle: String = "취소"
+                static let okayTitle: String = "확인"
+            }
             enum Register {
-                static let title: String = "등록"
+                static let title: String = "등록 완료"
+                static let message: String = "아이템 등록에 성공하였습니다"
+            }
+            enum Update {
+                static let title: String = "수정 완료"
+                static let message: String = "아이템 수정에 성공하였습니다"
             }
             enum InputPassword {
                 static let title: String = "비밀번호 입력"
@@ -81,9 +91,6 @@ extension ItemEditViewController {
             enum Dissatisfication {
                 static let title: String = "필수 요소 작성 불만족"
                 static let message: String = "할인 가격을 제외한 모든 요소를 채워야 하며,\n할인 가격은 제품 가격에 비해 낮아야 합니다"
-            }
-            enum Cancel {
-                static let title: String = "취소"
             }
         }
     }

@@ -120,27 +120,27 @@ final class ItemListCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
         NSLayoutConstraint.activate([
             thumbnailImageView.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor),
             thumbnailImageView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,
-                                                        constant: Style.Views.defaultMargin),
+                                                        constant: Style.Margin.normal),
             thumbnailImageView.topAnchor.constraint(equalTo: safeArea.topAnchor,
-                                                    constant: Style.Views.defaultMargin),
+                                                    constant: Style.Margin.normal),
             thumbnailImageView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor,
-                                                       constant: -Style.Views.defaultMargin),
+                                                       constant: -Style.Margin.normal),
             thumbnailImageView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor,
-                                                         constant: -20),
+                                                         constant: -Style.Margin.betweenImageViewTitle),
             titleLabel.topAnchor.constraint(equalTo: thumbnailImageView.topAnchor),
             titleLabel.trailingAnchor.constraint(equalTo: stockLabel.leadingAnchor,
-                                                 constant: -Style.Views.defaultMargin),
+                                                 constant: -Style.Margin.normal),
             titleLabel.bottomAnchor.constraint(lessThanOrEqualTo: priceLabelsStackView.topAnchor,
-                                               constant: -Style.Views.defaultMargin),
+                                               constant: -Style.Margin.normal),
             stockLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,
-                                                 constant: -Style.Views.defaultMargin),
+                                                 constant: -Style.Margin.normal),
             stockLabel.topAnchor.constraint(equalTo: thumbnailImageView.topAnchor),
             priceLabelsStackView.leadingAnchor.constraint(equalTo: thumbnailImageView.trailingAnchor,
-                                                          constant: 20),
+                                                          constant: Style.Margin.betweenImageViewTitle),
             priceLabelsStackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,
-                                                           constant: -Style.Views.defaultMargin),
+                                                           constant: -Style.Margin.normal),
             priceLabelsStackView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor,
-                                                         constant: -Style.Views.defaultMargin)
+                                                         constant: -Style.Margin.normal)
         ])
         discountedPriceLabel.setContentCompressionResistancePriority(Style.Priority.veryHigh, for: .horizontal)
         priceLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -162,8 +162,9 @@ extension ItemListCollectionViewCell {
         enum StackView {
             static let defaultSpacing: CGFloat = 20
         }
-        enum Views {
-            static let defaultMargin: CGFloat = 10
+        enum Margin {
+            static let normal: CGFloat = 10
+            static let betweenImageViewTitle: CGFloat = 20
         }
         enum Priority {
             static let veryHigh: UILayoutPriority = UILayoutPriority(1000)

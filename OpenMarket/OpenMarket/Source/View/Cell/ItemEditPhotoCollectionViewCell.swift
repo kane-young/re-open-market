@@ -31,7 +31,7 @@ final class ItemEditPhotoCollectionViewCell: UICollectionViewCell {
     }()
 
     // MARK: Property
-    private var viewModel: ItemEditPhotoCellViewModel?
+    private var viewModel: PhotoCellViewModel?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -54,7 +54,7 @@ final class ItemEditPhotoCollectionViewCell: UICollectionViewCell {
         deleteButton.addTarget(target, action: action, for: event)
     }
 
-    func bind(_ viewModel: ItemEditPhotoCellViewModel) {
+    func bind(_ viewModel: PhotoCellViewModel) {
         self.viewModel = viewModel
         viewModel.bind { [weak self] state in
             switch state {

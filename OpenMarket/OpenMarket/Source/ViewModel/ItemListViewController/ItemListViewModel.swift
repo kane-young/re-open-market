@@ -11,7 +11,7 @@ final class ItemListViewModel {
     // MARK: State
     enum State {
         case empty
-        case initial([IndexPath])
+        case initial
         case update([IndexPath])
         case error(ItemListViewModelError)
     }
@@ -23,7 +23,7 @@ final class ItemListViewModel {
             if oldValue.count > items.count { return }
             let indexPaths = (oldValue.count..<items.count).map { IndexPath(item: $0, section: .zero) }
             if oldValue.count == .zero {
-                state = .initial(indexPaths)
+                state = .initial
             } else {
                 state = .update(indexPaths)
             }

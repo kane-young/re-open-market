@@ -7,17 +7,17 @@
 
 import UIKit
 
-final class ItemEditPhotoCellViewModel {
+final class PhotoCellViewModel {
     // MARK: State
     enum State {
-        case initial
+        case empty
         case update(UIImage)
     }
 
     // MARK: Properties
     private let image: UIImage
     private var handler: ((State) -> Void)?
-    private var state: State = .initial {
+    private var state: State = .empty {
         didSet {
             DispatchQueue.main.async { [weak self] in
                 guard let state = self?.state else {

@@ -11,7 +11,7 @@ final class ItemDetailViewModel {
     // MARK: State
     enum State {
         case empty
-        case initial
+        case loading
         case delete
         case update(MetaData)
         case error(ItemDetailViewModelError)
@@ -30,9 +30,10 @@ final class ItemDetailViewModel {
     }
 
     // MARK: Properties
+    private(set) var images: [UIImage] = []
     private(set) var id: Int
     private let itemNetworkUseCase: ItemNetworkUseCaseProtocol
-    private let imageNetworkUseCase: ImageNetworkUseCase = .shared
+    private let imageNetworkUseCase: ImageNetworkUseCaseProtocol
     private var handler: ((State) -> Void)?
     private var state: State = .empty {
         didSet {
@@ -42,11 +43,12 @@ final class ItemDetailViewModel {
             }
         }
     }
-    private(set) var images: [UIImage] = []
 
-    init(id: Int, itemNetworkUseCase: ItemNetworkUseCaseProtocol = ItemNetworkUseCase()) {
+    init(id: Int, itemNetworkUseCase: ItemNetworkUseCaseProtocol = ItemNetworkUseCase(),
+         imageNetworkUseCase: ImageNetworkUseCaseProtocol = ImageNetworkUseCase.shared) {
         self.id = id
         self.itemNetworkUseCase = itemNetworkUseCase
+        self.imageNetworkUseCase = imageNetworkUseCase
     }
 
     // MARK: Instance Method
@@ -67,7 +69,6 @@ final class ItemDetailViewModel {
     }
 
     private func loadImages(item: Item) {
-        state = .initial
         let dispatchGroup = DispatchGroup()
         guard let imagePaths = item.images else { return }
         var images: [UIImage] = Array(repeating: UIImage(), count: imagePaths.count)

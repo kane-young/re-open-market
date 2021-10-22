@@ -19,7 +19,7 @@ class ItemDetailPhotoCollectionViewCell: UICollectionViewCell {
     }()
 
     // MARk: Property
-    private var viewModel: ItemDetailPhotoCellViewModel?
+    private var viewModel: PhotoCellViewModel?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -33,7 +33,7 @@ class ItemDetailPhotoCollectionViewCell: UICollectionViewCell {
 
     // MARK: Instance Method
     func configureCell(with image: UIImage) {
-        viewModel = ItemDetailPhotoCellViewModel(image: image)
+        viewModel = PhotoCellViewModel(image: image)
         viewModel?.bind({ [weak self] state in
             switch state {
             case .update(let image):

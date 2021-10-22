@@ -11,7 +11,7 @@ protocol ItemDetailViewControllerDelegate: AnyObject {
     func itemStateDidChanged()
 }
 
-class ItemDetailViewController: UIViewController {
+final class ItemDetailViewController: UIViewController {
     // MARK: View Properties
     private let scrollView: UIScrollView = {
         let scrollView: UIScrollView = .init()
@@ -139,7 +139,7 @@ class ItemDetailViewController: UIViewController {
         viewModel.bind { [weak self] state in
             guard let self = self else { return }
             switch state {
-            case .initial:
+            case .loading:
                 self.activityIndicator.startAnimating()
             case .update(let metaData):
                 self.activityIndicator.stopAnimating()
@@ -153,20 +153,92 @@ class ItemDetailViewController: UIViewController {
                 self.stockLabel.text = metaData.stock
                 self.pageControl.numberOfPages = self.viewModel.images.count
                 self.collectionView.reloadData()
+            case .delete:
+                self.alertSuccessDeleteItem()
             case .error(let error) where error == ItemDetailViewModelError.useCaseError(.networkError(.invalidResponseStatuscode(404))):
                 self.alertIncorrectPasswordMessage { _ in
                     self.alertCheckPassword()
                 }
             case .error(let error):
                 self.alertErrorMessage(error)
-            case .delete:
-                self.alertSuccessDeleteItem()
             default:
                 break
             }
         }
     }
 
+    private func configureConstraints() {
+        configureLabelsConstraints()
+        configureScrollViewConstraints()
+        configureCollectionViewConstraints()
+        configurePriceStackViewConstraints()
+        NSLayoutConstraint.activate([
+            pageControl.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor,
+                                                constant: -Style.defaultViewsMargin),
+            pageControl.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor),
+            activityIndicator.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor)
+        ])
+        stockLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+    }
+
+    private func configureScrollViewConstraints() {
+        let safeArea = view.safeAreaLayoutGuide
+        NSLayoutConstraint.activate([
+            scrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            scrollView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: view.widthAnchor),
+            scrollView.contentLayoutGuide.topAnchor.constraint(equalTo: titleLabel.topAnchor,
+                                                               constant: -Style.defaultViewsMargin),
+            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: descriptionLabel.bottomAnchor,
+                                                                  constant: -Style.defaultViewsMargin)
+        ])
+    }
+
+    private func configureCollectionViewConstraints() {
+        NSLayoutConstraint.activate([
+            collectionView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            collectionView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/2),
+            collectionView.bottomAnchor.constraint(equalTo: priceStackView.topAnchor,
+                                                   constant: -Style.defaultViewsMargin)
+        ])
+    }
+
+    private func configurePriceStackViewConstraints() {
+        NSLayoutConstraint.activate([
+            priceStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
+                                                    constant: Style.defaultViewsMargin),
+            priceStackView.trailingAnchor.constraint(equalTo: stockLabel.leadingAnchor,
+                                                     constant: -Style.defaultViewsMargin),
+            priceStackView.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor,
+                                                   constant: -(Style.defaultViewsMargin * 2))
+        ])
+    }
+
+    private func configureLabelsConstraints() {
+        NSLayoutConstraint.activate([
+            titleLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
+                                                constant: Style.defaultViewsMargin),
+            titleLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
+                                                 constant: -Style.defaultViewsMargin),
+            titleLabel.bottomAnchor.constraint(equalTo: collectionView.topAnchor,
+                                               constant: -Style.defaultViewsMargin),
+            stockLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
+                                                 constant: -Style.defaultViewsMargin),
+            stockLabel.topAnchor.constraint(equalTo: collectionView.bottomAnchor,
+                                            constant: Style.defaultViewsMargin),
+            descriptionLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            descriptionLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
+                                                       constant: -Style.defaultViewsMargin)
+        ])
+    }
+}
+
+extension ItemDetailViewController {
+    // MARK: Method associated with Binding
     private func configureNavigationBar() {
         let moreBarButtonItem: UIBarButtonItem = .init(image: Style.MoreBarButtonItem.image, style: .plain,
                                                        target: self, action: #selector(touchMenuBarButtonItem(_:)))
@@ -179,8 +251,9 @@ class ItemDetailViewController: UIViewController {
     }
 
     private func alertSuccessDeleteItem() {
-        let alertController: UIAlertController = .init(title: "삭제 되었습니다", message: "해당 아이템이 삭제 되었습니다", preferredStyle: .alert)
-        let okay: UIAlertAction = .init(title: "확인", style: .default) { [weak self] _ in
+        let alertController: UIAlertController = .init(title: Style.Alert.DeleteItem.title,
+                                                       message: Style.Alert.DeleteItem.message, preferredStyle: .alert)
+        let okay: UIAlertAction = .init(title: Style.Alert.Action.okayTitle, style: .default) { [weak self] _ in
             self?.delegate?.itemStateDidChanged()
             self?.navigationController?.popViewController(animated: true)
         }
@@ -190,13 +263,13 @@ class ItemDetailViewController: UIViewController {
 
     private func alertUpdateOrDelete() {
         let alertController: UIAlertController = .init(title: nil, message: nil, preferredStyle: .actionSheet)
-        let update: UIAlertAction = .init(title: Style.Alert.updateActionTitle, style: .default) { [weak self] _ in
+        let update: UIAlertAction = .init(title: Style.Alert.Action.updateTitle, style: .default) { [weak self] _ in
             self?.updateItem()
         }
-        let delete: UIAlertAction = .init(title: Style.Alert.deleteActionTitle, style: .destructive) { [weak self] _ in
+        let delete: UIAlertAction = .init(title: Style.Alert.Action.deleteTitle, style: .destructive) { [weak self] _ in
             self?.deleteItem()
         }
-        let cancel: UIAlertAction = .init(title: Style.Alert.cancelActionTitle, style: .cancel, handler: nil)
+        let cancel: UIAlertAction = .init(title: Style.Alert.Action.cancelTitle, style: .cancel, handler: nil)
         alertController.addAction(update)
         alertController.addAction(delete)
         alertController.addAction(cancel)
@@ -223,60 +296,15 @@ class ItemDetailViewController: UIViewController {
             textField.placeholder = Style.Alert.InputPassword.placeHolder
             textField.isSecureTextEntry = true
         }
-        let register: UIAlertAction = .init(title: Style.Alert.deleteActionTitle, style: .destructive) { [weak self] _ in
+        let register: UIAlertAction = .init(title: Style.Alert.Action.deleteTitle, style: .destructive) { [weak self] _ in
             guard let self = self else { return }
             guard let password = alertController.textFields?[0].text else { return }
             self.viewModel.deleteItem(password: password)
         }
-        let cancel: UIAlertAction = .init(title: Style.Alert.cancelActionTitle, style: .default, handler: nil)
+        let cancel: UIAlertAction = .init(title: Style.Alert.Action.cancelTitle, style: .default, handler: nil)
         alertController.addAction(register)
         alertController.addAction(cancel)
         present(alertController, animated: true, completion: nil)
-    }
-
-    private func configureConstraints() {
-        let safeArea = view.safeAreaLayoutGuide
-        NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            scrollView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
-            scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: view.widthAnchor),
-            scrollView.contentLayoutGuide.topAnchor.constraint(equalTo: titleLabel.topAnchor,
-                                                               constant: -Style.defaultViewsMargin),
-            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: descriptionLabel.bottomAnchor,
-                                                                  constant: -Style.defaultViewsMargin),
-            titleLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
-                                                constant: Style.defaultViewsMargin),
-            titleLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
-                                                 constant: -Style.defaultViewsMargin),
-            titleLabel.bottomAnchor.constraint(equalTo: collectionView.topAnchor,
-                                               constant: -Style.defaultViewsMargin),
-            collectionView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            collectionView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/2),
-            collectionView.bottomAnchor.constraint(equalTo: priceStackView.topAnchor,
-                                                   constant: -Style.defaultViewsMargin),
-            priceStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,
-                                                    constant: Style.defaultViewsMargin),
-            priceStackView.trailingAnchor.constraint(equalTo: stockLabel.leadingAnchor,
-                                                     constant: -Style.defaultViewsMargin),
-            priceStackView.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor,
-                                                   constant: -(Style.defaultViewsMargin * 2)),
-            stockLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
-                                                 constant: -Style.defaultViewsMargin),
-            stockLabel.topAnchor.constraint(equalTo: collectionView.bottomAnchor,
-                                            constant: Style.defaultViewsMargin),
-            descriptionLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            descriptionLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
-                                                       constant: -Style.defaultViewsMargin),
-            pageControl.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor,
-                                                constant: -Style.defaultViewsMargin),
-            pageControl.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor),
-            activityIndicator.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor)
-        ])
-        stockLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
     }
 }
 
@@ -324,47 +352,12 @@ extension ItemDetailViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension ItemDetailViewController: ItemEditViewControllerDelegate {
-    func didEndRegister(item: Item) {
+    // MARK: Item Edit View Controller Delegate Method
+    func didSuccessEdit(item: Item) {
         viewModel.reset()
         delegate?.itemStateDidChanged()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             self?.viewModel.loadItem()
-        }
-    }
-}
-
-extension ItemDetailViewController {
-    // MARK: Style
-    enum Style {
-        static let defaultBackgroundColor: UIColor = .systemBackground
-        static let defaultTintColor: UIColor = .label
-        static let defaultFont: UIFont = .preferredFont(forTextStyle: .body)
-        static let stressedFont: UIFont = .preferredFont(forTextStyle: .largeTitle)
-        static let defaultViewsMargin: CGFloat = 10
-        enum MoreBarButtonItem {
-            static let image: UIImage? = .init(systemName: "ellipsis")
-        }
-        enum PageControl {
-            static let currentPageColor: UIColor = .systemBlue
-            static let remainPageColor: UIColor = .systemGray
-        }
-        enum StockLabel {
-            static let soldOutColor: UIColor = .systemYellow
-            static let normalColor: UIColor = .label
-        }
-        enum PriceLabel {
-            static let strikeThroughColor: UIColor = .systemRed
-            static let normalColor: UIColor = .label
-        }
-        enum Alert {
-            static let updateActionTitle: String = "수정"
-            static let deleteActionTitle: String = "삭제"
-            static let cancelActionTitle: String = "취소"
-            enum InputPassword {
-                static let title: String = "비밀번호 입력"
-                static let message: String = "등록자 인증을 위한 비밀번호가 필요합니다"
-                static let placeHolder: String = "비밀번호"
-            }
         }
     }
 }

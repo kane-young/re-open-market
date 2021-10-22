@@ -84,7 +84,7 @@ final class ItemListViewController: UIViewController {
     private func viewModelBind() {
         viewModel.bind { [weak self] state in
             switch state {
-            case .initial(let indexPaths):
+            case .initial:
                 self?.activityIndicator.stopAnimating()
                 self?.collectionView.isHidden = false
                 self?.collectionView.reloadData()
@@ -248,7 +248,7 @@ extension ItemListViewController: ItemDetailViewControllerDelegate {
 
 extension ItemListViewController: ItemEditViewControllerDelegate {
     // MARK: ItemEditViewController Delegate Method - List에서 Item 생성시
-    func didEndRegister(item: Item) {
+    func didSuccessEdit(item: Item) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             let detailViewController = ItemDetailViewController(id: item.id)
             detailViewController.delegate = self

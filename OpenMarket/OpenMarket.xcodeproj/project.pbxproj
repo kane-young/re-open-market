@@ -30,12 +30,12 @@
 		C32EDBD92700023500F6BC53 /* NetworkManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBD82700023500F6BC53 /* NetworkManagerTest.swift */; };
 		C32EDBDC2700029400F6BC53 /* MockURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBDB2700029400F6BC53 /* MockURLProtocol.swift */; };
 		C32EDBE027002B4600F6BC53 /* RequestMakerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32EDBDF27002B4600F6BC53 /* RequestMakerTest.swift */; };
+		C339AEB42722821E00486F1D /* ItemDetailViewController+Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = C339AEB32722821E00486F1D /* ItemDetailViewController+Style.swift */; };
 		C33F1EE42719925B00BDCA35 /* ItemEditViewModelError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33F1EE32719925B00BDCA35 /* ItemEditViewModelError.swift */; };
 		C33F1EE7271992AE00BDCA35 /* ItemEditNetoworkUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33F1EE6271992AE00BDCA35 /* ItemEditNetoworkUseCaseProtocol.swift */; };
 		C33F1EE9271992DE00BDCA35 /* ItemEditUseCaseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33F1EE8271992DE00BDCA35 /* ItemEditUseCaseError.swift */; };
 		C33F1EEB2719931100BDCA35 /* ItemEditNetworkUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33F1EEA2719931100BDCA35 /* ItemEditNetworkUseCase.swift */; };
 		C33F1EED27199F1000BDCA35 /* ItemEditViewController+Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33F1EEC27199F1000BDCA35 /* ItemEditViewController+Style.swift */; };
-		C3441A8B271731A000D876B0 /* ItemDetailPhotoCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3441A8A271731A000D876B0 /* ItemDetailPhotoCellViewModel.swift */; };
 		C3441A8E271740B500D876B0 /* ItemDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3441A8D271740B500D876B0 /* ItemDetailViewModel.swift */; };
 		C3441A9227184E0200D876B0 /* ItemNetworkUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3441A9127184E0200D876B0 /* ItemNetworkUseCase.swift */; };
 		C3441A9427184E1F00D876B0 /* ItemDetailViewModelError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3441A9327184E1F00D876B0 /* ItemDetailViewModelError.swift */; };
@@ -75,7 +75,7 @@
 		C3CDCEE42717291200127636 /* ItemDetailPhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CDCEE32717291200127636 /* ItemDetailPhotoCollectionViewCell.swift */; };
 		C3E76FC12712AFB600755E07 /* ItemEditPhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FC02712AFB600755E07 /* ItemEditPhotoCollectionViewCell.swift */; };
 		C3E76FCB2712D2AF00755E07 /* AddPhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FCA2712D2AF00755E07 /* AddPhotoCollectionViewCell.swift */; };
-		C3E76FD12712E79000755E07 /* ItemEditPhotoCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FD02712E79000755E07 /* ItemEditPhotoCellViewModel.swift */; };
+		C3E76FD12712E79000755E07 /* PhotoCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FD02712E79000755E07 /* PhotoCellViewModel.swift */; };
 		C3E76FD32712F56200755E07 /* ItemEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E76FD22712F56200755E07 /* ItemEditViewModel.swift */; };
 		D0D420A34F274896FCE5389A /* Pods_OpenMarket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C1CCCB9FD817E8E78A31D5 /* Pods_OpenMarket.framework */; };
 /* End PBXBuildFile section */
@@ -121,12 +121,12 @@
 		C32EDBD82700023500F6BC53 /* NetworkManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManagerTest.swift; sourceTree = "<group>"; };
 		C32EDBDB2700029400F6BC53 /* MockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
 		C32EDBDF27002B4600F6BC53 /* RequestMakerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestMakerTest.swift; sourceTree = "<group>"; };
+		C339AEB32722821E00486F1D /* ItemDetailViewController+Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ItemDetailViewController+Style.swift"; sourceTree = "<group>"; };
 		C33F1EE32719925B00BDCA35 /* ItemEditViewModelError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditViewModelError.swift; sourceTree = "<group>"; };
 		C33F1EE6271992AE00BDCA35 /* ItemEditNetoworkUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditNetoworkUseCaseProtocol.swift; sourceTree = "<group>"; };
 		C33F1EE8271992DE00BDCA35 /* ItemEditUseCaseError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditUseCaseError.swift; sourceTree = "<group>"; };
 		C33F1EEA2719931100BDCA35 /* ItemEditNetworkUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditNetworkUseCase.swift; sourceTree = "<group>"; };
 		C33F1EEC27199F1000BDCA35 /* ItemEditViewController+Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ItemEditViewController+Style.swift"; sourceTree = "<group>"; };
-		C3441A8A271731A000D876B0 /* ItemDetailPhotoCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailPhotoCellViewModel.swift; sourceTree = "<group>"; };
 		C3441A8D271740B500D876B0 /* ItemDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewModel.swift; sourceTree = "<group>"; };
 		C3441A9127184E0200D876B0 /* ItemNetworkUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemNetworkUseCase.swift; sourceTree = "<group>"; };
 		C3441A9327184E1F00D876B0 /* ItemDetailViewModelError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewModelError.swift; sourceTree = "<group>"; };
@@ -166,7 +166,7 @@
 		C3CDCEE32717291200127636 /* ItemDetailPhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailPhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3E76FC02712AFB600755E07 /* ItemEditPhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditPhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3E76FCA2712D2AF00755E07 /* AddPhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPhotoCollectionViewCell.swift; sourceTree = "<group>"; };
-		C3E76FD02712E79000755E07 /* ItemEditPhotoCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditPhotoCellViewModel.swift; sourceTree = "<group>"; };
+		C3E76FD02712E79000755E07 /* PhotoCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCellViewModel.swift; sourceTree = "<group>"; };
 		C3E76FD22712F56200755E07 /* ItemEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -224,12 +224,12 @@
 			path = ItemListCell;
 			sourceTree = "<group>";
 		};
-		C32A71922714197A00E3B329 /* EditPhotoCell */ = {
+		C32A71922714197A00E3B329 /* PhotoCell */ = {
 			isa = PBXGroup;
 			children = (
-				C3E76FD02712E79000755E07 /* ItemEditPhotoCellViewModel.swift */,
+				C3E76FD02712E79000755E07 /* PhotoCellViewModel.swift */,
 			);
-			path = EditPhotoCell;
+			path = PhotoCell;
 			sourceTree = "<group>";
 		};
 		C32A7193271419A800E3B329 /* ItemListViewController */ = {
@@ -319,6 +319,7 @@
 			children = (
 				C32EDB8726FC904B00F6BC53 /* ItemListViewController.swift */,
 				C3CDCEE1271728F500127636 /* ItemDetailViewController.swift */,
+				C339AEB32722821E00486F1D /* ItemDetailViewController+Style.swift */,
 				C310739B27103DF400EFFF91 /* ItemEditViewController.swift */,
 				C33F1EEC27199F1000BDCA35 /* ItemEditViewController+Style.swift */,
 				C35943D827059AF800146FFC /* Cell */,
@@ -409,14 +410,6 @@
 			path = UseCase;
 			sourceTree = "<group>";
 		};
-		C3441A892717312A00D876B0 /* DetailPhotoCell */ = {
-			isa = PBXGroup;
-			children = (
-				C3441A8A271731A000D876B0 /* ItemDetailPhotoCellViewModel.swift */,
-			);
-			path = DetailPhotoCell;
-			sourceTree = "<group>";
-		};
 		C3441A8C2717406800D876B0 /* ItemDetailViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -430,8 +423,8 @@
 		C3441A9927184E7C00D876B0 /* UseCase */ = {
 			isa = PBXGroup;
 			children = (
-				C3441A9727184E5A00D876B0 /* ItemNetworkUseCaseProtocol.swift */,
 				C3441A9127184E0200D876B0 /* ItemNetworkUseCase.swift */,
+				C3441A9727184E5A00D876B0 /* ItemNetworkUseCaseProtocol.swift */,
 				C3441A9527184E3E00D876B0 /* ItemNetworkUseCaseError.swift */,
 			);
 			path = UseCase;
@@ -440,10 +433,10 @@
 		C35943D827059AF800146FFC /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				C37EA62B2702FD6A000518A0 /* ItemListCollectionViewCell.swift */,
 				C3CDCEE32717291200127636 /* ItemDetailPhotoCollectionViewCell.swift */,
 				C3E76FC02712AFB600755E07 /* ItemEditPhotoCollectionViewCell.swift */,
 				C3E76FCA2712D2AF00755E07 /* AddPhotoCollectionViewCell.swift */,
-				C37EA62B2702FD6A000518A0 /* ItemListCollectionViewCell.swift */,
 				C37EA6332704444C000518A0 /* ItemGridCollectionViewCell.swift */,
 				C35943D927059B1600146FFC /* ItemCellDisplayable.swift */,
 			);
@@ -453,8 +446,7 @@
 		C35943DC27059B8900146FFC /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				C3441A892717312A00D876B0 /* DetailPhotoCell */,
-				C32A71922714197A00E3B329 /* EditPhotoCell */,
+				C32A71922714197A00E3B329 /* PhotoCell */,
 				C310739A270F4A7500EFFF91 /* ItemListCell */,
 				C3441A8C2717406800D876B0 /* ItemDetailViewController */,
 				C32A7193271419A800E3B329 /* ItemListViewController */,
@@ -674,7 +666,7 @@
 				C35943EB27059F8000146FFC /* ItemListViewModelError.swift in Sources */,
 				C3441A9427184E1F00D876B0 /* ItemDetailViewModelError.swift in Sources */,
 				C35943E127059C4300146FFC /* ImageNetworkUseCaseProtocol.swift in Sources */,
-				C3E76FD12712E79000755E07 /* ItemEditPhotoCellViewModel.swift in Sources */,
+				C3E76FD12712E79000755E07 /* PhotoCellViewModel.swift in Sources */,
 				C3E76FCB2712D2AF00755E07 /* AddPhotoCollectionViewCell.swift in Sources */,
 				C32EDBA826FC950000F6BC53 /* PatchItem.swift in Sources */,
 				C3441A9227184E0200D876B0 /* ItemNetworkUseCase.swift in Sources */,
@@ -689,6 +681,7 @@
 				C37EA62C2702FD6A000518A0 /* ItemListCollectionViewCell.swift in Sources */,
 				C32EDBC226FC9E9300F6BC53 /* MultiPartForm.swift in Sources */,
 				C32EDBA626FC94D700F6BC53 /* PostItem.swift in Sources */,
+				C339AEB42722821E00486F1D /* ItemDetailViewController+Style.swift in Sources */,
 				C33F1EE42719925B00BDCA35 /* ItemEditViewModelError.swift in Sources */,
 				C37EA62A2702FA64000518A0 /* ItemListNetworkUseCase.swift in Sources */,
 				C35BE093271BDE0C001C5C9E /* UIViewController+Extension.swift in Sources */,
@@ -713,7 +706,6 @@
 				C37EA6342704444C000518A0 /* ItemGridCollectionViewCell.swift in Sources */,
 				C310739C27103DF400EFFF91 /* ItemEditViewController.swift in Sources */,
 				C35943EF27059FE300146FFC /* ItemListCellViewModelError.swift in Sources */,
-				C3441A8B271731A000D876B0 /* ItemDetailPhotoCellViewModel.swift in Sources */,
 				C32EDBAC26FC953E00F6BC53 /* Item.swift in Sources */,
 				C37EA628270179C3000518A0 /* ItemListViewModel.swift in Sources */,
 				C32EDBCE26FEB3DE00F6BC53 /* NetworkManager.swift in Sources */,

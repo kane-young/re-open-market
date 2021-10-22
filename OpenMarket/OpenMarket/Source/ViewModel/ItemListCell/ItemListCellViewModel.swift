@@ -80,8 +80,7 @@ final class ItemListCellViewModel {
         let discountedPrice = discountedPriceText()
         let originalPrice = originalPriceText()
         let priceLabelTextColor = priceLabelTextColor(isNeededDiscountedLabel)
-        let stockLabelTextColor: UIColor = item.stock == .zero ?
-            Format.Stock.soldOutColor : Format.Stock.defaultColor
+        let stockLabelTextColor: UIColor = item.stock == .zero ? Format.Stock.soldOutColor : Format.Stock.defaultColor
         let stock = stockText(item.stock)
         let metaData = MetaData(thumbnail: nil,
                                 title: item.title,
