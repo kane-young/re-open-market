@@ -33,8 +33,8 @@ final class ItemNetworkUseCase: ItemNetworkUseCaseProtocol {
 
     func deleteItem(id: Int, password: String, completionHandler: @escaping (Result<Item, ItemNetworkUseCaseError>) -> Void) {
         let path = OpenMarketAPI.deleteProduct(id: id).urlString
-        let deletItem = DeleteItem(password: password)
-        networkManager.request(urlString: path, with: deletItem, httpMethod: .delete) { [weak self] result in
+        let deleteItem = DeleteItem(password: password)
+        networkManager.request(urlString: path, with: deleteItem, httpMethod: .delete) { [weak self] result in
             switch result {
             case .success(let data):
                 guard let item = try? self?.decoder.decode(Item.self, from: data) else {

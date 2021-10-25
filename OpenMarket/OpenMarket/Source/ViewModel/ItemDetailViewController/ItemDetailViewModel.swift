@@ -114,10 +114,10 @@ final class ItemDetailViewModel {
     func deleteItem(password: String) {
         itemNetworkUseCase.deleteItem(id: id, password: password) { result in
             switch result {
+            case .success:
+                self.state = .delete
             case .failure(let error):
                 self.state = .error(.useCaseError(error))
-            default:
-                self.state = .delete
             }
         }
     }
