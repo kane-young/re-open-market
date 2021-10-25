@@ -14,9 +14,9 @@ enum ItemNetworkUseCaseError: Error {
     var message: String {
         switch self {
         case .decodingError:
-            return "디코딩 에러"
+            return "Decoding Error"
         case .networkError(let error):
-            return "UseCase \(error.message)"
+            return "Networking Error - \(error.message)"
         }
     }
 }

@@ -176,7 +176,7 @@ final class ItemDetailViewModel {
 
 extension ItemDetailViewModel {
     // MARK: Format
-    private enum Format {
+    enum Format {
         enum Price {
             static let defaultColor: UIColor = .label
             static let stressedColor: UIColor = .systemRed

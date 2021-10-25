@@ -9,6 +9,8 @@ import Foundation
 @testable import OpenMarket
 
 enum Dummy {
+    static let id: Int = 50
+    static let password: String = "password"
     static let postItem: PostItem = .init(title: "iPhone", descriptions: "애플폰", price: 1000000,
                                           currency: "KRW", stock: 9, discountedPrice: 900000,
                                           images: [Data()], password: "password")
