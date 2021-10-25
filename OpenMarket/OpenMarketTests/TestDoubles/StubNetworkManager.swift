@@ -35,7 +35,7 @@ final class StubSuccessItemDetailNetworkManager: NetworkManagable {
     }
 }
 
-final class StubSuccessThumbnailNetworkManager: NetworkManagable {
+final class StubSuccessImageNetworkManager: NetworkManagable {
     func request(urlString: String, with item: Any?, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
         guard let data = UIImage(systemName: "pencil")?.pngData() else {
             completion(.failure(.invalidData))

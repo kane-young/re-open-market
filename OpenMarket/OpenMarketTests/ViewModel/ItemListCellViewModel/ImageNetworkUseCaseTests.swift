@@ -8,7 +8,7 @@
 import XCTest
 @testable import OpenMarket
 
-final class ThumbnailUseCaseTests: XCTestCase {
+final class ImageNetworkUseCaseTests: XCTestCase {
     private var expectation: XCTestExpectation!
 
     override func setUpWithError() throws {
@@ -21,7 +21,7 @@ final class ThumbnailUseCaseTests: XCTestCase {
 
     func test_ThumbnailUseCase_retrieveImage성공() {
         //given
-        let useCase = ImageNetworkUseCase(networkManager: StubSuccessThumbnailNetworkManager())
+        let useCase = ImageNetworkUseCase(networkManager: StubSuccessImageNetworkManager())
         guard let expectedImage = UIImage(data: (UIImage(systemName: "pencil")?.pngData())!) else {
             XCTFail()
             return

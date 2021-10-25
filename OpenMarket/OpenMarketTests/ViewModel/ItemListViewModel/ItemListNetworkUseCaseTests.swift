@@ -72,7 +72,6 @@ final class ItemListNetworkUseCaseTests: XCTestCase {
             case .success(_):
                 XCTFail()
             case .failure(let error):
-                
                 XCTAssertEqual(error, expectedError)
                 self?.expectation.fulfill()
             }

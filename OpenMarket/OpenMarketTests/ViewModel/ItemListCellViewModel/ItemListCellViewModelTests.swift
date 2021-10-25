@@ -22,7 +22,7 @@ final class ItemListCellViewModelTests: XCTestCase {
     func test_when_cell구성요소_설정성공시_then_state_update로변경() {
         //given
         let itemListCellViewModel = ItemListCellViewModel(item: Dummy.normalItem,
-                                                          useCase: StubSuccessThumbnailUseCase())
+                                                          useCase: StubSuccessImageNetworkUseCase())
         itemListCellViewModel.bind { [weak self] state in
             switch state {
             case .update(_):
@@ -40,7 +40,7 @@ final class ItemListCellViewModelTests: XCTestCase {
     func test_when_cell구성요소_설정실패시_then_state_error로변경() {
         //given
         let itemListCellViewModel = ItemListCellViewModel(item: Dummy.normalItem,
-                                                          useCase: StubFailureThumbnailUseCase())
+                                                          useCase: StubFailureImageNetworkUseCase())
         itemListCellViewModel.bind { [weak self] state in
             switch state {
             case .error(_):
@@ -58,7 +58,7 @@ final class ItemListCellViewModelTests: XCTestCase {
     func test_when_emptyThumbnailItem구성요소_설정시_then_state_error로변경() {
         //given
         let itemListCellViewModel = ItemListCellViewModel(item: Dummy.emptyThumbnailItem,
-                                                          useCase: StubSuccessThumbnailUseCase())
+                                                          useCase: StubSuccessImageNetworkUseCase())
         itemListCellViewModel.bind { [weak self] state in
             switch state {
             case .error(let error):
@@ -77,7 +77,7 @@ final class ItemListCellViewModelTests: XCTestCase {
     func test_when_일반Item로cell구성요소_설정성공시_then_metaData비교() {
         //given
         let itemListCellViewModel = ItemListCellViewModel(item: Dummy.normalItem,
-                                                          useCase: StubSuccessThumbnailUseCase())
+                                                          useCase: StubSuccessImageNetworkUseCase())
         let expectedStockText = "수량 : 12"
         let expectedStockTextColor = UIColor.systemGray
         itemListCellViewModel.bind { [weak self] state in
@@ -99,7 +99,7 @@ final class ItemListCellViewModelTests: XCTestCase {
     func test_when_품절Item로cell구성요소_설정성공시_then_metaData비교() {
         //given
         let itemListCellViewModel = ItemListCellViewModel(item: Dummy.outOfStockItem,
-                                                          useCase: StubSuccessThumbnailUseCase())
+                                                          useCase: StubSuccessImageNetworkUseCase())
         let expectedStockText = "품절"
         let expectedStockTextColor = UIColor.systemYellow
         itemListCellViewModel.bind { [weak self] state in
@@ -121,7 +121,7 @@ final class ItemListCellViewModelTests: XCTestCase {
     func test_when_1000개이상의Item로cell구성요소_설정성공시_then_metaData비교() {
         //given
         let itemListCellViewModel = ItemListCellViewModel(item: Dummy.quantitiousItem,
-                                                          useCase: StubSuccessThumbnailUseCase())
+                                                          useCase: StubSuccessImageNetworkUseCase())
         let expectedStockText = "수량 : 999+"
         let expectedStockTextColor = UIColor.systemGray
         itemListCellViewModel.bind { [weak self] state in
