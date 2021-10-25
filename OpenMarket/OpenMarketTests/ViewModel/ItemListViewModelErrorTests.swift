@@ -12,13 +12,13 @@ final class ItemListViewModelErrorTests: XCTestCase {
     func testErrorMessage() {
         var expectedMessage: String
         
-        expectedMessage = "ViewModel UseCase Decoding Error 발생"
+        expectedMessage = "UseCase Decoding Error"
         XCTAssertEqual(ItemListViewModelError.useCaseError(.decodingError).message, expectedMessage)
         
-        expectedMessage = "ViewModel UseCase Networking Error - connectionProblem 발생"
+        expectedMessage = "UseCase Networking Error - connectionProblem"
         XCTAssertEqual(ItemListViewModelError.useCaseError(.networkError(.connectionProblem)).message, expectedMessage)
         
-        expectedMessage = "ViewModel UseCase Reference Counting zero - 메모리 해제 발생"
+        expectedMessage = "UseCase Reference Counting zero - 메모리 해제"
         XCTAssertEqual(ItemListViewModelError.useCaseError(.referenceCountingZero).message, expectedMessage)
     }
 }

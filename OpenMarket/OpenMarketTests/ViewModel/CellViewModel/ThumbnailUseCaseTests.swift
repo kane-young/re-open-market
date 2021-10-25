@@ -21,7 +21,7 @@ final class ThumbnailUseCaseTests: XCTestCase {
 
     func test_ThumbnailUseCase_retrieveImage성공() {
         //given
-        let useCase = ThumbnailUseCase(networkManager: StubSuccessThumbnailNetworkManager())
+        let useCase = ImageNetworkUseCase(networkManager: StubSuccessThumbnailNetworkManager())
         guard let expectedImage = UIImage(data: (UIImage(systemName: "pencil")?.pngData())!) else {
             XCTFail()
             return
@@ -42,8 +42,8 @@ final class ThumbnailUseCaseTests: XCTestCase {
 
     func test_ThumbnailUseCase_ConvertDataToImageError() {
         //given
-        let useCase = ThumbnailUseCase(networkManager: StubSuccessItemDetailNetworkManager())
-        let expectedError = ThumbnailUseCaseError.convertDataToImageError
+        let useCase = ImageNetworkUseCase(networkManager: StubSuccessItemDetailNetworkManager())
+        let expectedError = ImageNetworkUseCaseError.convertDataToImageError
         //when
         useCase.retrieveImage(with: Dummy.thumbnailUrlString) { [weak self] result in
             switch result {
@@ -60,8 +60,8 @@ final class ThumbnailUseCaseTests: XCTestCase {
 
     func test_ThumbnailUseCase_networkError() {
         //given
-        let useCase = ThumbnailUseCase(networkManager: StubFailureNetworkManager())
-        let expectedError = ThumbnailUseCaseError.networkError(.connectionProblem)
+        let useCase = ImageNetworkUseCase(networkManager: StubFailureNetworkManager())
+        let expectedError = ImageNetworkUseCaseError.networkError(.connectionProblem)
         //when
         useCase.retrieveImage(with: Dummy.thumbnailUrlString) { [weak self] result in
             switch result {

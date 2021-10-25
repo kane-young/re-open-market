@@ -79,7 +79,7 @@ final class ItemListCellViewModelTests: XCTestCase {
         let itemListCellViewModel = ItemListCellViewModel(item: Dummy.normalItem,
                                                           useCase: StubSuccessThumbnailUseCase())
         let expectedStockText = "수량 : 12"
-        let expectedStockTextColor = UIColor.label
+        let expectedStockTextColor = UIColor.systemGray
         itemListCellViewModel.bind { [weak self] state in
             switch state {
             case .update(let metaData):
@@ -123,7 +123,7 @@ final class ItemListCellViewModelTests: XCTestCase {
         let itemListCellViewModel = ItemListCellViewModel(item: Dummy.quantitiousItem,
                                                           useCase: StubSuccessThumbnailUseCase())
         let expectedStockText = "수량 : 999+"
-        let expectedStockTextColor = UIColor.label
+        let expectedStockTextColor = UIColor.systemGray
         itemListCellViewModel.bind { [weak self] state in
             switch state {
             case .update(let metaData):

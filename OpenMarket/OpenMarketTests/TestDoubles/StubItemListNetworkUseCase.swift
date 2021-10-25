@@ -12,10 +12,18 @@ final class StubSuccessItemListNetworkUseCase: ItemListNetworkUseCaseProtocol {
     func retrieveItems(completionHandler: @escaping (Result<[Item], ItemListUseCaseError>) -> Void) {
         completionHandler(.success(Dummy.items))
     }
+
+    func reset() {
+        
+    }
 }
 
 final class StubFailureItemListNetworkUseCase: ItemListNetworkUseCaseProtocol {
     func retrieveItems(completionHandler: @escaping (Result<[Item], ItemListUseCaseError>) -> Void) {
         completionHandler(.failure(.decodingError))
+    }
+
+    func reset() {
+        
     }
 }
