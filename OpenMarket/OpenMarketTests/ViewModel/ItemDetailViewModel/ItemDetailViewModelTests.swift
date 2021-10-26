@@ -19,14 +19,14 @@ final class ItemDetailViewModelTests: XCTestCase {
         expectation = nil
     }
 
-    func test_itemDetailViewModel_loadItem성공시_state_update로변경() {
+    func test_when_loadItem성공시_then_state_update로변경() {
         //given
+        let dummyId = Dummy.id
         let stubSuccessItemNetworkUseCase = StubSuccessItemNetworkUseCase()
         let stubSuccessImageNetworkUseCase = StubSuccessImageNetworkUseCase()
-        let itemDetailViewModel = ItemDetailViewModel(id: Dummy.id,
+        let itemDetailViewModel = ItemDetailViewModel(id: dummyId,
                                                       itemNetworkUseCase: stubSuccessItemNetworkUseCase,
                                                       imageNetworkUseCase: stubSuccessImageNetworkUseCase)
-        //when
         itemDetailViewModel.bind { [weak self] state in
             switch state {
             case .update(_):
@@ -36,62 +36,64 @@ final class ItemDetailViewModelTests: XCTestCase {
                 XCTFail()
             }
         }
+        //when
         itemDetailViewModel.loadItem()
         wait(for: [expectation], timeout: 2.0)
     }
 
-    func test_itemDetailViewModel_loadItem실패시_state_error로변경() {
+    func test_when_loadItem실패시_then_state_error로변경() {
         //given
+        let dummyId = Dummy.id
         let stubFailureItemNetworkUseCase = StubFailureItemNetworkUseCase()
         let dummyImageNetworkUseCase = ImageNetworkUseCase()
-        let itemDetailViewModel = ItemDetailViewModel(id: Dummy.id,
+        let itemDetailViewModel = ItemDetailViewModel(id: dummyId,
                                                       itemNetworkUseCase: stubFailureItemNetworkUseCase,
                                                       imageNetworkUseCase: dummyImageNetworkUseCase)
-        //when
         itemDetailViewModel.bind { [weak self] state in
             switch state {
-            case .error(let error):
+            case .error(_):
                 //then
                 self?.expectation.fulfill()
-                XCTAssertEqual(error, .useCaseError(.networkError(.connectionProblem)))
             default:
                 XCTFail()
             }
         }
+        //when
         itemDetailViewModel.loadItem()
         wait(for: [expectation], timeout: 2.0)
     }
 
-    func test_itemDetailViewModel_imageLoad실패시_state_error로변경() {
+    func test_when_imageLoad실패시_then_state_error로변경() {
         //given
+        let dummyId = Dummy.id
         let stubSuccessItemNetworkUseCase = StubSuccessItemNetworkUseCase()
         let stubFailureImageNetworkUseCase = StubFailureImageNetworkUseCase()
-        let itemDetailViewModel = ItemDetailViewModel(id: Dummy.id,
+        let itemDetailViewModel = ItemDetailViewModel(id: dummyId,
                                                       itemNetworkUseCase: stubSuccessItemNetworkUseCase,
                                                       imageNetworkUseCase: stubFailureImageNetworkUseCase)
-        //when
         itemDetailViewModel.bind { [weak self] state in
             switch state {
-            case .error(let error):
+            case .error(_):
                 //then
                 self?.expectation.fulfill()
-                XCTAssertEqual(error, .imageUseCaseError(.networkError(.invalidRequest)))
             default:
                 XCTFail()
             }
         }
+        //when
         itemDetailViewModel.loadItem()
         wait(for: [expectation], timeout: 2.0)
     }
 
-    func test_itemDetailViewModel_deleteItem성공시_state_delete로변경() {
+    func test_when_deleteItem성공시_then_state_delete로변경() {
         //given
+        let dummyId = Dummy.id
+        let dummyPassword = Dummy.password
         let stubSuccessItemNetworkUseCase = StubSuccessItemNetworkUseCase()
         let dummyImageNetworkUseCase = ImageNetworkUseCase()
-        let itemDetailViewModel = ItemDetailViewModel(id: Dummy.id,
+        let itemDetailViewModel = ItemDetailViewModel(id: dummyId,
                                                       itemNetworkUseCase: stubSuccessItemNetworkUseCase,
                                                       imageNetworkUseCase: dummyImageNetworkUseCase)
-        //when
         itemDetailViewModel.bind { [weak self] state in
             switch state {
             case .delete:
@@ -101,29 +103,31 @@ final class ItemDetailViewModelTests: XCTestCase {
                 XCTFail()
             }
         }
-        itemDetailViewModel.deleteItem(password: Dummy.password)
+        //when
+        itemDetailViewModel.deleteItem(password: dummyPassword)
         wait(for: [expectation], timeout: 2.0)
     }
 
-    func test_itemDetailViewModel_deleteItem실패시_state_delete로변경(){
+    func test_when_deleteItem실패시_then_state_error로변경(){
         //given
+        let dummyId = Dummy.id
+        let dummyPassword = Dummy.password
         let stubFailureItemNetworkUseCase = StubFailureItemNetworkUseCase()
         let dummyImageNetworkUseCase = ImageNetworkUseCase()
-        let itemDetailViewModel = ItemDetailViewModel(id: Dummy.id,
+        let itemDetailViewModel = ItemDetailViewModel(id: dummyId,
                                                       itemNetworkUseCase: stubFailureItemNetworkUseCase,
                                                       imageNetworkUseCase: dummyImageNetworkUseCase)
-        //when
         itemDetailViewModel.bind { [weak self] state in
             switch state {
-            case .error(let error):
+            case .error(_):
                 //then
                 self?.expectation.fulfill()
-                XCTAssertEqual(error, .useCaseError(.networkError(.connectionProblem)))
             default:
                 XCTFail()
             }
         }
-        itemDetailViewModel.deleteItem(password: Dummy.password)
+        //when
+        itemDetailViewModel.deleteItem(password: dummyPassword)
         wait(for: [expectation], timeout: 2.0)
     }
 }
