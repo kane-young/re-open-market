@@ -110,4 +110,41 @@ final class ItemNetworkUseCaseTests: XCTestCase {
         }
         wait(for: [expectation], timeout: 2.0)
     }
+
+    func test_itemNetworkUseCase_retrieveItem호출시_Item으로Decoding되지않는_Data가response로왔을시_decodingError검출() {
+        //given
+        let stubSuccessItemListNetworkManager = StubSuccessItemListNetworkManager()
+        let itemNetworkUseCase = ItemNetworkUseCase(networkManager: stubSuccessItemListNetworkManager)
+        //when
+        itemNetworkUseCase.retrieveItem(id: Dummy.id) { [weak self] result in
+            switch result {
+            case .success(_):
+                XCTFail()
+            case .failure(let error):
+                //then
+                XCTAssertEqual(error, .decodingError)
+                self?.expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 2.0)
+    }
+
+    func test_itemNetworkUseCase_deleteItem호출시_Item으로Decoding되지않는_Data가response로왔을시_decodingError검출() {
+        //given
+        let stubSuccessItemListNetworkManager = StubSuccessItemListNetworkManager()
+        let itemNetworkUseCase = ItemNetworkUseCase(networkManager: stubSuccessItemListNetworkManager)
+        //when
+        itemNetworkUseCase.deleteItem(id: Dummy.id, password: Dummy.password) { [weak self] result in
+            switch result {
+            case .success(_):
+                XCTFail()
+            case .failure(let error):
+                //then
+                XCTAssertEqual(error, .decodingError)
+                self?.expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 2.0)
+        
+    }
 }

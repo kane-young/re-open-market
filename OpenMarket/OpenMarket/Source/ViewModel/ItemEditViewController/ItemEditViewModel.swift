@@ -37,7 +37,7 @@ final class ItemEditViewModel {
             }
         }
     }
-    private var id: Int?
+    private let id: Int?
     private var title: String?
     private var stock: Int?
     private var currency: String?
@@ -59,8 +59,9 @@ final class ItemEditViewModel {
     private let itemEditNetworkUseCase: ItemEditNetworkUseCaseProtocol
     private let imageNetworkUseCase: ImageNetworkUseCaseProtocol
 
-    init(itemEditNetworkUseCase: ItemEditNetworkUseCaseProtocol = ItemEditNetworkUseCase(),
+    init(id: Int? = nil, itemEditNetworkUseCase: ItemEditNetworkUseCaseProtocol = ItemEditNetworkUseCase(),
          imageNetworkUseCase: ImageNetworkUseCaseProtocol = ImageNetworkUseCase.shared) {
+        self.id = id
         self.itemEditNetworkUseCase = itemEditNetworkUseCase
         self.imageNetworkUseCase = imageNetworkUseCase
     }
@@ -125,14 +126,14 @@ final class ItemEditViewModel {
         }
     }
 
-    func loadItem(id: Int) {
+    func loadItem() {
         state = .loading
+        guard let id = id else { return }
         let path = OpenMarketAPI.loadProduct(id: id).urlString
         itemEditNetworkUseCase.request(path: path, with: nil, for: .get) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let item):
-                self.id = item.id
                 self.loadImages(item: item)
             case .failure(let error):
                 self.state = .error(.editUseCaseError(error))

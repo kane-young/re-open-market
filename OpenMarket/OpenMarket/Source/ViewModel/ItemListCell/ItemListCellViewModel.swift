@@ -97,9 +97,8 @@ final class ItemListCellViewModel {
             return Format.Stock.soldOutText
         } else if count >= Format.Stock.standardCount {
             return Format.Stock.excessiveStockText
-        } else {
-            return "\(Format.Stock.preText)\(count)"
         }
+        return "\(Format.Stock.preText)\(count)"
     }
 
     private func priceLabelTextColor(_ isNeededDiscountedLabel: Bool) -> UIColor {
@@ -111,18 +110,16 @@ final class ItemListCellViewModel {
         let text = "\(item.currency) \(convertedFormatPrice)"
         if item.discountedPrice != nil {
             return text.strikeThrough()
-        } else {
-            return NSAttributedString(string: text)
         }
+        return NSAttributedString(string: text)
     }
 
     private func discountedPriceText() -> String {
         if let discountedPrice = item.discountedPrice {
             let convertedFormatPrice = converToMoneyType(discountedPrice)
             return "\(item.currency) \(convertedFormatPrice)"
-        } else {
-            return .init()
         }
+        return .init()
     }
 
     private func converToMoneyType(_ price: Int) -> String {
@@ -138,7 +135,7 @@ final class ItemListCellViewModel {
 
 extension ItemListCellViewModel {
     // MARK: Format
-    private enum Format {
+    enum Format {
         enum Stock {
             static let standardCount: Int = 1000
             static let soldOutColor: UIColor = .systemYellow

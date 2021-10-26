@@ -20,7 +20,7 @@ final class ItemEditViewModelTests: XCTestCase {
     }
 
     func test_itemEditViewModel_validate호출성공시_state_satisfy로변경() {
-        let itemEditViewModel = ItemEditViewModel()
+        let itemEditViewModel = ItemEditViewModel(id: Dummy.id)
         itemEditViewModel.bind { [weak self] state in
             switch state {
             case .satisfied:
@@ -35,7 +35,7 @@ final class ItemEditViewModelTests: XCTestCase {
     }
 
     func test_itemEditViewModel_validate호출실패시_state_dissatisfy로변경() {
-        let itemEditViewModel = ItemEditViewModel()
+        let itemEditViewModel = ItemEditViewModel(id: Dummy.id)
         itemEditViewModel.bind { [weak self] state in
             switch state {
             case .dissatisfied:
@@ -52,31 +52,28 @@ final class ItemEditViewModelTests: XCTestCase {
     func test_itemEditViewModel_loadItem호출성공시_state_initial로변경() {
         let stubSuccessItemEditNetworkUseCase = StubSuccessItemEditNetworkUseCase()
         let stubSuccessImageNetworkUseCase = StubSuccessImageNetworkUseCase()
-        let itemEditViewModel = ItemEditViewModel(itemEditNetworkUseCase: stubSuccessItemEditNetworkUseCase,
+        let itemEditViewModel = ItemEditViewModel(id: Dummy.id, itemEditNetworkUseCase: stubSuccessItemEditNetworkUseCase,
                                                   imageNetworkUseCase: stubSuccessImageNetworkUseCase)
-        itemEditViewModel.validate(titleText: Dummy.titleText, stockText: Dummy.stockText,
-                                   currencyText: Dummy.currencyText, priceText: Dummy.priceText,
-                                   discountedPriceText: Dummy.discountedPriceText,
-                                   descriptionsText: Dummy.descriptionsText)
         itemEditViewModel.bind { [weak self] state in
             switch state {
             case .loading:
-                fallthrough
+                break
             case .initial(_):
                 self?.expectation.fulfill()
             default:
                 XCTFail()
             }
         }
-        itemEditViewModel.loadItem(id: Dummy.id)
+        itemEditViewModel.loadItem()
         wait(for: [expectation], timeout: 2.0)
     }
 
     func test_itemEditViewModel_registerItem호출성공시_state_register로변경() {
         let stubSuccessItemEditNetworkUseCase = StubSuccessItemEditNetworkUseCase()
         let dummyImageNetworkUseCase = ImageNetworkUseCase()
-        let itemEditViewModel = ItemEditViewModel(itemEditNetworkUseCase: stubSuccessItemEditNetworkUseCase,
+        let itemEditViewModel = ItemEditViewModel(id: Dummy.id, itemEditNetworkUseCase: stubSuccessItemEditNetworkUseCase,
                                                   imageNetworkUseCase: dummyImageNetworkUseCase)
+        itemEditViewModel.addImage(Dummy.image)
         itemEditViewModel.validate(titleText: Dummy.titleText, stockText: Dummy.stockText,
                                    currencyText: Dummy.currencyText, priceText: Dummy.priceText,
                                    discountedPriceText: Dummy.discountedPriceText,
@@ -84,7 +81,7 @@ final class ItemEditViewModelTests: XCTestCase {
         itemEditViewModel.bind { [weak self] state in
             switch state {
             case .loading:
-                fallthrough
+                break
             case .register(_):
                 self?.expectation.fulfill()
             default:
@@ -98,8 +95,9 @@ final class ItemEditViewModelTests: XCTestCase {
     func test_itemEditViewModel_updateItem호출성공시_state_update로변경() {
         let stubSuccessItemEditNetworkUseCase = StubSuccessItemEditNetworkUseCase()
         let dummyImageNetworkUseCase = ImageNetworkUseCase()
-        let itemEditViewModel = ItemEditViewModel(itemEditNetworkUseCase: stubSuccessItemEditNetworkUseCase,
+        let itemEditViewModel = ItemEditViewModel(id: Dummy.id, itemEditNetworkUseCase: stubSuccessItemEditNetworkUseCase,
                                                   imageNetworkUseCase: dummyImageNetworkUseCase)
+        itemEditViewModel.addImage(Dummy.image)
         itemEditViewModel.validate(titleText: Dummy.titleText, stockText: Dummy.stockText,
                                    currencyText: Dummy.currencyText, priceText: Dummy.priceText,
                                    discountedPriceText: Dummy.discountedPriceText,
@@ -107,7 +105,7 @@ final class ItemEditViewModelTests: XCTestCase {
         itemEditViewModel.bind { [weak self] state in
             switch state {
             case .loading:
-                fallthrough
+                break
             case .update(_):
                 self?.expectation.fulfill()
             default:
@@ -121,31 +119,29 @@ final class ItemEditViewModelTests: XCTestCase {
     func test_itemEditViewModel_loadItem호출실패시_state_error로변경() {
         let stubFailureItemEditNetworkUseCase = StubFailureItemEditNetworkUseCase()
         let dummyImageNetworkUseCase = ImageNetworkUseCase()
-        let itemEditViewModel = ItemEditViewModel(itemEditNetworkUseCase: stubFailureItemEditNetworkUseCase,
+        let itemEditViewModel = ItemEditViewModel(id: Dummy.id, itemEditNetworkUseCase: stubFailureItemEditNetworkUseCase,
                                                   imageNetworkUseCase: dummyImageNetworkUseCase)
-        itemEditViewModel.validate(titleText: Dummy.titleText, stockText: Dummy.stockText,
-                                   currencyText: Dummy.currencyText, priceText: Dummy.priceText,
-                                   discountedPriceText: Dummy.discountedPriceText,
-                                   descriptionsText: Dummy.descriptionsText)
         itemEditViewModel.bind { [weak self] state in
             switch state {
             case .loading:
-                fallthrough
-            case .error(_):
+                break
+            case .error(let error):
+                XCTAssertEqual(error, ItemEditViewModelError.editUseCaseError(.networkError(.connectionProblem)))
                 self?.expectation.fulfill()
             default:
                 XCTFail()
             }
         }
-        itemEditViewModel.loadItem(id: Dummy.id)
+        itemEditViewModel.loadItem()
         wait(for: [expectation], timeout: 2.0)
     }
 
     func test_itemEditViewModel_registerItem호출실패시_state_error로변경() {
         let stubFailureItemEditNetworkUseCase = StubFailureItemEditNetworkUseCase()
         let dummyImageNetworkUseCase = ImageNetworkUseCase()
-        let itemEditViewModel = ItemEditViewModel(itemEditNetworkUseCase: stubFailureItemEditNetworkUseCase,
+        let itemEditViewModel = ItemEditViewModel(id: Dummy.id, itemEditNetworkUseCase: stubFailureItemEditNetworkUseCase,
                                                   imageNetworkUseCase: dummyImageNetworkUseCase)
+        itemEditViewModel.addImage(Dummy.image)
         itemEditViewModel.validate(titleText: Dummy.titleText, stockText: Dummy.stockText,
                                    currencyText: Dummy.currencyText, priceText: Dummy.priceText,
                                    discountedPriceText: Dummy.discountedPriceText,
@@ -153,8 +149,9 @@ final class ItemEditViewModelTests: XCTestCase {
         itemEditViewModel.bind { [weak self] state in
             switch state {
             case .loading:
-                fallthrough
-            case .error(_):
+                break
+            case .error(let error):
+                XCTAssertEqual(error, ItemEditViewModelError.editUseCaseError(.networkError(.connectionProblem)))
                 self?.expectation.fulfill()
             default:
                 XCTFail()
@@ -164,26 +161,34 @@ final class ItemEditViewModelTests: XCTestCase {
         wait(for: [expectation], timeout: 2.0)
     }
 
-    func test_itemEditViewModel_updateItem호출실패시_state_error로변경() {
-        let stubFailureItemEditNetworkUseCase = StubFailureItemEditNetworkUseCase()
-        let dummyImageNetworkUseCase = ImageNetworkUseCase()
-        let itemEditViewModel = ItemEditViewModel(itemEditNetworkUseCase: stubFailureItemEditNetworkUseCase,
-                                                  imageNetworkUseCase: dummyImageNetworkUseCase)
-        itemEditViewModel.validate(titleText: Dummy.titleText, stockText: Dummy.stockText,
-                                   currencyText: Dummy.currencyText, priceText: Dummy.priceText,
-                                   discountedPriceText: Dummy.discountedPriceText,
-                                   descriptionsText: Dummy.descriptionsText)
+    func test_when_addImage호출시_then_state_addPhoto로변경() {
+        let itemEditViewModel = ItemEditViewModel()
         itemEditViewModel.bind { [weak self] state in
             switch state {
-            case .loading:
-                fallthrough
-            case .error(_):
+            case .addPhoto(_):
                 self?.expectation.fulfill()
             default:
                 XCTFail()
             }
         }
-        itemEditViewModel.updateItem(password: Dummy.password)
+        itemEditViewModel.addImage(Dummy.image)
+        wait(for: [expectation], timeout: 2.0)
+    }
+
+    func test_when_deleteImage호출시_then_state_deletePhoto로변경() {
+        let itemEditViewModel = ItemEditViewModel()
+        itemEditViewModel.bind { [weak self] state in
+            switch state {
+            case .addPhoto(_):
+                break
+            case .deletePhoto(_):
+                self?.expectation.fulfill()
+            default:
+                XCTFail()
+            }
+        }
+        itemEditViewModel.addImage(Dummy.image)
+        itemEditViewModel.deleteImage(IndexPath(item: 1, section: .zero))
         wait(for: [expectation], timeout: 2.0)
     }
 }

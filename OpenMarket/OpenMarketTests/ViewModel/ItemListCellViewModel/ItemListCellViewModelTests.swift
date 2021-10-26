@@ -139,4 +139,39 @@ final class ItemListCellViewModelTests: XCTestCase {
         itemListCellViewModel.configureCell()
         wait(for: [expectation], timeout: 2.0)
     }
+
+    func test_when_ItemListCellViewModel_할인가격이존재할경우_then_priceLabelTextColor확인() {
+        //given
+        let expectedPriceLabelTextColor = ItemListCellViewModel.Format.Stock.discountedPriceTextColor
+        let item = Item(id: 50, title: "title", descriptions: "descriptions", price: 50000, currency: "USD", stock: 100, discountedPrice: 3000, thumbnails: [""], images: nil, registrationDate: 123123411)
+        let itemListCellViewModel = ItemListCellViewModel(item: item, useCase: StubSuccessImageNetworkUseCase())
+        itemListCellViewModel.bind { [weak self] state in
+            switch state {
+            case .update(let metaData):
+                XCTAssertEqual(expectedPriceLabelTextColor, metaData.priceLabelTextColor)
+                self?.expectation.fulfill()
+            default:
+                XCTFail()
+            }
+        }
+        itemListCellViewModel.configureCell()
+        wait(for: [expectation], timeout: 2.0)
+    }
+
+    func test_when_ItemListCellViewModel_할인가격이존재할경우_then_priceLabelText_strikeThrough적용() {
+        let expectedPriceText = "KRW 30,000".strikeThrough()
+        let item = Item(id: 50, title: "title", descriptions: "descriptions", price: 30000, currency: "KRW", stock: 30, discountedPrice: 15000, thumbnails: [""], images: nil, registrationDate: 1234123.123)
+        let itemListCellViewModel = ItemListCellViewModel(item: item, useCase: StubSuccessImageNetworkUseCase())
+        itemListCellViewModel.bind { [weak self] state in
+            switch state {
+            case .update(let metaData):
+                XCTAssertEqual(expectedPriceText, metaData.originalPrice)
+                self?.expectation.fulfill()
+            default:
+                XCTFail()
+            }
+        }
+        itemListCellViewModel.configureCell()
+        wait(for: [expectation], timeout: 2.0)
+    }
 }

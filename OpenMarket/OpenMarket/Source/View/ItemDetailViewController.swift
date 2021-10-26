@@ -277,8 +277,8 @@ extension ItemDetailViewController {
     }
 
     private func updateItem() {
-        let itemEditViewModel = ItemEditViewModel()
-        itemEditViewModel.loadItem(id: viewModel.id)
+        let itemEditViewModel = ItemEditViewModel(id: viewModel.id)
+        itemEditViewModel.loadItem()
         let itemEditViewController: ItemEditViewController = .init(mode: .update, viewModel: itemEditViewModel)
         itemEditViewController.delegate = self
         self.navigationController?.pushViewController(itemEditViewController, animated: true)
