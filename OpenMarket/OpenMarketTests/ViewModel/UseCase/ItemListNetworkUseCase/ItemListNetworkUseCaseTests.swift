@@ -19,23 +19,29 @@ final class ItemListNetworkUseCaseTests: XCTestCase {
         expectation = nil
     }
 
-    func test_useCase_retrieveItems성공() {
+    func test_when_retrieveItems_networking성공시_then_items반환() {
         //given
-        let useCase: ItemListNetworkUseCase = .init(networkManager: StubSuccessItemListNetworkManager())
-        let expectedItem = Item(id: 1, title: "MacBook Pro", descriptions: nil, price: 1690, currency: "USD", stock: 0, discountedPrice: nil, thumbnails: ["https://camp-open-market.s3.ap-northeast-2.amazonaws.com/thumbnails/1-1.png", "https://camp-open-market.s3.ap-northeast-2.amazonaws.com/thumbnails/1-2.png"], images: nil, registrationDate: 1611523563.7237701)
+        let stubSuccessItemListNetworkManager = StubSuccessItemListNetworkManager()
+        let itemListNetworkUseCase = ItemListNetworkUseCase(networkManager: stubSuccessItemListNetworkManager)
+        let expectedItem = Item(id: 1, title: "MacBook Pro", descriptions: nil, price: 1690,
+                                currency: "USD", stock: 0, discountedPrice: nil,
+                                thumbnails: ["https://camp-open-market.s3.ap-northeast-2.amazonaws.com/thumbnails/1-1.png",
+                                             "https://camp-open-market.s3.ap-northeast-2.amazonaws.com/thumbnails/1-2.png"],
+                                images: nil, registrationDate: 1611523563.7237701)
         //when
-        useCase.retrieveItems { [weak self] result in
+        itemListNetworkUseCase.retrieveItems { [weak self] result in
             switch result {
             case .success(let items):
+                guard let firstItem = items.first else { return }
                 //then
-                XCTAssertEqual(expectedItem.id, items.first!.id)
-                XCTAssertEqual(expectedItem.title, items.first!.title)
-                XCTAssertEqual(expectedItem.price, items.first!.price)
-                XCTAssertEqual(expectedItem.currency, items.first!.currency)
-                XCTAssertEqual(expectedItem.stock, items.first!.stock)
-                XCTAssertEqual(expectedItem.discountedPrice, items.first!.discountedPrice)
-                XCTAssertEqual(expectedItem.thumbnails, items.first!.thumbnails)
-                XCTAssertEqual(expectedItem.registrationDate, items.first!.registrationDate)
+                XCTAssertEqual(expectedItem.id, firstItem.id)
+                XCTAssertEqual(expectedItem.title, firstItem.title)
+                XCTAssertEqual(expectedItem.price, firstItem.price)
+                XCTAssertEqual(expectedItem.currency, firstItem.currency)
+                XCTAssertEqual(expectedItem.stock, firstItem.stock)
+                XCTAssertEqual(expectedItem.discountedPrice, firstItem.discountedPrice)
+                XCTAssertEqual(expectedItem.thumbnails, firstItem.thumbnails)
+                XCTAssertEqual(expectedItem.registrationDate, firstItem.registrationDate)
                 self?.expectation.fulfill()
             case .failure(_):
                 XCTFail()
@@ -44,12 +50,13 @@ final class ItemListNetworkUseCaseTests: XCTestCase {
         wait(for: [expectation], timeout: 2.0)
     }
 
-    func test_useCase_retrieveItems실패() {
+    func test_when_retrieveItems_networking실패시_then_networkingError반환() {
         //given
-        let useCase: ItemListNetworkUseCase = .init(networkManager: StubFailureNetworkManager())
+        let stubFailureNetworkManager = StubFailureNetworkManager()
+        let itemListNetworkUseCase = ItemListNetworkUseCase(networkManager: stubFailureNetworkManager)
         let expectedError = ItemListNetworkUseCaseError.networkError(.connectionProblem)
         //when
-        useCase.retrieveItems { [weak self] result in
+        itemListNetworkUseCase.retrieveItems { [weak self] result in
             switch result {
             case .success(_):
                 XCTFail()
@@ -62,12 +69,13 @@ final class ItemListNetworkUseCaseTests: XCTestCase {
         wait(for: [expectation], timeout: 2.0)
     }
 
-    func test_useCase_retrieveItems_디코딩실패() {
+    func test_when_retrieveItems호출시_디코딩실패할경우_then_decodingError반환() {
         //given
-        let useCase: ItemListNetworkUseCase = .init(networkManager: StubSuccessItemDetailNetworkManager())
+        let stubSuccessItemDetailNetworkManager = StubSuccessItemDetailNetworkManager()
+        let itemListNetworkUseCase = ItemListNetworkUseCase(networkManager: stubSuccessItemDetailNetworkManager)
         let expectedError = ItemListNetworkUseCaseError.decodingError
         //when
-        useCase.retrieveItems { [weak self] result in
+        itemListNetworkUseCase.retrieveItems { [weak self] result in
             switch result {
             case .success(_):
                 XCTFail()
@@ -78,6 +86,18 @@ final class ItemListNetworkUseCaseTests: XCTestCase {
             }
         }
         wait(for: [expectation], timeout: 2.0)
+    }
+
+    func test_when_loading중일때retrieveItems호출시_then한번만수행() {
+        //given
+        let spyNetworkManager = SpyNetworkManager()
+        let itemListNetworkUseCase = ItemListNetworkUseCase(networkManager: spyNetworkManager)
+        let expectedRequestCount = 1
+        //when
+        itemListNetworkUseCase.retrieveItems { _ in }
+        itemListNetworkUseCase.retrieveItems { _ in }
+        //then
+        XCTAssertEqual(spyNetworkManager.requestCount, expectedRequestCount)
     }
 }
 

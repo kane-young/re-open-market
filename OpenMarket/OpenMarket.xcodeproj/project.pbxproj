@@ -35,6 +35,7 @@
 		C3333C562728089F00C2ED39 /* ItemListNetworkUseCaseErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3333C552728089F00C2ED39 /* ItemListNetworkUseCaseErrorTests.swift */; };
 		C3333C58272809AF00C2ED39 /* ItemNetworkUseCaseErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3333C57272809AF00C2ED39 /* ItemNetworkUseCaseErrorTests.swift */; };
 		C3333C5A27280A2D00C2ED39 /* ImageNetworkUseCaseErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3333C5927280A2D00C2ED39 /* ImageNetworkUseCaseErrorTests.swift */; };
+		C3333C5C2728277000C2ED39 /* SpyNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3333C5B2728277000C2ED39 /* SpyNetworkManager.swift */; };
 		C339AEB42722821E00486F1D /* ItemDetailViewController+Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = C339AEB32722821E00486F1D /* ItemDetailViewController+Style.swift */; };
 		C33F1EE42719925B00BDCA35 /* ItemEditViewModelError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33F1EE32719925B00BDCA35 /* ItemEditViewModelError.swift */; };
 		C33F1EE7271992AE00BDCA35 /* ItemEditNetoworkUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33F1EE6271992AE00BDCA35 /* ItemEditNetoworkUseCaseProtocol.swift */; };
@@ -139,6 +140,7 @@
 		C3333C552728089F00C2ED39 /* ItemListNetworkUseCaseErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListNetworkUseCaseErrorTests.swift; sourceTree = "<group>"; };
 		C3333C57272809AF00C2ED39 /* ItemNetworkUseCaseErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemNetworkUseCaseErrorTests.swift; sourceTree = "<group>"; };
 		C3333C5927280A2D00C2ED39 /* ImageNetworkUseCaseErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageNetworkUseCaseErrorTests.swift; sourceTree = "<group>"; };
+		C3333C5B2728277000C2ED39 /* SpyNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpyNetworkManager.swift; sourceTree = "<group>"; };
 		C339AEB32722821E00486F1D /* ItemDetailViewController+Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ItemDetailViewController+Style.swift"; sourceTree = "<group>"; };
 		C33F1EE32719925B00BDCA35 /* ItemEditViewModelError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditViewModelError.swift; sourceTree = "<group>"; };
 		C33F1EE6271992AE00BDCA35 /* ItemEditNetoworkUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditNetoworkUseCaseProtocol.swift; sourceTree = "<group>"; };
@@ -437,6 +439,7 @@
 				C36789D22726E2FE003A00C9 /* StubItemEditNetworkUseCase.swift */,
 				C3916AB1270ACE90005E5C24 /* StubImageNetworkUseCase.swift */,
 				C3916AC4270B29CA005E5C24 /* StubNetworkManager.swift */,
+				C3333C5B2728277000C2ED39 /* SpyNetworkManager.swift */,
 				C3916AA52709F066005E5C24 /* Dummy.swift */,
 			);
 			path = TestDoubles;
@@ -485,10 +488,10 @@
 		C3333C4B2727FA3C00C2ED39 /* UseCase */ = {
 			isa = PBXGroup;
 			children = (
-				C3333C4A2727FA1600C2ED39 /* ItemEditNetworkUseCase */,
 				C3333C492727F9F800C2ED39 /* ItemListNetworkUseCase */,
-				C3333C482727F9D500C2ED39 /* ItemNetworkUseCase */,
 				C3333C472727F9AE00C2ED39 /* ImageNetworkUseCase */,
+				C3333C482727F9D500C2ED39 /* ItemNetworkUseCase */,
+				C3333C4A2727FA1600C2ED39 /* ItemEditNetworkUseCase */,
 			);
 			path = UseCase;
 			sourceTree = "<group>";
@@ -496,8 +499,8 @@
 		C3333C4C2727FB1400C2ED39 /* UseCase */ = {
 			isa = PBXGroup;
 			children = (
-				C3333C502727FB3400C2ED39 /* ItemEditNetworkUseCase */,
 				C3333C4F2727FB3200C2ED39 /* ItemListNetworkUseCase */,
+				C3333C502727FB3400C2ED39 /* ItemEditNetworkUseCase */,
 				C3333C4E2727FB2F00C2ED39 /* ItemNetworkUseCase */,
 				C3333C4D2727FB2C00C2ED39 /* ImageNetworkUseCase */,
 			);
@@ -858,6 +861,7 @@
 				C3916ABE270AF154005E5C24 /* OpenMarketAPITests.swift in Sources */,
 				C32EDBE027002B4600F6BC53 /* RequestMakerTest.swift in Sources */,
 				C3916AC7270B3B36005E5C24 /* ImageNetworkUseCaseTests.swift in Sources */,
+				C3333C5C2728277000C2ED39 /* SpyNetworkManager.swift in Sources */,
 				C36789C527268411003A00C9 /* PhotoCellViewModelTests.swift in Sources */,
 				C3916ABC270AEE0A005E5C24 /* MimeTypeTests.swift in Sources */,
 				C3916AB4270AE441005E5C24 /* ItemListViewModelErrorTests.swift in Sources */,
