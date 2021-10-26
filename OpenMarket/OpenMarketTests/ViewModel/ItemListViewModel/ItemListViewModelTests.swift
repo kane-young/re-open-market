@@ -12,7 +12,7 @@ final class ItemListViewModelTests: XCTestCase {
     private var expectation: XCTestExpectation!
 
     override func setUpWithError() throws {
-        expectation = XCTestExpectation(description: "bindSuccess")
+        expectation = XCTestExpectation()
     }
 
     override func tearDownWithError() throws {
@@ -21,7 +21,8 @@ final class ItemListViewModelTests: XCTestCase {
 
     func test_when_성공적loadItems시_then_state_initial로변경() {
         //given
-        let itemListViewModel = ItemListViewModel(useCase: StubSuccessItemListNetworkUseCase())
+        let stubSuccessItemListNetworkUseCase = StubSuccessItemListNetworkUseCase()
+        let itemListViewModel = ItemListViewModel(useCase: stubSuccessItemListNetworkUseCase)
         itemListViewModel.bind { [weak self] state in
             switch state {
             case .initial:
@@ -31,11 +32,12 @@ final class ItemListViewModelTests: XCTestCase {
                 XCTFail()
             }
         }
+        //when
         itemListViewModel.loadItems()
         wait(for: [expectation], timeout: 2.0)
     }
 
-    func test_when_useCaseError시_then_state_error로변경() {
+    func test_when_loadItem실패시_then_state_error로변경() {
         //given
         let itemListViewModel = ItemListViewModel(useCase: StubFailureItemListNetworkUseCase())
         itemListViewModel.bind { [weak self] state in
@@ -56,7 +58,6 @@ final class ItemListViewModelTests: XCTestCase {
         //given
         let itemListViewModel = ItemListViewModel(useCase: StubSuccessItemListNetworkUseCase())
         itemListViewModel.loadItems()
-        //when
         itemListViewModel.bind { [weak self] state in
             switch state {
             case .update(_):
