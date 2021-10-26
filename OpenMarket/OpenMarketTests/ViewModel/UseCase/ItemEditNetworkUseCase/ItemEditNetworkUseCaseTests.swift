@@ -19,13 +19,12 @@ final class ItemEditNetworkUseCaseTests: XCTestCase {
         expectation = nil
     }
 
-    func test_when_request_get성공시_result_success반환() {
+    func test_when_request_get성공시_then_success반환() {
         //given
         let stubSuccessItemNetworkManager = StubSuccessItemNetworkManager()
         let itemEditNetworkUseCase = ItemEditNetworkUseCase(networkManager: stubSuccessItemNetworkManager)
-        let dummyPath = "www.kane.com"
         //when
-        itemEditNetworkUseCase.request(path: dummyPath, with: nil, for: .get) { [weak self] result in
+        itemEditNetworkUseCase.request(path: Dummy.urlString, with: nil, for: .get) { [weak self] result in
             switch result {
             case .success(_):
                 //then
@@ -37,35 +36,36 @@ final class ItemEditNetworkUseCaseTests: XCTestCase {
         wait(for: [expectation], timeout: 2.0)
     }
 
-    func test_when_request_post실패시_result_failure반환() {
+    func test_when_request_post실패시_then_failure반환() {
         //given
         let stubFailureNetworkManager = StubFailureNetworkManager()
         let itemEditNetworkUseCase = ItemEditNetworkUseCase(networkManager: stubFailureNetworkManager)
-        let dummyPath = "www.kane.com"
         //when
-        itemEditNetworkUseCase.request(path: dummyPath, with: Dummy.postItem, for: .post) { [weak self] result in
+        itemEditNetworkUseCase.request(path: Dummy.urlString, with: Dummy.postItem, for: .post) { [weak self] result in
             switch result {
             case .success(_):
                 XCTFail()
             case .failure(_):
+                //then
                 self?.expectation.fulfill()
             }
         }
         wait(for: [expectation], timeout: 2.0)
     }
 
-    func test_when_request_호출시_response로_decoding불가능한데이터가반환될경우_decodingError반환() {
+    func test_when_request_호출시_response로_decoding불가능한데이터가반환될경우_then_decodingError반환() {
         //given
         let stubSuccessItemListNetworkManager = StubSuccessItemListNetworkManager()
         let itemEditNetworkUseCase = ItemEditNetworkUseCase(networkManager: stubSuccessItemListNetworkManager)
-        let dummyPath = "www.kane.com"
+        let expectedError = ItemEditNetworkUseCaseError.decodingError
         //when
-        itemEditNetworkUseCase.request(path: dummyPath, with: Dummy.patchItem, for: .patch) { [weak self] result in
+        itemEditNetworkUseCase.request(path: Dummy.urlString, with: Dummy.patchItem, for: .patch) { [weak self] result in
             switch result {
             case .success(_):
                 XCTFail()
             case .failure(let error):
-                XCTAssertEqual(error, .decodingError)
+                //then
+                XCTAssertEqual(error, expectedError)
                 self?.expectation.fulfill()
             }
         }

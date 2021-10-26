@@ -9,6 +9,7 @@ import UIKit
 @testable import OpenMarket
 
 enum Dummy {
+    static let urlString: String = OpenMarketAPI.postProduct.urlString
     static let titleText: String = "iPhone13 mini"
     static let stockText: String = "300"
     static let currencyText: String = "KRW"
