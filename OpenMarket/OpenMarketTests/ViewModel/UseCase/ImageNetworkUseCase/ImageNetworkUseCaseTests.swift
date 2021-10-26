@@ -19,15 +19,17 @@ final class ImageNetworkUseCaseTests: XCTestCase {
         expectation = nil
     }
 
-    func test_ThumbnailUseCase_retrieveImage성공() {
+    func test_when_retrieveImage성공시_then_image반환() {
         //given
-        let useCase = ImageNetworkUseCase(networkManager: StubSuccessImageNetworkManager())
+        let stubSuccessImageNetworkManager = StubSuccessImageNetworkManager()
+        let imageNetworkUseCase = ImageNetworkUseCase(networkManager: stubSuccessImageNetworkManager)
+        let dummyThumbnailPath = Dummy.thumbnailUrlString
         guard let expectedImage = UIImage(data: (UIImage(systemName: "pencil")?.pngData())!) else {
             XCTFail()
             return
         }
         //when
-        useCase.retrieveImage(with: Dummy.thumbnailUrlString) { [weak self] result in
+        imageNetworkUseCase.retrieveImage(with: dummyThumbnailPath) { [weak self] result in
             switch result {
             case .success(let image):
                 //then
@@ -40,12 +42,14 @@ final class ImageNetworkUseCaseTests: XCTestCase {
         wait(for: [expectation], timeout: 5.0)
     }
 
-    func test_ThumbnailUseCase_ConvertDataToImageError() {
+    func test_when_Data이미지로변환실패시_then_ConvertDataToImageError반환() {
         //given
-        let useCase = ImageNetworkUseCase(networkManager: StubSuccessItemDetailNetworkManager())
+        let dummyThumbnailPath = Dummy.thumbnailUrlString
+        let stubSuccessItemNetworkManager = StubSuccessItemNetworkManager()
+        let imageNetworkUseCase = ImageNetworkUseCase(networkManager: stubSuccessItemNetworkManager)
         let expectedError = ImageNetworkUseCaseError.convertDataToImageError
         //when
-        useCase.retrieveImage(with: Dummy.thumbnailUrlString) { [weak self] result in
+        imageNetworkUseCase.retrieveImage(with: dummyThumbnailPath) { [weak self] result in
             switch result {
             case .success(_):
                 XCTFail()
@@ -58,12 +62,14 @@ final class ImageNetworkUseCaseTests: XCTestCase {
         wait(for: [expectation], timeout: 2.0)
     }
 
-    func test_ThumbnailUseCase_networkError() {
+    func test_when_networking실패시_then_networkError반환() {
         //given
-        let useCase = ImageNetworkUseCase(networkManager: StubFailureNetworkManager())
+        let dummyThumbnailPath = Dummy.thumbnailUrlString
+        let stubFailureNetworkManager = StubFailureNetworkManager()
+        let imageNetworkUseCase = ImageNetworkUseCase(networkManager: stubFailureNetworkManager)
         let expectedError = ImageNetworkUseCaseError.networkError(.connectionProblem)
         //when
-        useCase.retrieveImage(with: Dummy.thumbnailUrlString) { [weak self] result in
+        imageNetworkUseCase.retrieveImage(with: dummyThumbnailPath) { [weak self] result in
             switch result {
             case .success(_):
                 XCTFail()
