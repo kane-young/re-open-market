@@ -227,7 +227,6 @@
 			children = (
 				C3916AA9270A03FB005E5C24 /* ItemListViewModelTests.swift */,
 				C3916AB3270AE441005E5C24 /* ItemListViewModelErrorTests.swift */,
-				C3916AC2270B04F6005E5C24 /* ItemListNetworkUseCaseTests.swift */,
 			);
 			path = ItemListViewModel;
 			sourceTree = "<group>";
@@ -248,42 +247,39 @@
 			path = Resource;
 			sourceTree = "<group>";
 		};
-		C310739A270F4A7500EFFF91 /* ItemListCell */ = {
+		C310739A270F4A7500EFFF91 /* ItemListCellViewModel */ = {
 			isa = PBXGroup;
 			children = (
 				C37EA62D2702FE91000518A0 /* ItemListCellViewModel.swift */,
 				C35943EE27059FE300146FFC /* ItemListCellViewModelError.swift */,
-				C35943DD27059BA700146FFC /* UseCase */,
 			);
-			path = ItemListCell;
+			path = ItemListCellViewModel;
 			sourceTree = "<group>";
 		};
-		C32A71922714197A00E3B329 /* PhotoCell */ = {
+		C32A71922714197A00E3B329 /* PhotoCellViewModel */ = {
 			isa = PBXGroup;
 			children = (
 				C3E76FD02712E79000755E07 /* PhotoCellViewModel.swift */,
 			);
-			path = PhotoCell;
+			path = PhotoCellViewModel;
 			sourceTree = "<group>";
 		};
-		C32A7193271419A800E3B329 /* ItemListViewController */ = {
+		C32A7193271419A800E3B329 /* ItemListViewModel */ = {
 			isa = PBXGroup;
 			children = (
 				C37EA627270179C3000518A0 /* ItemListViewModel.swift */,
 				C35943EA27059F8000146FFC /* ItemListViewModelError.swift */,
-				C35943DE27059BBB00146FFC /* UseCase */,
 			);
-			path = ItemListViewController;
+			path = ItemListViewModel;
 			sourceTree = "<group>";
 		};
-		C32A719427141D8500E3B329 /* ItemEditViewController */ = {
+		C32A719427141D8500E3B329 /* ItemEditViewModel */ = {
 			isa = PBXGroup;
 			children = (
 				C3E76FD22712F56200755E07 /* ItemEditViewModel.swift */,
 				C33F1EE32719925B00BDCA35 /* ItemEditViewModelError.swift */,
-				C33F1EE52719927800BDCA35 /* UseCase */,
 			);
-			path = ItemEditViewController;
+			path = ItemEditViewModel;
 			sourceTree = "<group>";
 		};
 		C32EDB7726FC904B00F6BC53 = {
@@ -436,34 +432,106 @@
 			path = TestDoubles;
 			sourceTree = "<group>";
 		};
-		C33F1EE52719927800BDCA35 /* UseCase */ = {
+		C3333C472727F9AE00C2ED39 /* ImageNetworkUseCase */ = {
 			isa = PBXGroup;
 			children = (
-				C33F1EEA2719931100BDCA35 /* ItemEditNetworkUseCase.swift */,
-				C33F1EE6271992AE00BDCA35 /* ItemEditNetoworkUseCaseProtocol.swift */,
-				C33F1EE8271992DE00BDCA35 /* ItemEditUseCaseError.swift */,
+				C37EA62F27033E0A000518A0 /* ImageNetworkUseCase.swift */,
+				C35943E027059C4300146FFC /* ImageNetworkUseCaseProtocol.swift */,
+				C35943E227059C9F00146FFC /* ImageNetworkUseCaseError.swift */,
 			);
-			path = UseCase;
+			path = ImageNetworkUseCase;
 			sourceTree = "<group>";
 		};
-		C3441A8C2717406800D876B0 /* ItemDetailViewController */ = {
-			isa = PBXGroup;
-			children = (
-				C3441A8D271740B500D876B0 /* ItemDetailViewModel.swift */,
-				C3441A9327184E1F00D876B0 /* ItemDetailViewModelError.swift */,
-				C3441A9927184E7C00D876B0 /* UseCase */,
-			);
-			path = ItemDetailViewController;
-			sourceTree = "<group>";
-		};
-		C3441A9927184E7C00D876B0 /* UseCase */ = {
+		C3333C482727F9D500C2ED39 /* ItemNetworkUseCase */ = {
 			isa = PBXGroup;
 			children = (
 				C3441A9127184E0200D876B0 /* ItemNetworkUseCase.swift */,
 				C3441A9727184E5A00D876B0 /* ItemNetworkUseCaseProtocol.swift */,
 				C3441A9527184E3E00D876B0 /* ItemNetworkUseCaseError.swift */,
 			);
+			path = ItemNetworkUseCase;
+			sourceTree = "<group>";
+		};
+		C3333C492727F9F800C2ED39 /* ItemListNetworkUseCase */ = {
+			isa = PBXGroup;
+			children = (
+				C37EA6292702FA64000518A0 /* ItemListNetworkUseCase.swift */,
+				C35943E627059D6D00146FFC /* ItemListNetworkUseCaseProtocol.swift */,
+				C35943E427059CD900146FFC /* ItemListUseCaseError.swift */,
+			);
+			path = ItemListNetworkUseCase;
+			sourceTree = "<group>";
+		};
+		C3333C4A2727FA1600C2ED39 /* ItemEditNetworkUseCase */ = {
+			isa = PBXGroup;
+			children = (
+				C33F1EEA2719931100BDCA35 /* ItemEditNetworkUseCase.swift */,
+				C33F1EE6271992AE00BDCA35 /* ItemEditNetoworkUseCaseProtocol.swift */,
+				C33F1EE8271992DE00BDCA35 /* ItemEditUseCaseError.swift */,
+			);
+			path = ItemEditNetworkUseCase;
+			sourceTree = "<group>";
+		};
+		C3333C4B2727FA3C00C2ED39 /* UseCase */ = {
+			isa = PBXGroup;
+			children = (
+				C3333C4A2727FA1600C2ED39 /* ItemEditNetworkUseCase */,
+				C3333C492727F9F800C2ED39 /* ItemListNetworkUseCase */,
+				C3333C482727F9D500C2ED39 /* ItemNetworkUseCase */,
+				C3333C472727F9AE00C2ED39 /* ImageNetworkUseCase */,
+			);
 			path = UseCase;
+			sourceTree = "<group>";
+		};
+		C3333C4C2727FB1400C2ED39 /* UseCase */ = {
+			isa = PBXGroup;
+			children = (
+				C3333C502727FB3400C2ED39 /* ItemEditNetworkUseCase */,
+				C3333C4F2727FB3200C2ED39 /* ItemListNetworkUseCase */,
+				C3333C4E2727FB2F00C2ED39 /* ItemNetworkUseCase */,
+				C3333C4D2727FB2C00C2ED39 /* ImageNetworkUseCase */,
+			);
+			path = UseCase;
+			sourceTree = "<group>";
+		};
+		C3333C4D2727FB2C00C2ED39 /* ImageNetworkUseCase */ = {
+			isa = PBXGroup;
+			children = (
+				C3916AC6270B3B36005E5C24 /* ImageNetworkUseCaseTests.swift */,
+			);
+			path = ImageNetworkUseCase;
+			sourceTree = "<group>";
+		};
+		C3333C4E2727FB2F00C2ED39 /* ItemNetworkUseCase */ = {
+			isa = PBXGroup;
+			children = (
+				C36789CD2726AA1B003A00C9 /* ItemNetworkUseCaseTests.swift */,
+			);
+			path = ItemNetworkUseCase;
+			sourceTree = "<group>";
+		};
+		C3333C4F2727FB3200C2ED39 /* ItemListNetworkUseCase */ = {
+			isa = PBXGroup;
+			children = (
+				C3916AC2270B04F6005E5C24 /* ItemListNetworkUseCaseTests.swift */,
+			);
+			path = ItemListNetworkUseCase;
+			sourceTree = "<group>";
+		};
+		C3333C502727FB3400C2ED39 /* ItemEditNetworkUseCase */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ItemEditNetworkUseCase;
+			sourceTree = "<group>";
+		};
+		C3441A8C2717406800D876B0 /* ItemDetailViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				C3441A8D271740B500D876B0 /* ItemDetailViewModel.swift */,
+				C3441A9327184E1F00D876B0 /* ItemDetailViewModelError.swift */,
+			);
+			path = ItemDetailViewModel;
 			sourceTree = "<group>";
 		};
 		C35943D827059AF800146FFC /* Cell */ = {
@@ -482,33 +550,14 @@
 		C35943DC27059B8900146FFC /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				C32A71922714197A00E3B329 /* PhotoCell */,
-				C310739A270F4A7500EFFF91 /* ItemListCell */,
-				C3441A8C2717406800D876B0 /* ItemDetailViewController */,
-				C32A7193271419A800E3B329 /* ItemListViewController */,
-				C32A719427141D8500E3B329 /* ItemEditViewController */,
+				C32A7193271419A800E3B329 /* ItemListViewModel */,
+				C310739A270F4A7500EFFF91 /* ItemListCellViewModel */,
+				C3441A8C2717406800D876B0 /* ItemDetailViewModel */,
+				C32A719427141D8500E3B329 /* ItemEditViewModel */,
+				C32A71922714197A00E3B329 /* PhotoCellViewModel */,
+				C3333C4B2727FA3C00C2ED39 /* UseCase */,
 			);
 			path = ViewModel;
-			sourceTree = "<group>";
-		};
-		C35943DD27059BA700146FFC /* UseCase */ = {
-			isa = PBXGroup;
-			children = (
-				C37EA62F27033E0A000518A0 /* ImageNetworkUseCase.swift */,
-				C35943E027059C4300146FFC /* ImageNetworkUseCaseProtocol.swift */,
-				C35943E227059C9F00146FFC /* ImageNetworkUseCaseError.swift */,
-			);
-			path = UseCase;
-			sourceTree = "<group>";
-		};
-		C35943DE27059BBB00146FFC /* UseCase */ = {
-			isa = PBXGroup;
-			children = (
-				C37EA6292702FA64000518A0 /* ItemListNetworkUseCase.swift */,
-				C35943E627059D6D00146FFC /* ItemListNetworkUseCaseProtocol.swift */,
-				C35943E427059CD900146FFC /* ItemListUseCaseError.swift */,
-			);
-			path = UseCase;
 			sourceTree = "<group>";
 		};
 		C35943DF27059BFA00146FFC /* Enum */ = {
@@ -526,7 +575,6 @@
 			children = (
 				C36789C727268777003A00C9 /* ItemDetailViewModelTests.swift */,
 				C36789CB2726A61C003A00C9 /* ItemDetailViewModelErrorTests.swift */,
-				C36789CD2726AA1B003A00C9 /* ItemNetworkUseCaseTests.swift */,
 			);
 			path = ItemDetailViewModel;
 			sourceTree = "<group>";
@@ -557,11 +605,12 @@
 		C3916AA82709F3F8005E5C24 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				C36789CF2726E188003A00C9 /* ItemEditViewModel */,
-				C36789C62726872F003A00C9 /* ItemDetailViewModel */,
 				C3106B5027267A4F00CA4FD8 /* ItemListViewModel */,
 				C3916ABF270AFB48005E5C24 /* ItemListCellViewModel */,
+				C36789C62726872F003A00C9 /* ItemDetailViewModel */,
+				C36789CF2726E188003A00C9 /* ItemEditViewModel */,
 				C3106B5127267F6600CA4FD8 /* PhotoCell */,
+				C3333C4C2727FB1400C2ED39 /* UseCase */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -571,7 +620,6 @@
 			children = (
 				C3916AAF270ABE41005E5C24 /* ItemListCellViewModelTests.swift */,
 				C3916AB7270AE950005E5C24 /* ItemListCellViewModelErrorTests.swift */,
-				C3916AC6270B3B36005E5C24 /* ImageNetworkUseCaseTests.swift */,
 			);
 			path = ItemListCellViewModel;
 			sourceTree = "<group>";
