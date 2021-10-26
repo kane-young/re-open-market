@@ -8,7 +8,7 @@
 import Foundation
 
 enum ItemListViewModelError: Error, ComprehensibleError {
-    case useCaseError(ItemListUseCaseError)
+    case useCaseError(ItemListNetworkUseCaseError)
 
     var message: String {
         switch self {

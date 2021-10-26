@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ItemEditUseCaseError: Error {
+enum ItemEditNetworkUseCaseError: Error {
     case decodingError
     case networkError(NetworkError)
 
@@ -18,5 +18,11 @@ enum ItemEditUseCaseError: Error {
         case .networkError(let error):
             return "Networking Error - \(error.message)"
         }
+    }
+}
+
+extension ItemEditNetworkUseCaseError: Equatable {
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.localizedDescription == rhs.localizedDescription
     }
 }

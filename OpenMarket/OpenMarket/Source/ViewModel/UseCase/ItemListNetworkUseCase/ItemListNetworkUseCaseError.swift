@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ItemListUseCaseError: Error {
+enum ItemListNetworkUseCaseError: Error {
     case networkError(NetworkError)
     case decodingError
     case referenceCountingZero
@@ -15,7 +15,7 @@ enum ItemListUseCaseError: Error {
     var message: String {
         switch self {
         case .networkError(let error):
-            return "Networking Error - \(error)"
+            return "Networking Error - \(error.message)"
         case .decodingError:
             return "Decoding Error"
         case .referenceCountingZero:
@@ -24,7 +24,7 @@ enum ItemListUseCaseError: Error {
     }
 }
 
-extension ItemListUseCaseError: Equatable {
+extension ItemListNetworkUseCaseError: Equatable {
     static func == (lhs: Self, rhs: Self) -> Bool {
         return lhs.localizedDescription == rhs.localizedDescription
     }

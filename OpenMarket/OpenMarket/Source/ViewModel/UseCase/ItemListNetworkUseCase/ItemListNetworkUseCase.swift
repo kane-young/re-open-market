@@ -21,23 +21,23 @@ final class ItemListNetworkUseCase: ItemListNetworkUseCaseProtocol {
         page = 1
     }
 
-    func retrieveItems(completionHandler: @escaping (Result<[Item], ItemListUseCaseError>) -> Void) {
+    func retrieveItems(completionHandler: @escaping (Result<[Item], ItemListNetworkUseCaseError>) -> Void) {
         let urlString = OpenMarketAPI.load(page: page).urlString
         if isLoading {
             return
         }
         isLoading = true
         networkManager.request(urlString: urlString, with: nil, httpMethod: .get) { [weak self] result in
-            let result = result.flatMapError { .failure(ItemListUseCaseError.networkError($0)) }
-                .flatMap { data -> Result<[Item], ItemListUseCaseError> in
+            let result = result.flatMapError { .failure(ItemListNetworkUseCaseError.networkError($0)) }
+                .flatMap { data -> Result<[Item], ItemListNetworkUseCaseError> in
                     do {
                         guard let itemList = try self?.decoder.decode(ItemList.self, from: data) else {
-                            return .failure(ItemListUseCaseError.referenceCountingZero)
+                            return .failure(ItemListNetworkUseCaseError.referenceCountingZero)
                         }
                         self?.page = itemList.page + 1
                         return .success(itemList.items)
                     } catch {
-                        return .failure(ItemListUseCaseError.decodingError)
+                        return .failure(ItemListNetworkUseCaseError.decodingError)
                     }
                 }
             completionHandler(result)

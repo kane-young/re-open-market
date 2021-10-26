@@ -8,7 +8,7 @@
 import Foundation
 
 enum ItemEditViewModelError: Error, ComprehensibleError {
-    case editUseCaseError(ItemEditUseCaseError)
+    case editUseCaseError(ItemEditNetworkUseCaseError)
     case imageUseCaseError(ImageNetworkUseCaseError)
 
     var message: String {

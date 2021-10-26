@@ -47,7 +47,7 @@ final class ItemListNetworkUseCaseTests: XCTestCase {
     func test_useCase_retrieveItems실패() {
         //given
         let useCase: ItemListNetworkUseCase = .init(networkManager: StubFailureNetworkManager())
-        let expectedError = ItemListUseCaseError.networkError(.connectionProblem)
+        let expectedError = ItemListNetworkUseCaseError.networkError(.connectionProblem)
         //when
         useCase.retrieveItems { [weak self] result in
             switch result {
@@ -65,7 +65,7 @@ final class ItemListNetworkUseCaseTests: XCTestCase {
     func test_useCase_retrieveItems_디코딩실패() {
         //given
         let useCase: ItemListNetworkUseCase = .init(networkManager: StubSuccessItemDetailNetworkManager())
-        let expectedError = ItemListUseCaseError.decodingError
+        let expectedError = ItemListNetworkUseCaseError.decodingError
         //when
         useCase.retrieveItems { [weak self] result in
             switch result {

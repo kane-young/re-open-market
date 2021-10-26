@@ -15,7 +15,7 @@ final class ItemEditNetworkUseCase: ItemEditNetworkUseCaseProtocol {
         self.networkManager = networkManager
     }
 
-    func request(path urlString: String, with item: Multipartable?, for httpMethod: HttpMethod, completionHandler: @escaping (Result<Item, ItemEditUseCaseError>) -> Void) {
+    func request(path urlString: String, with item: Multipartable?, for httpMethod: HttpMethod, completionHandler: @escaping (Result<Item, ItemEditNetworkUseCaseError>) -> Void) {
         networkManager.request(urlString: urlString, with: item, httpMethod: httpMethod) { [weak self] result in
             switch result {
             case .success(let data):

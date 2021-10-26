@@ -9,5 +9,5 @@ import Foundation
 
 protocol ItemEditNetworkUseCaseProtocol {
     func request(path urlString: String, with item: Multipartable?, for httpMethod: HttpMethod,
-                 completionHandler: @escaping (Result<Item, ItemEditUseCaseError>) -> Void)
+                 completionHandler: @escaping (Result<Item, ItemEditNetworkUseCaseError>) -> Void)
 }
