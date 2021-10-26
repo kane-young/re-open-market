@@ -67,7 +67,6 @@ final class ItemEditViewModel {
 
     // MARK: Instance Method
     func bind(_ handler: @escaping (State) -> Void) {
-        handler(state)
         self.handler = handler
     }
 

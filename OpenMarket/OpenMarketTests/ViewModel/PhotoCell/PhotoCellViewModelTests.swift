@@ -11,21 +11,23 @@ import XCTest
 class PhotoCellViewModelTests: XCTestCase {
     func test_photoCellViewModel_configureCell호출시_state_update로변경() throws {
         //given
-        guard let expectedImage = UIImage(named: "OpenMarket") else {
+        let expectation = XCTestExpectation()
+        guard let dummyImage = Dummy.image else {
             XCTFail()
             return
         }
-        let photoCellViewModel = PhotoCellViewModel(image: expectedImage)
-        //when
+        let photoCellViewModel = PhotoCellViewModel(image: dummyImage)
         photoCellViewModel.bind { state in
             switch state {
-            case .update(let image):
+            case .update(_):
                 //then
-                XCTAssertEqual(image, expectedImage)
+                expectation.fulfill()
             case .empty:
                 XCTFail()
             }
         }
+        //when
         photoCellViewModel.configureCell()
+        wait(for: [expectation], timeout: 2.0)
     }
 }
