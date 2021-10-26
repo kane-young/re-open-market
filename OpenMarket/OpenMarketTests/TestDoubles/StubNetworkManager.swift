@@ -25,7 +25,7 @@ final class StubFailureNetworkManager: NetworkManagable {
     }
 }
 
-final class StubSuccessItemDetailNetworkManager: NetworkManagable {
+final class StubSuccessItemNetworkManager: NetworkManagable {
     func request(urlString: String, with item: Any?, httpMethod: HttpMethod, completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask? {
         guard let data = NSDataAsset(name: "MockItem")?.data else {
             return nil

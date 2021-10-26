@@ -71,8 +71,8 @@ final class ItemListNetworkUseCaseTests: XCTestCase {
 
     func test_when_retrieveItems호출시_디코딩실패할경우_then_decodingError반환() {
         //given
-        let stubSuccessItemDetailNetworkManager = StubSuccessItemDetailNetworkManager()
-        let itemListNetworkUseCase = ItemListNetworkUseCase(networkManager: stubSuccessItemDetailNetworkManager)
+        let stubSuccessItemNetworkManager = StubSuccessItemNetworkManager()
+        let itemListNetworkUseCase = ItemListNetworkUseCase(networkManager: stubSuccessItemNetworkManager)
         let expectedError = ItemListNetworkUseCaseError.decodingError
         //when
         itemListNetworkUseCase.retrieveItems { [weak self] result in

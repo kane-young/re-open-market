@@ -21,8 +21,8 @@ final class ItemNetworkUseCaseTests: XCTestCase {
 
     func test_itemNetworkUseCase_retrieveItem호출시_networkingAndDecoding성공() {
         //given
-        let stubSuccessItemDetailNetworkManager = StubSuccessItemDetailNetworkManager()
-        let itemNetworkUseCase = ItemNetworkUseCase(networkManager: stubSuccessItemDetailNetworkManager)
+        let stubSuccessItemNetworkManager = StubSuccessItemNetworkManager()
+        let itemNetworkUseCase = ItemNetworkUseCase(networkManager: stubSuccessItemNetworkManager)
         let expectedItem = Item(id: 1, title: "MacBook Pro", descriptions: "Apple M1 칩은 13형 MacBook Pro에 믿을 수 없을 만큼의 속도와 파워를 선사합니다", price: 1690000, currency: "KRW", stock: 1000000000000, discountedPrice: nil, thumbnails: ["https://camp-open-market.s3.ap-northeast-2.amazonaws.com/thumbnails/1-1.png", "https://camp-open-market.s3.ap-northeast-2.amazonaws.com/thumbnails/1-2.png"], images: ["https://camp-open-market.s3.ap-northeast-2.amazonaws.com/images/1-1.png", "https://camp-open-market.s3.ap-northeast-2.amazonaws.com/images/1-2.png"], registrationDate: 1611523563.719116)
         //when
         itemNetworkUseCase.retrieveItem(id: Dummy.id) { [weak self] result in
@@ -49,8 +49,8 @@ final class ItemNetworkUseCaseTests: XCTestCase {
 
     func test_itemNetworkUseCase_deleteItem호출시_networkingAndDecoding성공() {
         //given
-        let stubSuccessItemDetailNetworkManager = StubSuccessItemDetailNetworkManager()
-        let itemNetworkUseCase = ItemNetworkUseCase(networkManager: stubSuccessItemDetailNetworkManager)
+        let stubSuccessItemNetworkManager = StubSuccessItemNetworkManager()
+        let itemNetworkUseCase = ItemNetworkUseCase(networkManager: stubSuccessItemNetworkManager)
         let expectedItem = Item(id: 1, title: "MacBook Pro", descriptions: "Apple M1 칩은 13형 MacBook Pro에 믿을 수 없을 만큼의 속도와 파워를 선사합니다", price: 1690000, currency: "KRW", stock: 1000000000000, discountedPrice: nil, thumbnails: ["https://camp-open-market.s3.ap-northeast-2.amazonaws.com/thumbnails/1-1.png", "https://camp-open-market.s3.ap-northeast-2.amazonaws.com/thumbnails/1-2.png"], images: ["https://camp-open-market.s3.ap-northeast-2.amazonaws.com/images/1-1.png", "https://camp-open-market.s3.ap-northeast-2.amazonaws.com/images/1-2.png"], registrationDate: 1611523563.719116)
         //when
         itemNetworkUseCase.deleteItem(id: Dummy.id, password: Dummy.password) { [weak self] result in

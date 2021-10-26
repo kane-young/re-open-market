@@ -21,8 +21,8 @@ final class ItemEditNetworkUseCaseTests: XCTestCase {
 
     func test_when_request_get성공시_result_success반환() {
         //given
-        let stubSuccessItemDetailNetworkManager = StubSuccessItemDetailNetworkManager()
-        let itemEditNetworkUseCase = ItemEditNetworkUseCase(networkManager: stubSuccessItemDetailNetworkManager)
+        let stubSuccessItemNetworkManager = StubSuccessItemNetworkManager()
+        let itemEditNetworkUseCase = ItemEditNetworkUseCase(networkManager: stubSuccessItemNetworkManager)
         let dummyPath = "www.kane.com"
         //when
         itemEditNetworkUseCase.request(path: dummyPath, with: nil, for: .get) { [weak self] result in
