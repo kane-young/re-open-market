@@ -95,6 +95,23 @@ final class NetworkManagerTest: XCTestCase {
         wait(for: [expectation], timeout: 2.0)
     }
 
+    func test_when_정상적이지않는_urlString사용할경우_then_invalidURL에러발생() {
+        //given
+        let expectedError: NetworkError = .invalidURL
+        let meaninglessUrlString: String = ""
+        //when
+        networkManager.request(urlString: meaninglessUrlString, with: nil, httpMethod: .get) { [weak self] result in
+            switch result {
+            case .success(_):
+                XCTFail()
+            case .failure(let error):
+                XCTAssertEqual(error, expectedError)
+                self?.expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 2.0)
+    }
+
     func test_when_아이템삭제요청시_then_data반환성공() {
         //given
         guard let dummyData: Data = try? JSONEncoder().encode(Dummy.deleteItem) else {

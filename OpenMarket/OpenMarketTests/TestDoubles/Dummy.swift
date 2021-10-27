@@ -5,10 +5,20 @@
 //  Created by 이영우 on 2021/10/03.
 //
 
-import Foundation
+import UIKit
 @testable import OpenMarket
 
 enum Dummy {
+    static let urlString: String = OpenMarketAPI.postProduct.urlString
+    static let titleText: String = "iPhone13 mini"
+    static let stockText: String = "300"
+    static let currencyText: String = "KRW"
+    static let priceText: String = "30000"
+    static let discountedPriceText: String = "15000"
+    static let descriptionsText: String = "아이폰 13 미니 신제품입니다"
+    static let id: Int = 50
+    static let password: String = "password"
+    static let image: UIImage? = UIImage(named: "OpenMarket")
     static let postItem: PostItem = .init(title: "iPhone", descriptions: "애플폰", price: 1000000,
                                           currency: "KRW", stock: 9, discountedPrice: 900000,
                                           images: [Data()], password: "password")
