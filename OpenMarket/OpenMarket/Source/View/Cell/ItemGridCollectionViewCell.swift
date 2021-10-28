@@ -136,7 +136,7 @@ final class ItemGridCollectionViewCell: UICollectionViewCell, ItemCellDisplayabl
             priceLabelsStackView.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
             priceLabelsStackView.topAnchor.constraint(greaterThanOrEqualTo: titleLabel.bottomAnchor,
                                                       constant: Style.Views.defaultMargin),
-            priceLabelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: stockLabel.topAnchor,
+            priceLabelsStackView.bottomAnchor.constraint(equalTo: stockLabel.topAnchor,
                                                          constant: -Style.Views.defaultMargin),
             priceLabelsStackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,
                                                           constant: Style.Views.defaultMargin),
