@@ -31,7 +31,6 @@ final class ItemEditViewController: UIViewController {
     private let titleBorderView: UIView = .init()
     private let stockBorderView: UIView = .init()
     private var scrollViewBottomAnchor: NSLayoutConstraint?
-    private var photoCollectionViewHeightAnchor: NSLayoutConstraint?
     private let scrollView: UIScrollView = {
         let scrollView: UIScrollView = .init()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -312,14 +311,11 @@ final class ItemEditViewController: UIViewController {
 
     // MARK: Method associated Notification
     private func setUpNotification() {
-        NotificationCenter.default.addObserver(self, selector: #selector(didRotateDevice),
-                                               name: UIDevice.orientationDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
 
     private func removeNotification() {
-        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
@@ -360,22 +356,6 @@ final class ItemEditViewController: UIViewController {
         view.endEditing(true)
     }
 
-    // MARK: Method for rotate device
-    @objc private func didRotateDevice() {
-        photoCollectionViewHeightAnchor?.isActive = false
-        if traitCollection.horizontalSizeClass == .regular && traitCollection.verticalSizeClass == .compact {
-            photoCollectionViewHeightAnchor = photoCollectionView.heightAnchor.constraint(equalTo: view.heightAnchor,
-                                                                                          multiplier: 0.5)
-        } else {
-            photoCollectionViewHeightAnchor = photoCollectionView.heightAnchor.constraint(equalTo: view.heightAnchor,
-                                                                                          multiplier: 0.2)
-        }
-        photoCollectionViewHeightAnchor?.isActive = true
-        DispatchQueue.main.async {
-            self.photoCollectionView.reloadData()
-        }
-    }
-
     // MARK: Set Constraints Method
     private func configureConstraints() {
         configureBorderViewsConstraints()
@@ -406,16 +386,9 @@ final class ItemEditViewController: UIViewController {
             photoCollectionView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             photoCollectionView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             photoCollectionView.bottomAnchor.constraint(equalTo: collectionViewBorderView.topAnchor,
-                                                        constant: -Style.Views.verticalSpacing)
+                                                        constant: -Style.Views.verticalSpacing),
+            photoCollectionView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.2)
         ])
-        if traitCollection.horizontalSizeClass == .regular && traitCollection.verticalSizeClass == .compact {
-            photoCollectionViewHeightAnchor = photoCollectionView.heightAnchor.constraint(equalTo: view.heightAnchor,
-                                                                                          multiplier: 0.5)
-        } else {
-            photoCollectionViewHeightAnchor = photoCollectionView.heightAnchor.constraint(equalTo: view.heightAnchor,
-                                                                                          multiplier: 0.2)
-        }
-        photoCollectionViewHeightAnchor?.isActive = true
     }
 
     private func configureBorderViewsConstraints() {
