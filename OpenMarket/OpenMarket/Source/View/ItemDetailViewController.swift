@@ -300,7 +300,13 @@ extension ItemDetailViewController {
         alertController.addAction(update)
         alertController.addAction(delete)
         alertController.addAction(cancel)
-        present(alertController, animated: true, completion: nil)
+
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            if let popoverController = alertController.popoverPresentationController {
+                popoverController.barButtonItem = navigationItem.rightBarButtonItem
+            }
+        }
+        present(alertController, animated: true)
     }
 
     private func updateItem() {

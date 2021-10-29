@@ -406,7 +406,7 @@ final class ItemEditViewController: UIViewController {
             photoCollectionView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             photoCollectionView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             photoCollectionView.bottomAnchor.constraint(equalTo: collectionViewBorderView.topAnchor,
-                                                        constant: -Style.Views.verticalSpacing),
+                                                        constant: -Style.Views.verticalSpacing)
         ])
         if traitCollection.horizontalSizeClass == .regular && traitCollection.verticalSizeClass == .compact {
             photoCollectionViewHeightAnchor = photoCollectionView.heightAnchor.constraint(equalTo: view.heightAnchor,
