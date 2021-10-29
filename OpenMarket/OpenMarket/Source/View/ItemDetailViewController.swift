@@ -117,6 +117,16 @@ final class ItemDetailViewController: UIViewController {
         viewModel.loadItem()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setUpNotification()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        removeNotification()
+    }
+
     // MARK: Configure Views
     private func addSubviews() {
         view.addSubview(scrollView)
@@ -189,7 +199,7 @@ final class ItemDetailViewController: UIViewController {
             scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             scrollView.topAnchor.constraint(equalTo: safeArea.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
-            scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: view.widthAnchor),
+            scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: safeArea.widthAnchor),
             scrollView.contentLayoutGuide.topAnchor.constraint(equalTo: titleLabel.topAnchor,
                                                                constant: -Style.defaultViewsMargin),
             scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: descriptionLabel.bottomAnchor,
@@ -199,9 +209,9 @@ final class ItemDetailViewController: UIViewController {
 
     private func configureCollectionViewConstraints() {
         NSLayoutConstraint.activate([
-            collectionView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            collectionView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
             collectionView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/2),
+            collectionView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: priceStackView.topAnchor,
                                                    constant: -Style.defaultViewsMargin)
         ])
@@ -234,6 +244,23 @@ final class ItemDetailViewController: UIViewController {
             descriptionLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
                                                        constant: -Style.defaultViewsMargin)
         ])
+    }
+
+    private func setUpNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(didRotateDevice),
+                                               name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+
+    private func removeNotification() {
+        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+
+    @objc private func didRotateDevice() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.collectionView.reloadData()
+            self.collectionView.scrollToItem(at: IndexPath(item: self.pageControl.currentPage, section: .zero),
+                                             at: .bottom, animated: false)
+        }
     }
 }
 
@@ -311,7 +338,7 @@ extension ItemDetailViewController {
 extension ItemDetailViewController: UICollectionViewDelegate {
     // MARK: CollectionView Delegate Method
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let scrollPos = scrollView.contentOffset.x / view.frame.width
+        let scrollPos = scrollView.contentOffset.x / view.safeAreaLayoutGuide.layoutFrame.width
         pageControl.currentPage = Int(scrollPos)
     }
 }
@@ -346,8 +373,7 @@ extension ItemDetailViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.bounds.width,
-                      height: collectionView.bounds.height)
+        return CGSize(width: collectionView.bounds.width, height: collectionView.bounds.height)
     }
 }
 
