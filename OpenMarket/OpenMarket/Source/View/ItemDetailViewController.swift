@@ -117,16 +117,6 @@ final class ItemDetailViewController: UIViewController {
         viewModel.loadItem()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        setUpNotification()
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        removeNotification()
-    }
-
     // MARK: Configure Views
     private func addSubviews() {
         view.addSubview(scrollView)
@@ -244,23 +234,6 @@ final class ItemDetailViewController: UIViewController {
             descriptionLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,
                                                        constant: -Style.defaultViewsMargin)
         ])
-    }
-
-    private func setUpNotification() {
-        NotificationCenter.default.addObserver(self, selector: #selector(didRotateDevice),
-                                               name: UIDevice.orientationDidChangeNotification, object: nil)
-    }
-
-    private func removeNotification() {
-        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
-    }
-
-    @objc private func didRotateDevice() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.collectionView.reloadData()
-            self.collectionView.scrollToItem(at: IndexPath(item: self.pageControl.currentPage, section: .zero),
-                                             at: .bottom, animated: false)
-        }
     }
 }
 
