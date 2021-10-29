@@ -64,6 +64,16 @@ final class ItemListViewController: UIViewController {
         configureCollectionViewConstraints()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setUpNotification()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        removeNotification()
+    }
+
     // MARK: Initialize ViewController
     private func addSubViews() {
         view.addSubview(collectionView)
@@ -144,6 +154,19 @@ final class ItemListViewController: UIViewController {
         itemEditViewController.delegate = self
         self.navigationController?.pushViewController(itemEditViewController, animated: true)
     }
+
+    private func setUpNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(didRotateDevice),
+                                               name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+
+    private func removeNotification() {
+        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+
+    @objc private func didRotateDevice() {
+        self.collectionView.reloadData()
+    }
 }
 
 extension ItemListViewController: UICollectionViewDelegate {
@@ -206,13 +229,25 @@ extension ItemListViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        switch cellStyle {
-        case .list:
-            return .init(width: collectionView.bounds.width * Style.Cell.listWidthRatio,
-                         height: collectionView.bounds.height * Style.Cell.listHeightRatio)
-        case .grid:
-            return .init(width: collectionView.bounds.width * Style.Cell.gridWidthRatio + Style.Cell.gridWidthConstant,
-                         height: collectionView.bounds.height * Style.Cell.gridHeightRatio + Style.Cell.gridHeightConstant)
+        if traitCollection.horizontalSizeClass == .regular && traitCollection.verticalSizeClass == .compact {
+            switch cellStyle {
+            case .list:
+                return .init(width: collectionView.bounds.width * Style.Cell.regularListWidthRatio,
+                             height: collectionView.bounds.height * Style.Cell.regularListHeightRatio)
+            case .grid:
+                return .init(width: collectionView.bounds.width * Style.Cell.regularWidthRatio,
+                             height: collectionView.bounds.height * Style.Cell.regularHeightRatio)
+            }
+        } else {
+            switch cellStyle {
+            case .list:
+                return .init(width: collectionView.bounds.width * Style.Cell.compactListWidthRatio,
+                             height: collectionView.bounds.height * Style.Cell.compactListHeightRatio)
+            case .grid:
+                return .init(width: collectionView.bounds.width * Style.Cell.compactGridWidthRatio +
+                             Style.Cell.compactGridWidthConstant,
+                             height: collectionView.bounds.height * Style.Cell.compactGridHeightRatio + Style.Cell.compactGridHeightConstant)
+            }
         }
     }
 
@@ -273,12 +308,16 @@ extension ItemListViewController {
             static let remainCellCount: Int = 10
         }
         enum Cell {
-            static let listWidthRatio: CGFloat = 1
-            static let listHeightRatio: CGFloat = 1/6
-            static let gridWidthRatio: CGFloat = 1/2
-            static let gridWidthConstant: CGFloat = -20
-            static let gridHeightRatio: CGFloat = 2/5
-            static let gridHeightConstant: CGFloat = -20
+            static let regularListWidthRatio: CGFloat = 1
+            static let regularListHeightRatio: CGFloat = 1/3
+            static let regularWidthRatio: CGFloat = 1/4
+            static let regularHeightRatio: CGFloat = 1
+            static let compactListWidthRatio: CGFloat = 1
+            static let compactListHeightRatio: CGFloat = 1/6
+            static let compactGridWidthRatio: CGFloat = 1/2
+            static let compactGridWidthConstant: CGFloat = -20
+            static let compactGridHeightRatio: CGFloat = 2/5
+            static let compactGridHeightConstant: CGFloat = -20
         }
     }
 }
