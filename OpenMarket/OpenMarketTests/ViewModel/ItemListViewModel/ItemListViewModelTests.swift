@@ -25,6 +25,8 @@ final class ItemListViewModelTests: XCTestCase {
         let itemListViewModel = ItemListViewModel(useCase: stubSuccessItemListNetworkUseCase)
         itemListViewModel.bind { [weak self] state in
             switch state {
+            case .update(_):
+                XCTFail()
             case .initial:
                 //then
                 self?.expectation.fulfill()

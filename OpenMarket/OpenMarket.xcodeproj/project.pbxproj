@@ -359,8 +359,8 @@
 		C32EDB9B26FC92C000F6BC53 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				C32EDB8726FC904B00F6BC53 /* ItemListViewController.swift */,
 				C3CDCEE1271728F500127636 /* ItemDetailViewController.swift */,
+				C32EDB8726FC904B00F6BC53 /* ItemListViewController.swift */,
 				C339AEB32722821E00486F1D /* ItemDetailViewController+Style.swift */,
 				C310739B27103DF400EFFF91 /* ItemEditViewController.swift */,
 				C33F1EEC27199F1000BDCA35 /* ItemEditViewController+Style.swift */,

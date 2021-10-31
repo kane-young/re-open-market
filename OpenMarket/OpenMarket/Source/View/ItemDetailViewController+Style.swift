@@ -15,6 +15,9 @@ extension ItemDetailViewController {
         static let defaultFont: UIFont = .preferredFont(forTextStyle: .body)
         static let stressedFont: UIFont = .preferredFont(forTextStyle: .largeTitle)
         static let defaultViewsMargin: CGFloat = 10
+        enum BackBarButtonItem {
+            static let title: String = "< Back"
+        }
         enum MoreBarButtonItem {
             static let image: UIImage? = .init(systemName: "ellipsis")
         }

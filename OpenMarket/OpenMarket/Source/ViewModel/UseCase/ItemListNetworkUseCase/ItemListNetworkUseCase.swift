@@ -19,6 +19,7 @@ final class ItemListNetworkUseCase: ItemListNetworkUseCaseProtocol {
 
     func reset() {
         page = 1
+        isLoading = false
     }
 
     func retrieveItems(completionHandler: @escaping (Result<[Item], ItemListNetworkUseCaseError>) -> Void) {
