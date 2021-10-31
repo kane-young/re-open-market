@@ -13,7 +13,7 @@ protocol NetworkManagable {
                  completion: @escaping (Result<Data, NetworkError>) -> Void) -> URLSessionDataTask?
 }
 
-final class NetworkManager: NetworkManagable {
+struct NetworkManager: NetworkManagable {
     private let urlSession: URLSession
     private let requestMaker: RequestMakable
 

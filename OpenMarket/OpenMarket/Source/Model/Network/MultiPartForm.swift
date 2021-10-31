@@ -11,7 +11,7 @@ protocol MultiPartFormProtocol {
     func create(with item: Multipartable, boundary: String) -> Data
 }
 
-final class MultiPartForm: MultiPartFormProtocol {
+struct MultiPartForm: MultiPartFormProtocol {
     private enum Format {
         static let contentDisposition = "Content-Disposition: "
         static let contentType = "Content-Type: "

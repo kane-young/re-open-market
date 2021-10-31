@@ -11,7 +11,7 @@ protocol RequestMakable {
     func request(url: URL, httpMethod: HttpMethod, with item: Any) -> URLRequest?
 }
 
-final class RequestMaker: RequestMakable {
+struct RequestMaker: RequestMakable {
     private enum Format {
         static let contentType = "Content-Type"
         static func multiPartContentType(_ boundary: String) -> String {
