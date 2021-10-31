@@ -94,6 +94,7 @@ final class ItemDetailViewController: UIViewController {
     }()
 
     // MARK: Properties
+    private var isUpdated: Bool = false
     private let viewModel: ItemDetailViewModel
     weak var delegate: ItemDetailViewControllerDelegate?
 
@@ -139,8 +140,6 @@ final class ItemDetailViewController: UIViewController {
         viewModel.bind { [weak self] state in
             guard let self = self else { return }
             switch state {
-            case .loading:
-                self.activityIndicator.startAnimating()
             case .update(let metaData):
                 self.activityIndicator.stopAnimating()
                 self.discountedPriceLabel.isHidden = !metaData.isNeededDiscountedLabel
@@ -244,10 +243,21 @@ extension ItemDetailViewController {
                                                        target: self, action: #selector(touchMenuBarButtonItem(_:)))
         moreBarButtonItem.tintColor = Style.defaultTintColor
         navigationItem.rightBarButtonItem = moreBarButtonItem
+        navigationItem.hidesBackButton = true
+        let backButtonItem = UIBarButtonItem(title: Style.BackBarButtonItem.title, style: .plain, target: self,
+                                             action: #selector(touchBackBarButtonItem))
+        navigationItem.leftBarButtonItem = backButtonItem
     }
 
     @objc private func touchMenuBarButtonItem(_ sender: UIBarButtonItem) {
         alertUpdateOrDelete()
+    }
+
+    @objc private func touchBackBarButtonItem(_ sender: UIBarButtonItem) {
+        if isUpdated {
+            delegate?.itemStateDidChanged()
+        }
+        navigationController?.popViewController(animated: true)
     }
 
     private func alertSuccessDeleteItem() {
@@ -359,8 +369,8 @@ extension ItemDetailViewController: UICollectionViewDelegateFlowLayout {
 extension ItemDetailViewController: ItemEditViewControllerDelegate {
     // MARK: Item Edit View Controller Delegate Method
     func didSuccessEdit(item: Item) {
+        isUpdated = true
         viewModel.reset()
-        delegate?.itemStateDidChanged()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             self?.viewModel.loadItem()
         }

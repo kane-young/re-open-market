@@ -57,6 +57,7 @@ final class ItemDetailViewModel {
     }
 
     func loadItem() {
+        state = .loading
         itemNetworkUseCase.retrieveItem(id: id) { [weak self] result in
             guard let self = self else { return }
             switch result {
