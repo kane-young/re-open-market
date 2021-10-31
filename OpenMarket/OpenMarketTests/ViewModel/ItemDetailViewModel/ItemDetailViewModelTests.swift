@@ -29,6 +29,8 @@ final class ItemDetailViewModelTests: XCTestCase {
                                                       imageNetworkUseCase: stubSuccessImageNetworkUseCase)
         itemDetailViewModel.bind { [weak self] state in
             switch state {
+            case .loading:
+                break
             case .update(_):
                 //then
                 self?.expectation.fulfill()
