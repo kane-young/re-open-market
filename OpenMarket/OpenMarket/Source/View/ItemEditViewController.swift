@@ -194,8 +194,10 @@ final class ItemEditViewController: UIViewController {
                 self?.configureViewsForUpdate(item)
             case .addPhoto(let indexPath):
                 self?.photoCollectionView.insertItems(at: [indexPath])
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: AddPhotoCollectionViewCell.Style.Notification.addPhoto), object: nil)
             case .deletePhoto(let indexPath):
                 self?.photoCollectionView.deleteItems(at: [indexPath])
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: AddPhotoCollectionViewCell.Style.Notification.deletePhoto), object: nil)
             case .satisfied:
                 self?.alertInputPassword()
             case .dissatisfied:
@@ -521,7 +523,6 @@ extension ItemEditViewController: UICollectionViewDataSource {
             guard let addPhotoCell = collectionView.dequeueReusableCell(withReuseIdentifier: AddPhotoCollectionViewCell.identifier, for: indexPath) as? AddPhotoCollectionViewCell else {
                 return UICollectionViewCell()
             }
-            viewModel.delegate = addPhotoCell
             cell = addPhotoCell
         } else {
             guard let photoCell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemEditPhotoCollectionViewCell.identifier, for: indexPath) as? ItemEditPhotoCollectionViewCell else {

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AddPhotoCollectionViewCell: UICollectionViewCell {
+final class AddPhotoCollectionViewCell: UICollectionViewCell {
     static let identifier: String = "AddPhotoCollectionViewCell"
 
     // MARK: View Properties
@@ -34,11 +34,18 @@ class AddPhotoCollectionViewCell: UICollectionViewCell {
         return stackView
     }()
 
+    private var photoCount: Int = .zero
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureCellStyle()
         addSubviews()
         configureConstraints()
+        configureNotification()
+    }
+
+    deinit {
+        removeNotification()
     }
 
     required init?(coder: NSCoder) {
@@ -61,11 +68,29 @@ class AddPhotoCollectionViewCell: UICollectionViewCell {
             stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
     }
-}
 
-extension AddPhotoCollectionViewCell: ItemEditViewModelDelegate {
-    func imagesCountChanged(_ count: Int) {
-        self.photoCountLabel.text = "\(count)/\(Style.maximumPhotoCount)"
+    private func configureNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(addPhotosCount(_:)),
+                                               name: NSNotification.Name(rawValue: Style.Notification.addPhoto), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(deletePhotosCount(_:)),
+                                               name: NSNotification.Name(rawValue: Style.Notification.deletePhoto), object: nil)
+    }
+
+    private func removeNotification() {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Style.Notification.addPhoto),
+                                                  object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Style.Notification.deletePhoto),
+                                                  object: nil)
+    }
+
+    @objc private func addPhotosCount(_ notification: Notification) {
+        photoCount += 1
+        photoCountLabel.text = "\(photoCount)/\(Style.maximumPhotoCount)"
+    }
+
+    @objc private func deletePhotosCount(_ notification: Notification) {
+        photoCount -= 1
+        photoCountLabel.text = "\(photoCount)/\(Style.maximumPhotoCount)"
     }
 }
 
@@ -83,6 +108,10 @@ extension AddPhotoCollectionViewCell {
             static let borderWidth: CGFloat = 1
             static let borderColor: CGColor = UIColor.lightGray.cgColor
             static let cornerRadius: CGFloat = 15
+        }
+        enum Notification {
+            static let addPhoto = "addPhoto"
+            static let deletePhoto = "deletePhoto"
         }
     }
 }

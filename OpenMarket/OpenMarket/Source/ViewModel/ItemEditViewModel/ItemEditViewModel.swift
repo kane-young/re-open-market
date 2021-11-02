@@ -7,10 +7,6 @@
 
 import UIKit
 
-protocol ItemEditViewModelDelegate: AnyObject {
-    func imagesCountChanged(_ count: Int)
-}
-
 final class ItemEditViewModel {
     // MARK: State
     enum State {
@@ -27,16 +23,8 @@ final class ItemEditViewModel {
     }
 
     // MARK: Properties
-    weak var delegate: ItemEditViewModelDelegate?
     private(set) var currencies: [String] = ["KRW", "JPY", "USD", "EUR", "CNY"]
-    private(set) var images: [UIImage] = [] {
-        didSet {
-            DispatchQueue.main.async { [weak self] in
-                guard let imagesCount = self?.images.count else { return }
-                self?.delegate?.imagesCountChanged(imagesCount)
-            }
-        }
-    }
+    private(set) var images: [UIImage] = []
     private let id: Int?
     private var title: String?
     private var stock: Int?
