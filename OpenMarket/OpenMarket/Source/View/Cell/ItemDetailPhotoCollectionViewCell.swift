@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ItemDetailPhotoCollectionViewCell: UICollectionViewCell {
+final class ItemDetailPhotoCollectionViewCell: UICollectionViewCell {
     static let identifier: String = "ItemDetailCollectionViewCell"
 
     // MARK: View Property
