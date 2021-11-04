@@ -21,11 +21,10 @@ final class ItemListViewModel {
     private var handler: ((State) -> Void)?
     private(set) var items: [Item] = [] {
         didSet {
-            if oldValue.count > items.count { return }
-            let indexPaths = (oldValue.count..<items.count).map { IndexPath(item: $0, section: .zero) }
-            if oldValue.count == .zero {
+            if items.count == .zero {
                 state = .initial
-            } else {
+            } else if items.count > oldValue.count {
+                let indexPaths = (oldValue.count ..< items.count).map { IndexPath(item: $0, section: .zero) }
                 state = .update(indexPaths)
             }
         }
