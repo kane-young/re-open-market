@@ -192,12 +192,17 @@ final class ItemEditViewController: UIViewController {
                 self?.activityIndicator.startAnimating()
             case .initial(let item):
                 self?.configureViewsForUpdate(item)
+                guard let photosCount = item.images?.count else { return }
+                NotificationCenter.default.post(name: Notification.Name(rawValue: AddPhotoCollectionViewCell.Style.Notification.initialPhotosCount),
+                                                object: nil,
+                                                userInfo: [AddPhotoCollectionViewCell.Style.Notification.photosCountInfoKey:
+                                                            photosCount])
             case .addPhoto(let indexPath):
                 self?.photoCollectionView.insertItems(at: [indexPath])
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: AddPhotoCollectionViewCell.Style.Notification.addPhoto), object: nil)
+                NotificationCenter.default.post(name: Notification.Name(rawValue: AddPhotoCollectionViewCell.Style.Notification.addPhoto), object: nil)
             case .deletePhoto(let indexPath):
                 self?.photoCollectionView.deleteItems(at: [indexPath])
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: AddPhotoCollectionViewCell.Style.Notification.deletePhoto), object: nil)
+                NotificationCenter.default.post(name: Notification.Name(rawValue: AddPhotoCollectionViewCell.Style.Notification.deletePhoto), object: nil)
             case .satisfied:
                 self?.alertInputPassword()
             case .dissatisfied:

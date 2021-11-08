@@ -71,16 +71,27 @@ final class AddPhotoCollectionViewCell: UICollectionViewCell {
 
     private func configureNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(addPhotosCount(_:)),
-                                               name: NSNotification.Name(rawValue: Style.Notification.addPhoto), object: nil)
+                                               name: Notification.Name(rawValue: Style.Notification.addPhoto), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(deletePhotosCount(_:)),
-                                               name: NSNotification.Name(rawValue: Style.Notification.deletePhoto), object: nil)
+                                               name: Notification.Name(rawValue: Style.Notification.deletePhoto), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(initialPhotosCount(_:)),
+                                               name: Notification.Name(rawValue: Style.Notification.initialPhotosCount), object: nil)
     }
 
     private func removeNotification() {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Style.Notification.addPhoto),
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue: Style.Notification.addPhoto),
                                                   object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Style.Notification.deletePhoto),
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue: Style.Notification.deletePhoto),
                                                   object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue: Style.Notification.initialPhotosCount),
+                                                  object: nil)
+    }
+
+    @objc private func initialPhotosCount(_ notification: Notification) {
+        guard let userInfoKey = notification.userInfo else { return }
+        guard let photosCount = userInfoKey[Style.Notification.photosCountInfoKey] as? Int else { return }
+        photoCount = photosCount
+        photoCountLabel.text = "\(photoCount)/\(Style.maximumPhotoCount)"
     }
 
     @objc private func addPhotosCount(_ notification: Notification) {
@@ -112,6 +123,8 @@ extension AddPhotoCollectionViewCell {
         enum Notification {
             static let addPhoto = "addPhoto"
             static let deletePhoto = "deletePhoto"
+            static let initialPhotosCount = "initialPhotosCount"
+            static let photosCountInfoKey = "photosCountInfoKey"
         }
     }
 }
