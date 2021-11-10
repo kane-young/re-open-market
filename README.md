@@ -1,6 +1,6 @@
 # Open Market App
 
-> 마켓 상품의 정보를 제공하는 API를 이용해서 당근마켓 앱과 같이 사용자가 직접 상품을 편집할 수 있는 기능을 제공하는 앱입니다
+> 마켓 상품의 정보를 제공하는 API를 이용해서 당근마켓 App과 같이 사용자가 직접 상품을 편집할 수 있는 기능을 제공하는 앱입니다
 
 
 
@@ -8,10 +8,10 @@
 
 **Index**
 
-- 기능
-- 설계 및 구현
-- trouble shooting
-- 학습한 내용
+- [기능](#기능)
+- [설계 및 구현](#설계-및-구현)
+- [Trouble Shooting](#Trouble-Shooting)
+- [학습한 내용](#학습한-내용)
 
 ---
 
@@ -27,27 +27,33 @@
 
 ## 기능
 
-- 마켓 상품 리스트
-- 마켓 상품 세부정보
-- 마켓 상품 등록
-- 마켓 상품 수정
-- 마켓 상품 삭제
+- [마켓 상품 리스트](#마켓-상품-리스트)
+- [마켓 상품 세부정보](#마켓-상품-세부정보)
+- [마켓 상품 등록](#마켓-상품-등록)
+- [마켓 상품 수정](#마켓-상품-수정)
+- [마켓 상품 삭제](#마켓-상품-삭제)
 
 <br>
 
 ### 마켓 상품 리스트
 
-상품 정보 리스트를 무한 스크롤을 통해서 볼 수 있으며, 네비게이션 바에 위치한 `SegmentControl`를 통해서 리스트를 보여주는 Cell Layout을 변경할 수 있습니다
+상품 정보 리스트를 스크롤을 통해서 볼 수 있으며,
+
+리스트 스타일을 LIST, GRID로 선택할 수 있습니다
 
 <img src="https://user-images.githubusercontent.com/64566207/139630694-42392730-573d-45a9-a620-44fdde7c0576.gif" width="250"/>
 
-
+<br>
 
 ### 마켓 상품 세부정보
 
-해당 상품에 대한 상품명, 가격, 재고수량, 이미지, 세부 설명 정보를 제공하며, 필요에 따라 삭제 및 수정을 할 수 있게 합니다
+해당 상품에 대한 상품명, 가격, 재고수량, 이미지, 세부 설명 정보를 제공하며,
+
+필요에 따라 삭제 및 수정을 할 수 있게 합니다
 
 <img src="https://user-images.githubusercontent.com/64566207/139631032-6c05204f-3922-435e-b8fc-97b3f227075c.gif" width="250" />
+
+<br>
 
 ### 마켓 상품 등록
 
@@ -55,23 +61,27 @@
 
 <img src="https://user-images.githubusercontent.com/64566207/139632154-73b2a2f0-175d-4fcd-952d-3fc04d5fcd4c.gif" width="250"/>
 
+<br>
+
 ### 마켓 상품 수정
 
-양식에 맞는 정보를 입력 후, 등록시에 입력했던 비밀번호를 통해 상품 수정을 할 수 있습니다
+양식에 맞는 정보를 입력 후,
+
+등록시에 입력했던 비밀번호를 통해 상품 수정을 시도할 수 있습니다
 
 <img src="https://user-images.githubusercontent.com/64566207/139633136-710aac7d-9833-4a42-a6aa-9de8f30bdc29.gif" width="250"/>
 
+<br>
+
 ### 마켓 상품 삭제
 
-등록시 입력했던 비밀번호를 통해서 상품 삭제가 가능합니다
+등록시 입력했던 비밀번호를 통해서 상품 삭제를 시도할 수 있습니다
 
 <img src="https://user-images.githubusercontent.com/64566207/139999964-249f8fe6-793e-425c-8b5e-076c23b66ebd.gif" width="250"/>
 
 <br>
 
 ---
-
-
 
 ## 설계 및 구현
 
@@ -103,9 +113,9 @@ View와 Model을 서로 독립시키며, ViewModel에 대한 Unit Test를 진행
 
 | struct / protocol / enum              | 역할                                                         |
 | ------------------------------------- | ------------------------------------------------------------ |
-| `NetworkManager/NetworkManagable`     | - URLSession을 통한 http 통신을 진행하고, 이에 대한 response, Error를 처리 |
-| `RequestMaker/RequestMakable`         | - httpMethod와 조건에 맞는 request를 생성                    |
-| `MultiPartForm/MultiPartFormProtocol` | - multipart/form-data 형식의 request를 제공하고자 multipart/form-data 형식에 맞는 Data 인코딩 |
+| `NetworkManager: NetworkManagable`     | - URLSession을 통한 http 통신을 진행하고, 이에 대한 response, Error를 처리 |
+| `RequestMaker: RequestMakable`         | - httpMethod와 조건에 맞는 request를 생성                    |
+| `MultiPartForm: MultiPartFormProtocol` | - multipart/form-data 형식의 request를 제공하고자 multipart/form-data 형식에 맞는 Data 인코딩 |
 | `HttpMethod`                          | - get, post, patch, delete와 같은 HttpMethod                 |
 | `OpenMarketAPI`                       | - 해당 앱에서 사용되는 API의 각 요청에 대한 URL, path 제공   |
 | `MimeType`                            | - application/json, image/jpeg 와 같은 MimeType              |
@@ -113,10 +123,13 @@ View와 Model을 서로 독립시키며, ViewModel에 대한 Unit Test를 진행
 
 **Model - Dtat Transfer Object(DTO)**
 
-| struct     | 역할                                                         |
-| ---------- | ------------------------------------------------------------ |
-| `Item`     | - 서버로부터 받아온 마켓 Data를 Json Decoding 하기 위해 정의한 타입 |
-| `ItemList` | - 서버로부터 받아온 마켓 리스트 Data를 Json Decoding 하기 위해 정의한 타입 |
+| struct       | 역할                                                         |
+| ------------ | ------------------------------------------------------------ |
+| `Item`       | - 서버로부터 받아온 마켓 Data를 Json Decoding 하기 위해 `Decodable`을 채택한 타입 |
+| `ItemList`   | - 서버로부터 받아온 마켓 리스트 Data를 Json Decoding 하기 위해 `Decodable`을 채택한 타입 |
+| `PostItem`   | - 마켓 상품을 생성할 때 `multipart/form-data` 형식을 사용하기 위해 `Multipartable` 을 채택한 타입 |
+| `PatchItem`  | - 마켓 상품을 수정할 때 `multipart/form-data` 형식을 사용하기 위해 `Multipartable` 을 채택한 타입 |
+| `DeleteItem` | - 마켓 상품을 삭제할 때 Json Encoding 하기 위해 `Encoable` 을 채택한 타입 |
 
 <br>
 
@@ -127,7 +140,7 @@ View와 Model을 서로 독립시키며, ViewModel에 대한 Unit Test를 진행
 | class / protocol                    | 역할                                                         |
 | ----------------------------------- | ------------------------------------------------------------ |
 | `ItemListViewController`            | - 서버로부터 받아온 마켓 상품의 목록을 View를 통해 출력<br />- 상품 생성 버튼 제공 |
-| `ItemCellDisplayable`               | - `ItemListCollectionViewCell` 과 `ItemGridCollectionViewCell` 을 추상화 시키기 위해 정의 |
+| `ItemCellDisplayable`               | - `ItemListCollectionViewCell` 과 `ItemGridCollectionViewCell` 을 추상화 시키기 위해 프로토콜 정의 |
 | `ItemListCollectionViewCell`        | - `ItemListViewController` 에서 List 형식으로 사용하기 위해 사용자 정의한 `UICollectionViewCell` |
 | `ItemGridCollectionViewCell`        | - `ItemListViewController` 에서 Grid 형식으로 사용하기 위해 사용자 정의한 `UICollectionViewCell` |
 | `ItemDetailViewController`          | - 마켓 상품의 상세 정보 제공<br />- 제목, 가격, 할인 가격, 재고, 상세 설명, 이미지<br />- `ItemDetailViewControllerDelegate` 를 통해 상품이 수정되었을 경우 다른 객체에 해당 이벤트를 전달 |
@@ -156,19 +169,35 @@ View와 Model을 서로 독립시키며, ViewModel에 대한 Unit Test를 진행
 
 <br>
 
-### View객체들 간에 이벤트 주고 받기 - Delegate, Notification
+### View객체들 간에 이벤트 주고 받기 - Delegate, NotificationCenter
 
-View가 사용자로부터 이벤트가 발생할 경우 다른 View 또한 해당 이벤트에 대해 반응하기 위해 Delegate 혹은 Notification, KVO가 필요하다
+View가 사용자로부터 이벤트가 발생할 경우 다른 View 또한 해당 이벤트에 대해 반응하기 위해 Delegate 혹은 NotificationCenter가 필요하다
 
 <img src="https://user-images.githubusercontent.com/64566207/140001869-69a7f015-c167-4c1d-aea9-9e05f0ebe45a.png" width="550">
 
+Photo 갯수 변경시 `AddPhotoCollectionViewCell`에 반영해주기 위해서 `NotificationCenter` 사용
+
+<br>
+
 <img src="https://user-images.githubusercontent.com/64566207/140001772-21d3492b-ced8-4041-926f-376daa4d350d.png" width="550">
+
+`ItemEditViewController` 에서 상품 수정시 `ItemDetailViewController` 에서 변경사항을 반영하기 위해 Delegate 패턴 활용
+
+<br>
 
 <img src="https://user-images.githubusercontent.com/64566207/140001778-9f264fbf-2296-4586-82ea-e6fcb74e7a06.png" width="550">
 
-<img src="https://user-images.githubusercontent.com/64566207/140001769-b06566d0-3617-45f5-9646-dfc67cffd770.png" width="800">
+`ItemDetailViewController` 에서 상품 삭제시 `ItemListViewController` 에서 변경사항을 반영하기 위해 Delegate 패턴 활용
 
 <br>
+
+<img src="https://user-images.githubusercontent.com/64566207/140001769-b06566d0-3617-45f5-9646-dfc67cffd770.png" width="800">
+
+`ItemEditViewController` 에서 상품 생성시 `ItemListViewController` 에서 생성된 상품을 `ItemDetailViewController` 로 띄우기 위해 Delegate 패턴 활용
+
+<br>
+
+---
 
 ### 마켓 상품 리스트
 
@@ -178,7 +207,7 @@ View가 사용자로부터 이벤트가 발생할 경우 다른 View 또한 해�
 
 **Cell Layout 변경**
 
-`UISegmentedControl` 의 값이 변경될 때 아래 method가 수행되도록 하였다. `Cell` size가 바뀌더라도 현재 보고 있는 상품을 볼 수 있도록  `collectionView(_:willDisplay:forItemAt:)` 메서드에서 `currentPosition` 을 지정하고, 해당 위치로 스크롤 시켜주었다
+`UISegmentedControl` 의 값이 변경될 때 `cellStyle` 프로퍼티 값을 변경
 
 ```swift
 @objc private func segmentedControlChangedValue(_ sender: UISegmentedControl) {
@@ -213,6 +242,10 @@ func collectionView(_ collectionView: UICollectionView, layout collectionViewLay
 }
 ```
 
+
+`Cell` size가 바뀌더라도 현재 보고 있는 상품을 볼 수 있도록, `collectionView(_:willDisplay:forItemAt:)` 메서드에서 `currentPosition` 을 지정하고, 해당 위치로 스크롤
+
+
 ```swift
 func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell,
                     forItemAt indexPath: IndexPath) {
@@ -226,11 +259,17 @@ func collectionView(_ collectionView: UICollectionView, willDisplay cell: UIColl
 }
 ```
 
+<img src="https://user-images.githubusercontent.com/64566207/141038244-fc89e264-60e2-40b3-9d1a-30da78248663.png" width="550">
+
 <br>
 
 **Infinite Scrolling**
 
-해당 마켓 상품 리스트의 경우, Pagining 처리가 되어 있기 때문에, 아래 방향 스크롤을 통해 자동으로 다음 페이지 상품 리스트를 load 하도록 구현하였다. 해당 구현은 `collectionView(_:willDisplay:forItemAt:)` 에서 하였으며, `ItemListNetworkUseCase` 에서 request 성공시 page 값을 `+1` 씩 올리며, 중복 request를 하지 않기 위해 `isLoading: Bool` 변수를 활용하였다
+해당 마켓 상품 리스트의 경우, 사용자의 편의성을 고려하여
+아래 방향 스크롤을 통해 자동으로 다음 페이지 상품 리스트를 load 하도록 구현하였습니다.
+해당 구현은 `collectionView(_:willDisplay:forItemAt:)` 잔여 상품갯수를 비교하여 요청하였습니다.
+`ItemListNetworkUseCase` 에서 request 성공시 page 값을 `+1` 씩 올리며,
+ 중복 request를 하지 않기 위해 `isLoading: Bool` 변수를 활용하였다
 
 ```swift
 func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell,
@@ -267,6 +306,7 @@ final class ItemListNetworkUseCase: ItemListNetworkUseCaseProtocol {
   }
 }
 ```
+<img src="https://user-images.githubusercontent.com/64566207/141039839-de437143-92d8-4e92-8ffa-9ad2ad6c6dd0.png" width="550">
 
 <br>
 
@@ -292,6 +332,8 @@ func reset() {
 ```
 
 <br>
+
+---
 
 ### 마켓 상품 세부정보
 
@@ -324,6 +366,7 @@ func scrollViewDidScroll(_ scrollView: UIScrollView) {
   pageControl.currentPage = Int(scrollPos)
 }
 ```
+<img src="https://user-images.githubusercontent.com/64566207/141040674-12acdefb-b913-4dc2-9698-722fa66c8021.png" width="550">
 
 <br>
 
@@ -386,15 +429,16 @@ private func alertSuccessDeleteItem() {
 }
 ```
 
+<br>
 
-
+---
 ### 마켓 상품 생성 및 수정
 
 **마켓 상품 생성 Networking**
 
 <img src="https://user-images.githubusercontent.com/64566207/140046409-31d34d5a-b6e6-46da-9586-5ab85b117186.png" width="550">
 
-
+<br>
 
 **마켓 상품 수정 Networking**
 
@@ -403,6 +447,8 @@ private func alertSuccessDeleteItem() {
 <br>
 
 **Keyboard Frame으로 보이지 않게될 View를 위한 AutoLayout 변경**
+ 
+ 키보드가 올라올 때 혹은 사라질 때 Post되는 `UIResponder.keyboardWillHideNotification`, `UIResponder.keyboardWillShowNotification`를 활용해서 AutoLayout Constraint 값을 변경
 
 ```swift
 @objc private func keyboardWillShow(_ notification: Notification) {
@@ -431,6 +477,7 @@ private func alertSuccessDeleteItem() {
  	  }
 }
 ```
+<img src="https://user-images.githubusercontent.com/64566207/141041299-76279d66-d67a-438d-b993-9d058d770b14.png" width="550">
 
 <br>
 
@@ -509,21 +556,26 @@ func textViewDidEndEditing(_ textView: UITextView) {
 
 <br>
 
+---
 ### Unit Test
 
 #### Unit Test를 진행한 이유
 
-가장 큰 이유로는 작성한 코드가 제대로 작동하는지에 대한 검증을 하고자 진행을 하였으며, 요구사항 변경이나 리팩토링과 같은 코드 수정 과정에서 더 유연하고 안정적인 대응을 할 수 있기 때문입니다. 또한 부수적으로 테스트 코드를 작성하는 과정에서 자연스럽게 코드의 모듈화를 고민하게 되는 등의 이점을 가지고 올 수 있었습니다.
+가장 큰 이유는 작성한 코드가 제대로 작동하는지에 대한 검증이며, 요구사항 변경이나 리팩토링과 같은 코드 수정 과정에서 더 유연하고 안정적인 대응을 할 수 있기 때문입니다. 또한 부수적으로 테스트 코드를 작성하는 과정에서 자연스럽게 코드의 모듈화를 고민하게 되는 등의 이점을 가지고 올 수 있다고 생각되어 테스트를 진행하였습니다.
+
+<br>
 
 #### Unit Test 진행
 
-Model의 `NetworkManager` 와 같은 Network 관련 로직, 그리고  `ViewModel`, `UseCase` 를 중심으로 테스트를 진행하였습니다. `NetworkManager` 와 `ViewModel`, `UseCase` 타입들의 경우 타 타입에 대한 의존성이 있기 때문에 Mock, Stub와 같은 Test Doubles를 사용하여 의존성을 제거하고 테스트를 진행하였습니다. 총 24개 타입에 대한 64개의 테스트 명세를 작성하였으며, `given`, `when`, `then` 패턴을 통해서 테스트 명세의 가독성을 높였습니다
+Model의 `NetworkManager` 와 같은 Network 관련 로직, 그리고  `ViewModel`, `UseCase` 를 중심으로 테스트를 진행하였습니다. `NetworkManager` 와 `ViewModel`, `UseCase` 타입들의 경우 타 타입에 대한 의존성이 있기 때문에 Mock, Stub와 같은 Test Doubles를 사용하여 의존성을 주입하고 테스트를 진행하였습니다. 총 24개 타입에 대한 64개의 테스트 명세를 작성하였으며, `given`, `when`, `then` 패턴을 통해서 테스트 명세의 가독성을 높였습니다
 
 <img src="https://user-images.githubusercontent.com/64566207/140265227-32e0c62c-d3a5-4343-9cd0-c3865a83b978.png" width="300">
 
+<br>
+
 ### 네트워크에 외존하지 않는 테스트
 
-이번 프로젝트에서 대표적으로 소개하고자 하는 테스트는 `MockURLProtocol` 을 통한 `NetworkManager` 테스트 입니다. `URLSession` 을 통해서 네트워크 관련 로직을 테스트할 경우, 네트워크 연결 여부에 따라 혹은 서버 구축 여부에 따라 테스트가 항상 같은 결과를 도출하기 힘듭니다. 따라서 이런 외부 의존성을 제거하기 위해서  `MockURLProtocol` 을 작성하였습니다.
+이번 프로젝트에서 대표적으로 소개하고자 하는 테스트는 `MockURLProtocol` 을 통한 `NetworkManager` 테스트 입니다. `URLSession` 을 통해서 네트워크 관련 로직을 테스트할 경우, 네트워크 연결 혹은 서버 구축 여부에 따라 테스트가 항상 같은 결과를 도출하지 못할 수 있습니다. 따라서 이런 외부 의존성을 주입하기 위해서  `MockURLProtocol` 을 작성하였습니다.
 
 ```swift
 func test_when_아이템수정시_then_statusCode가200번대가아닐경우_then_invalidResponse에러발생() {
@@ -552,10 +604,19 @@ func test_when_아이템수정시_then_statusCode가200번대가아닐경우_the
     wait(for: [expectation], timeout: 2.0)
 }
 ```
+<br>
 
-
+---
 
 ## Trouble Shooting
+- [Cachimg 된 이미지가 출력되지 않는 Bug](#Caching-된-이미지가-출력되지-않는-Bug)
+- [ItemEditPhotoCollectionViewCell 의 DeleteButton Bug](#ItemEditPhotoCollectionViewCell-의-DeleteButton-Bug)
+- [Item 정보를 load한 후, Response Data 중 images들을 load 받는 중 Bug 발생](#Item-정보를-load한-후,-Response-Data-중-images들을-load-받는-중-Bug-발생)
+- [각 Device Size 별 혹은 회전에 따른 AutoLayout Bug](#각-Device-Size-별-혹은-회전에-따른-AutoLayout-Bug)
+- [iPad - Alert(Action Sheet) 관련 이슈](#iPad---Alert(Action-Sheet)-관련-이슈)
+- [ItemListViewController - Refresh시 Item 배열에 대한 런타임 에러](ItemListViewController---Refresh시-Item-배열에-대한-런타임-에러)
+
+<br>
 
 ### Caching 된 이미지가 출력되지 않는 Bug [(관련 Issue)](https://github.com/kane-young/re-open-market/issues/1)
 
@@ -654,6 +715,7 @@ private func updateText() {
 - 공유 자원에 접근하는 시점을 변경하거나, 공유 자원에 접근할 경우 serialQueue에 넣어주는 방법을 고민함
 - multi Thread에서 같은 자원에 동시에 접근하지 않아도 되도록 변경
 
+**before**
 ```swift
 private func loadImages(item: Item) {
     let dispatchGroup = DispatchGroup()
@@ -680,6 +742,7 @@ private func loadImages(item: Item) {
 }
 ```
 
+**after**
 ```swift
 private func loadImages(item: Item) {
     let dispatchGroup = DispatchGroup()
@@ -727,7 +790,7 @@ private func loadImages(item: Item) {
 
 <br>
 
-### iPad - Alert(Action Sheet) 관련 Bug [(관련 Issue)](https://github.com/kane-young/re-open-market/issues/21)
+### iPad - Alert(Action Sheet) 관련 이슈 [(관련 Issue)](https://github.com/kane-young/re-open-market/issues/21)
 
 **문제 진단**
 
@@ -753,7 +816,7 @@ if UIDevice.current.userInterfaceIdiom == .pad {
 **문제 진단**
 
 - 스크롤을 빠르게 내리던 도중에 Refresh 할 경우 `cellForRow` 에서  `out of index` error 발생
-- LLDV를 통해서 당시 `viewModel` 의 state가 .update(indexPaths) 임을 확인, items 배열의 경우 empty임을 인지
+- BreakPoint를 통해서 당시 `viewModel` 의 state가 .update(indexPaths) 임을 확인, items 배열의 경우 empty임을 인지
 - 추가로 load한 마켓 상품 목록이 update 됨과 동시에 items 배열을 `removeAll` 해서 `collectionView` 에서 `insertItems(at: indexPath)` 를 할 경우 에러가 생김을 확인하였다. 따라서 해당 문제가 `loadItems` 메서드가 비동기적으로 작동하기 때문임을 파악함
 
 ```swift
@@ -794,3 +857,66 @@ private func viewModelBind() {
 - 이전에 items 변화에 따른 state는 items가 비어있다가 채워질 경우  `.initial`이 되도록, 추가될 경우는 `.update`로 설정하였다. 해당 방법의 경우 `items.removeAll` 에 대한 state 변화가 없으므로, 비동기적으로 `.update`가 수행되는 것을 그대로 수행할 수 밖에 없었다
 - 간단하게, `items.count == 0` 이 될 경우,  `.initial 로 state` 변경하고,` indexPath`가 추가되면 state를 `.update`로 변경함으로써 `items.removeAll`에 대한 state 변화를 만족시키도록 변경
 
+<br>
+
+---
+
+## 학습한내용
+
+- [MVVM 패턴](#MVVM-디자인-패턴)
+- [MultipartForm](#MultipartForm)
+- [Test Doubles](#Test-Doubles)
+- [URLSession Unit Test](#URLSession-Unit-Test)
+
+<br>
+
+### MVVM 디자인 패턴
+
+해당 프로젝트는 이전 협업으로 진행하였던 [OpenMarket](https://github.com/kane-young/open-market) 프로젝트를 새롭게 진행한 re-project 입니다.
+이전 프로젝트를 진행하면서 `Massive ViewController` 의 단점과 View를 통해 출력될 Data에 대한 테스트가 불가능하다는 단점을 느껴, 이번 프로젝트는 `MVVM` 디자인 패턴을 사용하게 되었습니다
+
+> [MVC 학습 내용](https://velog.io/@leeyoungwoozz/iOS-MVC-Pattern), [MVVM 학습 내용](https://velog.io/@leeyoungwoozz/iOS-MVVM-아키텍처)
+
+
+
+<br>
+
+### MultipartForm
+
+HTTP Header에는 Message Body부분에 포함하게 될 Data 타입을 정의하는 Content-Type라는 필드가 있습니다. 해당 필드 값으로 MIME 타입을 설정할 수 있는데, 그 중 하나가 `multipart/form-data` 입니다.
+
+`multipart/form-data` 는 Body에 2개 이상의 데이터나 여러 개의 메시지를 구분해서 보낼 때 유용하게 사용됩니다.
+
+위 프로젝트에서는 이미지와 일반 데이터를 같이 보내기 때문에 `multipart/form-data`를 유용하게 사용할 수 있다
+> [MultipartForm 학습 내용](https://velog.io/@leeyoungwoozz/CS-Multipartform-data)
+
+<br>
+
+### Test Doubles
+유닛테스트를 효과적으로 진행하는데에는 여러 기준이 있는데,
+
+Unit Test를 작성하는 동안 production에 사용될 객체와 동일하게 동작하지만 단순화된 버전이 필요한 경우가 있다. 우리는 이런 종류의 객체들을 Test Doubles 이라고 한다. 외부 의존성은 Test Doubles를 통해 관리되며 다양한 시나리오를 쉽게 시뮬레이션할 수 있다
+
+Test Double은 테스트 목적으로 production 객체를 교체하는 모든 객체를 부르는 모든 용어를 말한다. 그리고 이러한 Test Double에는 다섯 가지 종류가 있다
+
+- Dummy : 가장 기본적이며, 객체는 전달되지만 사용되지 않는 객체, 작동은 되지 않지만 매개변수를 채우기 위해서 자주 사용된다.
+
+- Fake : 복잡한 로직이나 객체 내부에서 필요로 하는 다른 외부 객체들의 동작을 단순화하여 구현한 객체이다.
+동작의 구현을 가지고 있지만 실제 프로덕션에는 적합하지 않은 객체이다.
+
+- Stub : Dummy 객체가 실제로 동작하는 것 처럼 보이게 만들어 놓은 객체이다. 인터페이스 또는 기본 클래스가 최소한으로 구현된 상태이다. 테스트에서 호출된 요청에 대해 미리 준비해둔 결과를 제공한다.
+
+- Spy : Stub의 역할을 가지면서 호출된 내용에 대해 약간의 정보를 기록한다. 테스트 더블로 구현된 객체에 자기 자신이 호출 되었을 때 확인이 필요한 부분을 기록하도록 구현한다. 실제 객체처럼 동작시킬 수도 있고, 필요한 부분에 대해서는 Stub로 만들어서 동작을 지정할 수도 있다.
+
+- Mock : 호출에 대한 기대를 명세하고 내용에 따라 동작하도록 프로그래밍 된 객체이다.
+> [Test Doubles 학습 내용](https://velog.io/@leeyoungwoozz/Test-Doubles)
+
+<br>
+
+### URLSession Unit Test
+효율적이고 좋은 테스트의 조건인 F.I.R.S.T 중 하나인 Repeatable 은 반복되는 테스트 속에서 같은 결과를 나타남을 뜻한다. 하지만 Network 와 같이 외부 의존성을 가진 객체에 대한 테스트는 쉽지 않다. Network 관련 이슈들로 테스트 결과가 바뀔 수 있기 때문이다.
+
+이러한 외부 의존성을 외부에서 Test Doubles를 주입함으로써 해결하고, Repeatable한 테스트를 완료하였습니다.
+
+
+> [URLSession 테스트 학습 내용](https://velog.io/@leeyoungwoozz/iOS-네트워크에-의존하지-않는-Test)
