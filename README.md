@@ -1,28 +1,26 @@
-# Open Market App
-
-<img src="https://user-images.githubusercontent.com/64566207/139567580-ccfb4bf8-4896-4afc-8c3c-8d02ff60dc7e.png" width="250">
-
-## Overview
+# Open Market v1.0
 
 오픈 마켓 앱은 사용자가 직접 상품을 생성, 수정, 삭제할 수 있는 앱으로, REST API를 통해 서버와 통신을 합니다.
 
+
+<img src="https://user-images.githubusercontent.com/64566207/139567580-ccfb4bf8-4896-4afc-8c3c-8d02ff60dc7e.png" width="250">
+
+
+
 Available
 
-- iPhone, iPad 모두 지원
+- iPhone, iPad 지원
 - 화면의 경우 세로 모드 전용
 
-<br>
-
-## Index
+Index
 
 - [기능](#기능)
 - [설계 및 구현](#설계-및-구현)
+- [Unit Test](#Unit-Test)
 - [Trouble Shooting](#Trouble-Shooting)
-- [학습한 내용](#학습한-내용)
-
+- [개선 요구사항](#개선-요구사항)
 
 <br>
-
 
 ## 기능
 
@@ -56,12 +54,14 @@ Available
 ## 설계 및 구현
 
 Index
-- ViewController 간의 전환 흐름
-- MVVM 구조
-- View객체들 간에 이벤트 주고 받기 - Delegate, NotificationCenter
-- ItemListViewController 구현
-- ItemDetailViewController 구현
-- ItemEditViewController 구현
+- [ViewController 간의 전환 흐름](#ViewController-간의-전환-흐름)
+- [MVVM 구조](#MVVM-구조)
+- [View객체들 간에 이벤트 주고 받기 - Delegate, NotificationCenter](#View객체들-간에-이벤트-주고-받기---Delegate,-NotificationCenter)
+- [ItemListViewController 구현](#ItemListViewController-구현)
+- [ItemDetailViewController 구현](#ItemDetailViewController-구현)
+- [ItemEditViewController 구현](#ItemEditViewController-구현)
+
+<br>
 
 ### ViewController 간의 전환 흐름
 
@@ -117,7 +117,7 @@ Photo 갯수 변경시 `AddPhotoCollectionViewCell`에 반영해주기 위해서
 
 ---
 
-### 마켓 상품 리스트
+### ItemListViewController 구현
 
 **상품 조회화면 Network Request 과정**
 
@@ -253,7 +253,7 @@ func reset() {
 
 ---
 
-### 마켓 상품 세부정보
+### ItemDetailViewController 구현
 
 **상품 세부정보 Networking**
 
@@ -350,7 +350,7 @@ private func alertSuccessDeleteItem() {
 <br>
 
 ---
-### 마켓 상품 생성 및 수정
+### ItemEditViewController 구현
 
 **마켓 상품 생성 Networking**
 
@@ -475,15 +475,15 @@ func textViewDidEndEditing(_ textView: UITextView) {
 <br>
 
 ---
-### Unit Test
+## Unit Test
 
-#### Unit Test를 진행한 이유
+### Unit Test를 진행한 이유
 
 가장 큰 이유는 작성한 코드가 제대로 작동하는지에 대한 검증이며, 요구사항 변경이나 리팩토링과 같은 코드 수정 과정에서 더 유연하고 안정적인 대응을 할 수 있기 때문입니다. 또한 부수적으로 테스트 코드를 작성하는 과정에서 자연스럽게 코드의 모듈화를 고민하게 되는 등의 이점을 가지고 올 수 있다고 생각되어 테스트를 진행하였습니다.
 
 <br>
 
-#### Unit Test 진행
+### Unit Test 진행
 
 Model의 `NetworkManager` 와 같은 Network 관련 로직, 그리고  `ViewModel`, `UseCase` 를 중심으로 테스트를 진행하였습니다. `NetworkManager` 와 `ViewModel`, `UseCase` 타입들의 경우 타 타입에 대한 의존성이 있기 때문에 Mock, Stub와 같은 Test Doubles를 사용하여 의존성을 주입하고 테스트를 진행하였습니다. 총 24개 타입에 대한 64개의 테스트 명세를 작성하였으며, `given`, `when`, `then` 패턴을 통해서 테스트 명세의 가독성을 높였습니다
 
@@ -775,3 +775,28 @@ private func viewModelBind() {
 - 이전에 items 변화에 따른 state는 items가 비어있다가 채워질 경우  `.initial`이 되도록, 추가될 경우는 `.update`로 설정하였다. 해당 방법의 경우 `items.removeAll` 에 대한 state 변화가 없으므로, 비동기적으로 `.update`가 수행되는 것을 그대로 수행할 수 밖에 없었다
 - 간단하게, `items.count == 0` 이 될 경우,  `.initial 로 state` 변경하고,` indexPath`가 추가되면 state를 `.update`로 변경함으로써 `items.removeAll`에 대한 state 변화를 만족시키도록 변경
 
+<br>
+
+---
+
+## 개선 요구사항
+
+개발 초기 과정에 있어서 완벽하게 feature 개발을 하는 것도 중요하지만, 이후 유저들의 의견을 수렴하여 업데이트를 하는 App 운영도 좋은 App의 조건 중 하나라고 생각됩니다. `App Store` 출시를 통해 실제 유저들의 후기를 들어볼 수는 없었지만, 직접 테스트를 통해 개선해야되는 부분을 정리하였습니다
+
+<br>
+
+### UIImagePicker
+`UIImagePicker`를 사용했을 경우 유저가 한번에 하나의 사진밖에 선택하지 못한다
+
+-> `PHPicker(iOS 14.0+)` 등을 활용하여, 사진 선택을 여러 개 할 수 있도록 개선 요망
+
+<br>
+
+### Currency - UITextField
+
+`UIPickerView`를 통해 Currency에 대한 선택을 제한하고 있습니다. 하지만, 커서가 `UITextField`를 통해 노출되고 있음을 발견
+
+-> 보이지 않도록 수정 요망
+
+
+<img src="https://user-images.githubusercontent.com/64566207/141405809-0537f30a-5466-4517-bfb3-0b55da65f57f.png" width="300">
