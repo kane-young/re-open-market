@@ -1,24 +1,17 @@
-# Open Market v1.0
+# Open Market
 
 오픈 마켓 앱은 사용자가 직접 상품을 생성, 수정, 삭제할 수 있는 앱으로, REST API를 통해 서버와 통신을 합니다.
 
 
 <img src="https://user-images.githubusercontent.com/64566207/139567580-ccfb4bf8-4896-4afc-8c3c-8d02ff60dc7e.png" width="250">
 
-
-
-Available
-
-- iPhone, iPad 지원
-- 화면의 경우 세로 모드 전용
-
-Index
+목차
 
 - [기능](#기능)
 - [설계 및 구현](#설계-및-구현)
 - [Unit Test](#Unit-Test)
 - [Trouble Shooting](#Trouble-Shooting)
-- [개선 요구사항](#개선-요구사항)
+- [개선 필요사항](#개선-필요사항)
 
 <br>
 
@@ -53,17 +46,43 @@ Index
 
 ## 설계 및 구현
 
+### Available
+
+- iPhone, iPad 지원
+- 화면의 경우 세로 모드 전용 [관련 내용]()
+
+<br>
+
+### Dependency
+- CocoaPods(SwiftLint)
+
+단일 프로젝트에서의 코드 스타일 일관성 유지를 위해 [SwiftLint](https://github.com/realm/SwiftLint)를 적용하였습니다
+
+<br>
+
+### Technical Stack
+- UI - UIKit
+- Networking - URLSession
+- Data
+    - Codable(Decodable & Encodable)
+    - multipart/form-data
+    - JSONEncodable / JSONDecodable
+- Caching
+    - NSCache
+- Test
+    - XCTest
+
 Index
-- [ViewController 간의 전환 흐름](#ViewController-간의-전환-흐름)
+- [ViewController간 전환 흐름](#ViewController간-전환-흐름)
 - [MVVM 구조](#MVVM-구조)
-- [View객체들 간에 이벤트 주고 받기 - Delegate, NotificationCenter](#View객체들-간에-이벤트-주고-받기---Delegate,-NotificationCenter)
+- [View객체들간 이벤트 주고 받기](#View객체들간-이벤트-주고-받기)
 - [ItemListViewController 구현](#ItemListViewController-구현)
 - [ItemDetailViewController 구현](#ItemDetailViewController-구현)
 - [ItemEditViewController 구현](#ItemEditViewController-구현)
 
 <br>
 
-### ViewController 간의 전환 흐름
+### ViewController간 전환 흐름
 
 <img src="https://user-images.githubusercontent.com/64566207/141394762-4e50164e-59d7-4634-945a-437b5c792bb2.png" width="800"/>
 
@@ -87,7 +106,7 @@ MVVM 채택 이유
 <br>
 <br>
 
-### View객체들 간에 이벤트 주고 받기 - Delegate, NotificationCenter
+### View객체들간 이벤트 주고 받기
 
 View가 사용자로부터 이벤트가 발생할 경우 다른 View 또한 해당 이벤트에 대해 반응하기 위해 Delegate 혹은 NotificationCenter가 필요하다
 
@@ -161,7 +180,7 @@ func collectionView(_ collectionView: UICollectionView, layout collectionViewLay
 ```
 
 
-`Cell` size가 바뀌더라도 현재 보고 있는 상품을 볼 수 있도록, `collectionView(_:willDisplay:forItemAt:)` 메서드에서 `currentPosition` 을 지정하고, 해당 위치로 스크롤
+`Cell Layout`이 바뀌더라도 현재 보고 있는 상품을 볼 수 있도록, `collectionView(_:willDisplay:forItemAt:)` 메서드에서 `currentPosition` 을 지정하고, 해당 위치로 스크롤
 
 
 ```swift
@@ -225,6 +244,39 @@ final class ItemListNetworkUseCase: ItemListNetworkUseCaseProtocol {
 }
 ```
 <img src="https://user-images.githubusercontent.com/64566207/141039839-de437143-92d8-4e92-8ffa-9ad2ad6c6dd0.png" width="550">
+
+<br>
+
+**Caching을 통한 네트워킹 감소**
+
+상품 목록 스크롤시 캐싱된 이미지를 통해서 네트워크 부하를 줄이기 위해 `NSCache`를 통한 메모리 캐싱을 구현하였습니다. `ItemListViewController` 뿐만 아니라 App 전체에서 캐싱된 이미지를 사용하기 위해, `ImageNetworkUseCase`를 타입 프로퍼티로 생성했습니다.
+
+```swift
+final class ImageNetworkUseCase: ImageNetworkUseCaseProtocol {
+    static let shared: ImageNetworkUseCase = .init()
+
+    private let networkManager: NetworkManagable
+    private let cache: NSCache = NSCache<NSURL, UIImage>()
+
+    init(networkManager: NetworkManagable = NetworkManager()) {
+        self.networkManager = networkManager
+    }
+
+    @discardableResult
+    func retrieveImage(with urlString: String, completionHandler: @escaping (Result<UIImage, ImageNetworkUseCaseError>) -> Void) -> URLSessionDataTask? {
+        guard let keyForCaching = NSURL(string: urlString) else {
+            completionHandler(.failure(.invalidURL))
+            return nil
+        }
+        if let cachedImaged = cache.object(forKey: keyForCaching) {
+            completionHandler(.success(cachedImaged))
+            return nil
+        }
+        //생략...
+    }
+}
+
+```
 
 <br>
 
@@ -483,6 +535,12 @@ func textViewDidEndEditing(_ textView: UITextView) {
 
 <br>
 
+### 검증되지 않은 코드로 인해 발생했었던 문제
+
+프로젝트를 진행하면서, `MultipartForm` 타입에 대한 검증을 하지 않은 채로 이후 `UI` 개발을 진행했었습니다. 이후 간단한 Header 값에 들어가야 하는 String 값의 오타 이슈조차, 검증되지 않은 코드로 인해 디버깅 영역이 넓어져 코드 수정에 어려움을 겪었습니다. 해당 경험을 통해 `Test`의 필요성에 대해 다시 한번 알게되었습니다.
+
+<br>
+
 ### Unit Test 진행
 
 Model의 `NetworkManager` 와 같은 Network 관련 로직, 그리고  `ViewModel`, `UseCase` 를 중심으로 테스트를 진행하였습니다. `NetworkManager` 와 `ViewModel`, `UseCase` 타입들의 경우 타 타입에 대한 의존성이 있기 때문에 Mock, Stub와 같은 Test Doubles를 사용하여 의존성을 주입하고 테스트를 진행하였습니다. 총 24개 타입에 대한 64개의 테스트 명세를 작성하였으며, `given`, `when`, `then` 패턴을 통해서 테스트 명세의 가독성을 높였습니다
@@ -492,6 +550,8 @@ Model의 `NetworkManager` 와 같은 Network 관련 로직, 그리고  `ViewMode
 <br>
 
 ### 네트워크에 외존하지 않는 테스트
+
+[<관련 학습 자료>](https://velog.io/@leeyoungwoozz/iOS-네트워크에-의존하지-않는-Test)
 
 이번 프로젝트에서 대표적으로 소개하고자 하는 테스트는 `MockURLProtocol` 을 통한 `NetworkManager` 테스트 입니다. `URLSession` 을 통해서 네트워크 관련 로직을 테스트할 경우, 네트워크 연결 혹은 서버 구축 여부에 따라 테스트가 항상 같은 결과를 도출하지 못할 수 있습니다. 따라서 이런 외부 의존성을 주입하기 위해서  `MockURLProtocol` 을 작성하였습니다.
 
@@ -527,16 +587,17 @@ func test_when_아이템수정시_then_statusCode가200번대가아닐경우_the
 ---
 
 ## Trouble Shooting
-- [Cachimg 된 이미지가 출력되지 않는 Bug](#Caching-된-이미지가-출력되지-않는-Bug)
+- [Caching 된 이미지가 출력되지 않는 Bug](#Caching-된-이미지가-출력되지-않는-Bug)
 - [ItemEditPhotoCollectionViewCell 의 DeleteButton Bug](#ItemEditPhotoCollectionViewCell-의-DeleteButton-Bug)
-- [Item 정보를 load한 후, Response Data 중 images들을 load 받는 중 Bug 발생](#Item-정보를-load한-후,-Response-Data-중-images들을-load-받는-중-Bug-발생)
+- [Item 정보를 load한 후 Response Data 중 images들을 load 받는 중 Bug 발생](#Item-정보를-load한-후-Response-Data-중-images들을-load-받는-중-Bug-발생)
 - [각 Device Size 별 혹은 회전에 따른 AutoLayout Bug](#각-Device-Size-별-혹은-회전에-따른-AutoLayout-Bug)
-- [iPad - Alert(Action Sheet) 관련 이슈](#iPad---Alert(Action-Sheet)-관련-이슈)
-- [ItemListViewController - Refresh시 Item 배열에 대한 런타임 에러](ItemListViewController---Refresh시-Item-배열에-대한-런타임-에러)
+- [iPad Action Sheet 관련 이슈](#iPad-Action-Sheet-관련-이슈)
+- [ItemListViewController Refresh시 Item 배열에 대한 런타임 에러](#ItemListViewController-Refresh시-Item-배열에-대한-런타임-에러)
 
 <br>
 
-### Caching 된 이미지가 출력되지 않는 Bug [(관련 Issue)](https://github.com/kane-young/re-open-market/issues/1)
+### Caching 된 이미지가 출력되지 않는 Bug
+[(관련 Issue)](https://github.com/kane-young/re-open-market/issues/1)
 
 **문제 진단**
 
@@ -591,7 +652,8 @@ private func updateText() {
 
 <br>
 
-### ItemEditPhotoCollectionViewCell 의 DeleteButton Bug [(관련 Issue)](https://github.com/kane-young/re-open-market/issues/14)
+### ItemEditPhotoCollectionViewCell 의 DeleteButton Bug
+[(관련 Issue)](https://github.com/kane-young/re-open-market/issues/14)
 
 **문제 진단**
 
@@ -621,7 +683,8 @@ private func updateText() {
 
 <br>
 
-### Item 정보를 load한 후, Response Data 중  images들을 load 받는 중 Bug 발생 [(관련 Issue)](https://github.com/kane-young/re-open-market/issues/15)
+### Item 정보를 load한 후 Response Data 중 images들을 load 받는 중 Bug 발생
+[(관련 Issue)](https://github.com/kane-young/re-open-market/issues/15)
 
 **문제 진단**
 
@@ -691,7 +754,8 @@ private func loadImages(item: Item) {
 
 <br>
 
-### 각 Device Size 별 혹은 회전에 따른 AutoLayout Bug [(관련 Issue)](https://github.com/kane-young/re-open-market/issues/20)
+### 각 Device Size 별 혹은 회전에 따른 AutoLayout Bug
+[(관련 Issue)](https://github.com/kane-young/re-open-market/issues/20)
 
 **문제 진단**
 
@@ -708,7 +772,8 @@ private func loadImages(item: Item) {
 
 <br>
 
-### iPad - Alert(Action Sheet) 관련 이슈 [(관련 Issue)](https://github.com/kane-young/re-open-market/issues/21)
+### iPad Action Sheet 관련 이슈
+[(관련 Issue)](https://github.com/kane-young/re-open-market/issues/21)
 
 **문제 진단**
 
@@ -729,7 +794,8 @@ if UIDevice.current.userInterfaceIdiom == .pad {
 
 <br>
 
-### ItemListViewController - Refresh시 Item 배열에 대한 런타임 에러 [(관련 Issue)](https://github.com/kane-young/re-open-market/issues/23)
+### ItemListViewController Refresh시 Item 배열에 대한 런타임 에러
+[(관련 Issue)](https://github.com/kane-young/re-open-market/issues/23)
 
 **문제 진단**
 
@@ -779,7 +845,7 @@ private func viewModelBind() {
 
 ---
 
-## 개선 요구사항
+## 개선 필요사항
 
 개발 초기 과정에 있어서 완벽하게 feature 개발을 하는 것도 중요하지만, 이후 유저들의 의견을 수렴하여 업데이트를 하는 App 운영도 좋은 App의 조건 중 하나라고 생각됩니다. `App Store` 출시를 통해 실제 유저들의 후기를 들어볼 수는 없었지만, 직접 테스트를 통해 개선해야되는 부분을 정리하였습니다
 
