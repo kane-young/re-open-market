@@ -26,8 +26,6 @@ final class ItemListViewModelTests: XCTestCase {
         itemListViewModel.bind { [weak self] state in
             switch state {
             case .update(_):
-                XCTFail()
-            case .initial:
                 //then
                 self?.expectation.fulfill()
             default:
