@@ -30,9 +30,6 @@ final class ItemEditPhotoCollectionViewCell: UICollectionViewCell {
         return button
     }()
 
-    // MARK: Property
-    private var viewModel: PhotoCellViewModel?
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubviews()
@@ -54,20 +51,8 @@ final class ItemEditPhotoCollectionViewCell: UICollectionViewCell {
         deleteButton.addTarget(target, action: action, for: event)
     }
 
-    func bind(_ viewModel: PhotoCellViewModel) {
-        self.viewModel = viewModel
-        viewModel.bind { [weak self] state in
-            switch state {
-            case .update(let image):
-                self?.imageView.image = image
-            default:
-                break
-            }
-        }
-    }
-
-    func configureCell() {
-        viewModel?.configureCell()
+    func configureCell(with image: UIImage) {
+        imageView.image = image
     }
 
     private func addSubviews() {

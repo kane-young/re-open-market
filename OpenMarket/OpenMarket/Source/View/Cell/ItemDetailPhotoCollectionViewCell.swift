@@ -18,9 +18,6 @@ final class ItemDetailPhotoCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
 
-    // MARk: Property
-    private var viewModel: PhotoCellViewModel?
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubviews()
@@ -33,16 +30,7 @@ final class ItemDetailPhotoCollectionViewCell: UICollectionViewCell {
 
     // MARK: Instance Method
     func configureCell(with image: UIImage) {
-        viewModel = PhotoCellViewModel(image: image)
-        viewModel?.bind({ [weak self] state in
-            switch state {
-            case .update(let image):
-                self?.imageView.image = image
-            default:
-                break
-            }
-        })
-        viewModel?.configureCell()
+        imageView.image = image
     }
 
     private func addSubviews() {

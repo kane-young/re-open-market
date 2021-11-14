@@ -534,8 +534,7 @@ extension ItemEditViewController: UICollectionViewDataSource {
                 return UICollectionViewCell()
             }
             photoCell.addDeleteButtonTarget(target: self, action: #selector(touchDeletePhotoButton(_:)), for: .touchUpInside)
-            photoCell.bind(PhotoCellViewModel(image: viewModel.images[indexPath.item-1]))
-            photoCell.configureCell()
+            photoCell.configureCell(with: viewModel.images[indexPath.item-1])
             cell = photoCell
         }
         return cell
