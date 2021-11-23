@@ -11,7 +11,6 @@ final class ItemDetailViewModel {
     // MARK: State
     enum State {
         case empty
-        case loading
         case delete
         case update(MetaData)
         case error(ItemDetailViewModelError)
@@ -57,7 +56,6 @@ final class ItemDetailViewModel {
     }
 
     func loadItem() {
-        state = .loading
         itemNetworkUseCase.retrieveItem(id: id) { [weak self] result in
             guard let self = self else { return }
             switch result {
@@ -70,12 +68,13 @@ final class ItemDetailViewModel {
     }
 
     private func loadImages(item: Item) {
+        let queue = DispatchQueue(label: "ImagesLoadQueue", attributes: .concurrent)
         let dispatchGroup = DispatchGroup()
         guard let imagePaths = item.images else { return }
         var images: [UIImage] = Array(repeating: UIImage(), count: imagePaths.count)
         for index in .zero..<imagePaths.count {
             dispatchGroup.enter()
-            DispatchQueue(label: "ImageLoadQueue", attributes: .concurrent).async(group: dispatchGroup) { [weak self] in
+            queue.async(group: dispatchGroup) { [weak self] in
                 self?.imageNetworkUseCase.retrieveImage(with: imagePaths[index]) { result in
                     switch result {
                     case .success(let image):
