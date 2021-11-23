@@ -17,27 +17,28 @@ final class ImageNetworkUseCase: ImageNetworkUseCaseProtocol {
         self.networkManager = networkManager
     }
 
-    @discardableResult
-    func retrieveImage(with urlString: String, completionHandler: @escaping (Result<UIImage, ImageNetworkUseCaseError>) -> Void) -> URLSessionDataTask? {
+    func retrieveImage(with urlString: String, completionHandler: @escaping (Result<UIImage, ImageNetworkUseCaseError>) -> Void) {
         guard let keyForCaching = NSURL(string: urlString) else {
             completionHandler(.failure(.invalidURL))
-            return nil
+            return
         }
         if let cachedImaged = cache.object(forKey: keyForCaching) {
             completionHandler(.success(cachedImaged))
-            return nil
+            return
         }
-        let task = networkManager.request(urlString: urlString, with: nil, httpMethod: .get) { [weak self] result in
-            let result = result.flatMapError { .failure(ImageNetworkUseCaseError.networkError($0)) }
-                .flatMap { data -> Result<UIImage, ImageNetworkUseCaseError> in
-                    guard let image = UIImage(data: data) else {
-                        return .failure(ImageNetworkUseCaseError.convertDataToImageError)
-                    }
-                    self?.cache.setObject(image, forKey: keyForCaching)
-                    return .success(image)
+        networkManager.request(urlString: urlString, with: nil, httpMethod: .get) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let data):
+                guard let image = UIImage(data: data) else {
+                    completionHandler(.failure(.convertDataToImageError))
+                    return
                 }
-            completionHandler(result)
+                self.cache.setObject(image, forKey: keyForCaching)
+                completionHandler(.success(image))
+            case .failure(let error):
+                completionHandler(.failure(.networkError(error)))
+            }
         }
-        return task
     }
 }
