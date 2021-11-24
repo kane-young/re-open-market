@@ -35,6 +35,7 @@ final class ItemListViewController: UIViewController {
         let indicator: UIActivityIndicatorView = .init()
         indicator.color = Style.defaultTintColor
         indicator.style = .large
+        indicator.startAnimating()
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
     }()
@@ -93,7 +94,8 @@ final class ItemListViewController: UIViewController {
                 self?.activityIndicator.stopAnimating()
             case .refresh:
                 self?.collectionView.reloadData()
-                self?.activityIndicator.startAnimating()
+                self?.collectionView.refreshControl?.endRefreshing()
+                self?.activityIndicator.stopAnimating()
             case .error(let error):
                 self?.alertErrorMessage(error)
             default:
@@ -111,6 +113,8 @@ final class ItemListViewController: UIViewController {
     private func configureCollectionView() {
         collectionView.delegate = self
         collectionView.dataSource = self
+        collectionView.refreshControl = UIRefreshControl()
+        collectionView.refreshControl?.addTarget(self, action: #selector(refreshItemList), for: .valueChanged)
     }
 
     private func configureCollectionViewConstraints() {
@@ -147,6 +151,7 @@ final class ItemListViewController: UIViewController {
     }
 
     @objc private func refreshItemList() {
+        collectionView.refreshControl?.beginRefreshing()
         activityIndicator.startAnimating()
         viewModel.reset()
     }
