@@ -240,7 +240,7 @@ extension ItemDetailViewController {
     // MARK: Method associated with Binding
     private func configureNavigationBar() {
         let moreBarButtonItem: UIBarButtonItem = .init(image: Style.MoreBarButtonItem.image, style: .plain,
-                                                       target: self, action: #selector(touchMenuBarButtonItem(_:)))
+                                                       target: self, action: #selector(touchMenuBarButtonItem))
         moreBarButtonItem.tintColor = Style.defaultTintColor
         navigationItem.rightBarButtonItem = moreBarButtonItem
         navigationItem.hidesBackButton = true
@@ -249,11 +249,11 @@ extension ItemDetailViewController {
         navigationItem.leftBarButtonItem = backButtonItem
     }
 
-    @objc private func touchMenuBarButtonItem(_ sender: UIBarButtonItem) {
+    @objc private func touchMenuBarButtonItem() {
         alertUpdateOrDelete()
     }
 
-    @objc private func touchBackBarButtonItem(_ sender: UIBarButtonItem) {
+    @objc private func touchBackBarButtonItem() {
         if isUpdated {
             delegate?.itemStateDidChanged()
         }
