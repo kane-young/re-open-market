@@ -23,7 +23,7 @@ final class ItemEditViewModel {
     }
 
     // MARK: Properties
-    private(set) var currencies: [String] = ["KRW", "JPY", "USD", "EUR", "CNY"]
+    private(set) var currencies: [String] = ["KRW", "JPY", "USD", "EUR", "CNY", "BTC"].sorted()
     private(set) var images: [UIImage] = []
     private let id: Int?
     private var title: String?
