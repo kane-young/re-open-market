@@ -543,9 +543,10 @@ extension ItemEditViewController: UICollectionViewDataSource {
     @objc private func touchDeletePhotoButton(_ sender: UIButton) {
         for index in .zero..<viewModel.images.count {
             let indexPath = IndexPath(item: index + 1, section: .zero)
-            guard let cell = photoCollectionView.cellForItem(at: indexPath) as? ItemEditPhotoCollectionViewCell else { continue }
+            guard let cell = photoCollectionView.cellForItem(at: indexPath) as? ItemEditPhotoCollectionViewCell else { return }
             if cell.deleteButton === sender {
                 viewModel.deleteImage(indexPath)
+                return
             }
         }
     }
