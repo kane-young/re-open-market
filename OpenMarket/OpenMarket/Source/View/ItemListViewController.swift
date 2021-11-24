@@ -72,10 +72,10 @@ final class ItemListViewController: UIViewController {
 
     private func configureNavigationBar() {
         addBarButtonItem.target = self
-        addBarButtonItem.action = #selector(touchAddBarButtonItem(_:))
+        addBarButtonItem.action = #selector(touchAddBarButtonItem)
         segmentedControl.addTarget(self, action: #selector(segmentedControlChangedValue(_:)), for: .valueChanged)
         let refreshBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self,
-                                                   action: #selector(refreshItemList(_:)))
+                                                   action: #selector(refreshItemList))
         navigationItem.setRightBarButtonItems([addBarButtonItem, refreshBarButtonItem], animated: true)
         navigationItem.titleView = segmentedControl
         navigationController?.navigationBar.tintColor = Style.defaultTintColor
@@ -86,12 +86,12 @@ final class ItemListViewController: UIViewController {
     private func viewModelBind() {
         viewModel.bind { [weak self] state in
             switch state {
-            case .initial:
-                self?.collectionView.reloadData()
-                self?.activityIndicator.startAnimating()
             case .update(let indexPaths):
                 self?.collectionView.insertItems(at: indexPaths)
                 self?.activityIndicator.stopAnimating()
+            case .refresh:
+                self?.collectionView.reloadData()
+                self?.activityIndicator.startAnimating()
             case .error(let error):
                 self?.alertErrorMessage(error)
             default:
@@ -138,13 +138,13 @@ final class ItemListViewController: UIViewController {
         collectionView.scrollToItem(at: currentPosition, at: .centeredVertically, animated: false)
     }
 
-    @objc private func touchAddBarButtonItem(_ sender: UIBarButtonItem) {
+    @objc private func touchAddBarButtonItem() {
         let itemEditViewController = ItemEditViewController(mode: .register)
         itemEditViewController.delegate = self
         self.navigationController?.pushViewController(itemEditViewController, animated: true)
     }
 
-    @objc private func refreshItemList(_ sender: UIBarButtonItem) {
+    @objc private func refreshItemList() {
         activityIndicator.startAnimating()
         viewModel.reset()
     }
