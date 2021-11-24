@@ -12,6 +12,7 @@
 - [4. Unit Test](#4-unit-test)
 - [5. Trouble Shooting](#5-trouble-shooting)
 - [6. 개선 필요사항](#6-개선-필요사항)
+- [7. H.I.G를 지키며 설계한 부분](#7-HIG를-지키며-설계한-부분)
 
 <br>
 
@@ -505,12 +506,12 @@ func textViewDidEndEditing(_ textView: UITextView) {
 <br>
 
 
-## 사용자 경험을 고려한 구현
+## 사용자 경험을 향상시키기 위한 구현
 
 ### 상품 상세 정보 업데이트
 
 - 상품 수정 성공 이후에 상품에 대한 설명을 업데이트 한다. 해당 과정은 `ItemDetailViewController`에서 채택한 `ItemEditViewControllerDelegate`의 `didSuccessEdit(item: Item)` 메서드 내에서 구현한다.
-- 상품 수정 이후 바로 서버로 해당 상품 정보를 요청할 경우 `403 Forbidden Error` 가 발생한다. `DispatchQueue.main.asyncAfter(deadline: .now() + 1)`을 통해서 해당 작업을 지연시켜주었습니다
+- 상품 수정 이후 바로 서버로 해당 상품 정보를 요청할 경우 `404 Not Found` 가 발생한다. `DispatchQueue.main.asyncAfter(deadline: .now() + 1)`을 통해서 해당 작업을 지연시켜주었습니다
 
 ```swift
 extension ItemDetailViewController: ItemEditViewControllerDelegate {
@@ -687,173 +688,39 @@ func test_when_아이템수정시_then_statusCode가200번대가아닐경우_the
 
 # 5. Trouble Shooting
 
-- [Caching 된 이미지가 출력되지 않는 Bug](#caching-된-이미지가-출력되지-않는-bug)
-- [ItemEditPhotoCollectionViewCell 의 DeleteButton Bug](#itemeditphotocollectionviewcell-의-deletebutton-bug)
-- [Item 정보를 load한 후 Response Data 중 images들을 load 받는 중 Bug 발생](#item-정보를-load한-후-response-data-중-images들을-load-받는-중-bug-발생)
+- [상품 생성 또는 수정 후 즉시 상품 조회 시 서버 업로드 지연 문제로 이미지 로드가 안되던 문제](#상품-생성-또는-수정-후-즉시-상품-조회-시-서버-업로드-지연-문제로-이미지-로드가-안되던-문제)
 - [각 Device Size 별 혹은 회전에 따른 AutoLayout Bug](#각-device-size-별-혹은-회전에-따른-autolayout-bug)
 - [iPad Action Sheet 관련 이슈](#ipad-action-sheet-관련-이슈)
-- [ItemListViewController Refresh시 Item 배열에 대한 런타임 에러](#itemlistviewcontroller-refresh시-item-배열에-대한-런타임-에러)
 
 <br>
 
-### Caching 된 이미지가 출력되지 않는 Bug
-[(관련 Issue)](https://github.com/kane-young/re-open-market/issues/1)
+## 상품 생성 또는 수정 후 즉시 상품 조회 시 서버 업로드 지연 문제로 이미지 로드가 안되던 문제
 
 **문제 진단**
 
-- 초기 Networking을 통해서 View에 보여지는 Image의 경우는 제대로 출력이 되지만, Caching 된 이미지의 경우 출력이 되지 않는 것을 발견
-- `ImageNetworkUseCase` 의 Caching 사용 코드에서 BreakPoint 설정
-- BreakPoint로 부터 `UIImage` 값의 흐름 파악, `retrieveImage()` 메서드 내, `guard case var .update(metaData) = self?.state else { return }` 에서 빠른 종료됨을 파악
-
-**해결 방법**
-
-- `configureCell()` 에서 초기 Networking 이미지가 제대로 출력되어진 것은 Networking 부하로 인해 먼저 `retrieveImage()` 를 수행하더라도 `updateText()` 가 끝난시점에 `retrieveImage()` 의`switch` 구문이 수행되기 때문이다
-- 의도적으로 `retrieveImage()` 와 `updateText()` 의 순서를 변경하면, 해당 `guard` 구문에서  return이 발생하지 않게 된다
-
-```swift
-func configureCell() {
-    retrieveImage()
-    updateText()
-}//cell metaData를 변경하고 state 값을 변경하는 함수
-
-private func retrieveImage() {
-    guard let urlString = marketItem.thumbnails.first else {
-        state = .error(.emptyPath)
-        return
-    }
-    imageTask = useCase.retrieveImage(with: urlString, completionHandler: { [weak self] result in
-        switch result {
-        case .success(let image):
-            guard case var .update(metaData) = self?.state else { return }
-            metaData.image = image
-            self?.state = .update(metaData)
-        case .failure(let error):
-            self?.state = .error(.useCaseError(error))
-        }
-    })
-}//이미지 관련 로직을 가지고 있는 useCase로 부터 image를 받아오는 함수
-
-private func updateText() {
-    let isneededDiscountedLabel = marketItem.discountedPrice == nil
-    let discountedPrice = discountedPriceText(isneededDiscountedLabel)
-    let originalPrice = originalPriceText(isneededDiscountedLabel)
-    let stockLabelTextColor: UIColor = marketItem.stock == 0 ? .systemYellow : .black
-    let stock = stockText(marketItem.stock)
-    let metaData = MetaData(image: nil,
-                            title: marketItem.title,
-                            isneededDiscountedLabel: isneededDiscountedLabel,
-                            discountedPrice: discountedPrice,
-                            originalPrice: originalPrice,
-                            stockLabelTextColor: stockLabelTextColor,
-                            stock: stock)
-    state = .update(metaData)
-}//init을 통해서 주입받은 marketItem을 통해서 image를 제외한 metaData를 채우는 함수
-```
-
-<br>
-
-### ItemEditPhotoCollectionViewCell 의 DeleteButton Bug
-[(관련 Issue)](https://github.com/kane-young/re-open-market/issues/14)
-
-**문제 진단**
-
-- 앞쪽에 위치한 Cell의 경우 문제 없이 `DeleteButton` 작동을 확인, 뒤쪽 Cell의 경우 작동되지 않음을 확인
-- Cell이 Reuse 되면서 문제 발생했음을 판단, `DeleteButton` `touchUpInside` target action 메서드 내부에  BreakPoint 설정
-
-```swift
-@objc private func touchDeletePhotoButton(_ sender: UIButton) {
-    for index in 0..<viewModel.images.count {
-        let indexPath = IndexPath(item: index + 1, section: 0)
-        guard let cell = photoCollectionView.cellForItem(at: indexPath) as? ItemEditPhotoCollectionViewCell else {
-          //BreakPoint
-            return
-        }
-        if cell.deleteButton === sender {
-            viewModel.deleteImage(indexPath)
-        }
-    }
-}
-```
-
-- 위 코드에서 BreakPoint 발동, 타입 캐스팅이 제대로 이루어지지 않음을 확인
-
-**해결 방법**
-
-- for 문 내에서 `return` 대신 `continue` 키워드를 통해서 반복문을 계속해서 선회할 수 있도록 변경
-
-<br>
-
-### Item 정보를 load한 후 Response Data 중 images들을 load 받는 중 Bug 발생
-[(관련 Issue)](https://github.com/kane-young/re-open-market/issues/15)
-
-**문제 진단**
-
-- multi Thread에서 `images`에 동시 접근하여 `UIImage` 를 `append` 할 경우, 3개의 이미지를 `append` 해도 1개의 이미지만 추가되는 문제 발생
+- 상품 생성, 수정 후 등록된 상품의 이미지를 GET 요청을 할 경우, `404 Not Found` Error가 발생
+- 다시 해당 상품 페이지로 들어갔을 경우, 정상적으로 응답하는 것을 확인
 
 **문제 해결**
 
-- 공유 자원에 접근하는 시점을 변경하거나, `images`에 접근할 경우 serialQueue에 넣어주는 방법을 고민함
-- multi Thread에서 같은 자원에 동시에 접근하지 않아도 되도록 변경
+- 서버에 등록되는 되는 시간을 위해 의도적으로 시간을 지연
 
-**before**
 ```swift
-private func loadImages(item: Item) {
-    let dispatchGroup = DispatchGroup()
-    guard let imagePaths = item.images else { return }
-    for imagePath in imagePaths {
-        dispatchGroup.enter()
-        DispatchQueue(label: "ImageLoadQueue",
-                      attributes: .concurrent).async(group: dispatchGroup) { [weak self] in
-            self?.imageNetworkUseCase.retrieveImage(with: imagePath) { result in
-                switch result {
-                case .success(let image):
-                    self?.images.append(image) //멀티 쓰레드에서 동시에 images에 접근하여 의도대로 작동하지 않음
-                    dispatchGroup.leave()
-                case .failure(let error):
-                    self?.state = .error(.imageUseCaseError(error))
-                }
-            }
+extension ItemDetailViewController: ItemEditViewControllerDelegate {
+    // MARK: Item Edit View Controller Delegate Method
+    func didSuccessEdit(item: Item) {
+        isUpdated = true
+        viewModel.reset()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            self?.viewModel.loadItem()
         }
-    }
-    dispatchGroup.notify(queue: DispatchQueue.global()) { [weak self] in
-        guard let metaData = self?.metaData(for: item) else { return }
-        self?.state = .update(metaData)
-    }
-}
-```
-
-**after**
-```swift
-private func loadImages(item: Item) {
-    let dispatchGroup = DispatchGroup()
-    guard let imagePaths = item.images else { return }
-    var images: [UIImage] = Array(repeating: UIImage(), count: imagePaths.count)
-    for index in .zero..<imagePaths.count {
-        dispatchGroup.enter()
-        DispatchQueue(label: "ImageLoadQueue",
-                      attributes: .concurrent).async(group: dispatchGroup) { [weak self] in
-            self?.imageNetworkUseCase.retrieveImage(with: imagePaths[index]) { result in
-                switch result {
-                case .success(let image):
-                    images[index] = image //멀티 쓰레드에서 같은 자원에 접근하지 않아도 되도록 코드 수정
-                    dispatchGroup.leave()
-                case .failure(let error):
-                    self?.state = .error(.imageUseCaseError(error))
-                }
-            }
-        }
-    }
-    dispatchGroup.notify(queue: DispatchQueue.global()) { [weak self] in
-        guard let metaData = self?.metaData(for: item) else { return }
-        self?.images.append(contentsOf: images)
-        self?.state = .update(metaData)
     }
 }
 ```
 
 <br>
 
-### 각 Device Size 별 혹은 회전에 따른 AutoLayout Bug
+## 각 Device Size 별 혹은 회전에 따른 AutoLayout Bug
 [(관련 Issue)](https://github.com/kane-young/re-open-market/issues/20)
 
 **문제 진단**
@@ -871,7 +738,7 @@ private func loadImages(item: Item) {
 
 <br>
 
-### iPad Action Sheet 관련 이슈
+## iPad Action Sheet 관련 이슈
 [(관련 Issue)](https://github.com/kane-young/re-open-market/issues/21)
 
 **문제 진단**
@@ -892,48 +759,6 @@ if UIDevice.current.userInterfaceIdiom == .pad {
 ```
 
 <br>
-
-### ItemListViewController Refresh시 Item 배열에 대한 런타임 에러
-[(관련 Issue)](https://github.com/kane-young/re-open-market/issues/23)
-
-**문제 진단**
-
-- 스크롤을 빠르게 내리던 도중에 Refresh 할 경우 `cellForRow` 에서  `out of index` error 발생
-- BreakPoint를 통해서 당시 `viewModel` 의 state가 .update(indexPaths) 임을 확인, items 배열의 경우 empty임을 인지
-- 추가로 load한 마켓 상품 목록이 update 됨과 동시에 items 배열을 `removeAll` 해서 `collectionView` 에서 `insertItems(at: indexPath)` 를 할 경우 에러가 생김을 확인하였다. 따라서 해당 문제가 `loadItems` 메서드가 비동기적으로 작동하기 때문임을 파악함
-
-```swift
-private(set) var items: [Item] = [] {
-    didSet {
-        if oldValue.count > items.count { return }
-        let indexPaths = (oldValue.count..<items.count).map { IndexPath(item: $0, section: .zero) }
-        if oldValue.count == .zero {
-            state = .initial
-        } else {
-            state = .update(indexPaths)
-        }
-    }
-}
-
-private func viewModelBind() {
-    viewModel.bind { [weak self] state in
-        switch state {
-        case .initial:
-            self?.activityIndicator.stopAnimating()
-            self?.collectionView.isHidden = false
-            self?.collectionView.reloadData()
-            self?.collectionView.scrollToItem(at: IndexPath(item: .zero, section: .zero),
-                                              at: .top, animated: false)
-        case .update(let indexPaths):
-            self?.collectionView.insertItems(at: indexPaths)
-        case .error(let error):
-            self?.alertErrorMessage(error)
-        default:
-            break
-        }
-    }
-}
-```
 
 **문제 해결**
 
@@ -964,3 +789,56 @@ private func viewModelBind() {
 
 
 <img src="https://user-images.githubusercontent.com/64566207/141405809-0537f30a-5466-4517-bfb3-0b55da65f57f.png" width="300">
+
+<br>
+
+# 7. H.I.G를 지키며 설계한 부분
+
+## Launch Screen 제공
+[H.I.G - Launching](https://github.com/kane-young/H.I.G-reading-record/blob/main/AppArchitecture/Launching.md)
+
+시스템은 앱이 시작되는 순간 launch screen 을 표시하고 앱의 첫 화면으로 빠르게 바꾼다. launch screen 의 기능은 초기 콘텐츠를 로딩하면서 앱이 빠르고 응답성이 뛰어나다는 인상을 사람들에게 준다는 것이다. 시작 화면에서 원할하게 전환되도록 하려면 첫 번째 앱 화면과 비슷하고 주의를 끌지 않는 일반 화면을 디자인해야 한다. 
+
+<img src="https://user-images.githubusercontent.com/64566207/141468898-e3cbbf52-97b0-4f1b-8e59-e1d8b65594f3.png" width="200">
+
+<br>
+
+## Navigation Bar에 SegmentedControl를 사용
+
+[H.I.G - Navigation Bars](https://github.com/kane-young/H.I.G-reading-record/blob/main/Bars/Navigation%20Bars.md)
+
+앱의 계층 중 최상위에서는 Navigation Bar에 Segmendted Control을 사용할 수 있습니다.
+
+<img src="https://user-images.githubusercontent.com/64566207/143190142-9a155cf0-897a-42d1-9f19-a03f409cc020.png" width="400">
+
+<br>
+
+## Picker로 선택 목록을 제공할 시 예측 가능하도록 목록을 구성해야 된다
+
+[H.I.G - Pickers](https://github.com/kane-young/H.I.G-reading-record/blob/main/Controls/Pickers.md)
+
+알파벳 순서대로 정렬된 통화 목록으로 유저들의 선택을 더 빠르게 유도합니다.
+
+<img src="https://user-images.githubusercontent.com/64566207/143191020-d25628b1-eb24-4a10-b64d-11a99e44e8bf.png" width = "300">
+
+<br>
+
+## CollectionView Pull Down 시 Content를 Refresh
+
+[H.I.G - Refresh Content Controls](https://github.com/kane-young/H.I.G-reading-record/blob/main/Controls/Refresh%20Content%20Controls.md)
+
+사용자가 예측할 수 있는 Action(Pull Down)을 통해서 Content를 Refresh할 수 있도록 합니다. 또한 NavigationBar 에서 Button을 통해서 Refresh할 수 있도록 제공합니다.
+
+<img src="https://user-images.githubusercontent.com/64566207/143192895-e8945bb6-ea2d-4fbc-a0ab-95b3caa1110e.png">
+
+<br>
+
+## Secure TextField를 사용하여 개인 데이터를 숨기세요
+
+[H.I.G - Text Fields]()
+
+암호와 같은 중요한 데이터를 사용자에게 요청할 경우에는 항상 Secure TextField를 사용합니다.
+
+<img src="https://user-images.githubusercontent.com/64566207/143193422-bc467931-36a0-470f-adc4-dded8822c690.png" width="250">
+
+<br>
