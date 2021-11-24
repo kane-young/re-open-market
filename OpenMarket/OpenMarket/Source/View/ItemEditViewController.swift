@@ -262,23 +262,17 @@ final class ItemEditViewController: UIViewController {
     private func configureNavigationBar() {
         switch mode {
         case .register:
-            let doneButton: UIBarButtonItem = .init(title: Style.RightBarButtonItem.registerTitle, style: .plain,
-                                             target: self, action: #selector(touchRegisterItemButton(_:)))
-            navigationItem.rightBarButtonItem = doneButton
+            let registerButton: UIBarButtonItem = .init(title: Style.RightBarButtonItem.registerTitle, style: .plain,
+                                             target: self, action: #selector(touchRightBarButtonItem))
+            navigationItem.rightBarButtonItem = registerButton
         case .update:
             let updateButton: UIBarButtonItem = .init(title: Style.RightBarButtonItem.updateTitle, style: .plain,
-                                                      target: self, action: #selector(touchUpdateItemButton(_:)))
+                                                      target: self, action: #selector(touchRightBarButtonItem))
             navigationItem.rightBarButtonItem = updateButton
         }
     }
 
-    @objc private func touchRegisterItemButton(_ sender: UIBarButtonItem) {
-        viewModel.validate(titleText: titleTextField.text, stockText: stockTextField.text,
-                           currencyText: currencyTextField.text, priceText: priceTextField.text,
-                           discountedPriceText: discountedPriceTextField.text, descriptionsText: descriptionsTextView.text)
-    }
-
-    @objc private func touchUpdateItemButton(_ sender: UIBarButtonItem) {
+    @objc private func touchRightBarButtonItem() {
         viewModel.validate(titleText: titleTextField.text, stockText: stockTextField.text,
                            currencyText: currencyTextField.text, priceText: priceTextField.text,
                            discountedPriceText: discountedPriceTextField.text, descriptionsText: descriptionsTextView.text)
@@ -470,7 +464,7 @@ extension ItemEditViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         bar.sizeToFit()
         bar.isUserInteractionEnabled = true
         let done: UIBarButtonItem = .init(title: Style.CurrenyPickerView.buttonTitle, style: .plain,
-                                   target: self, action: #selector(touchDoneBarButtonItem(_:)))
+                                   target: self, action: #selector(touchDoneBarButtonItem))
         done.tintColor = Style.defaultTintColor
         let space: UIBarButtonItem = .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         bar.setItems([space, done], animated: false)
@@ -494,7 +488,7 @@ extension ItemEditViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         currencyTextField.text = viewModel.currencies[row]
     }
 
-    @objc private func touchDoneBarButtonItem(_ sender: UIBarButtonItem) {
+    @objc private func touchDoneBarButtonItem() {
         currencyTextField.resignFirstResponder()
     }
 }
