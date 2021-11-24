@@ -73,6 +73,8 @@ final class ItemListViewController: UIViewController {
     private func configureNavigationBar() {
         addBarButtonItem.target = self
         addBarButtonItem.action = #selector(touchAddBarButtonItem)
+        segmentedControl.setWidth(view.frame.width * 1/5, forSegmentAt: 0)
+        segmentedControl.setWidth(view.frame.width * 1/5, forSegmentAt: 1)
         segmentedControl.addTarget(self, action: #selector(segmentedControlChangedValue(_:)), for: .valueChanged)
         let refreshBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self,
                                                    action: #selector(refreshItemList))
@@ -271,7 +273,7 @@ extension ItemListViewController {
             static let gridItem = "GRID"
         }
         enum CollectionView {
-            static let listLayoutMinimumLineSpacing: CGFloat = 10
+            static let listLayoutMinimumLineSpacing: CGFloat = 0
             static let gridLayoutMinimumLineSpacing: CGFloat = 10
             static let listLayoutInsets: UIEdgeInsets = .zero
             static let gridLayoutInsets: UIEdgeInsets = .init(top: 10, left: 10, bottom: 10, right: 10)
