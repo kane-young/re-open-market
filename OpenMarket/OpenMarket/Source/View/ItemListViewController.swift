@@ -35,6 +35,7 @@ final class ItemListViewController: UIViewController {
         let indicator: UIActivityIndicatorView = .init()
         indicator.color = Style.defaultTintColor
         indicator.style = .large
+        indicator.startAnimating()
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
     }()
@@ -72,10 +73,12 @@ final class ItemListViewController: UIViewController {
 
     private func configureNavigationBar() {
         addBarButtonItem.target = self
-        addBarButtonItem.action = #selector(touchAddBarButtonItem(_:))
+        addBarButtonItem.action = #selector(touchAddBarButtonItem)
+        segmentedControl.setWidth(view.frame.width * 1/5, forSegmentAt: 0)
+        segmentedControl.setWidth(view.frame.width * 1/5, forSegmentAt: 1)
         segmentedControl.addTarget(self, action: #selector(segmentedControlChangedValue(_:)), for: .valueChanged)
         let refreshBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self,
-                                                   action: #selector(refreshItemList(_:)))
+                                                   action: #selector(refreshItemList))
         navigationItem.setRightBarButtonItems([addBarButtonItem, refreshBarButtonItem], animated: true)
         navigationItem.titleView = segmentedControl
         navigationController?.navigationBar.tintColor = Style.defaultTintColor
@@ -86,11 +89,12 @@ final class ItemListViewController: UIViewController {
     private func viewModelBind() {
         viewModel.bind { [weak self] state in
             switch state {
-            case .initial:
-                self?.collectionView.reloadData()
-                self?.activityIndicator.startAnimating()
             case .update(let indexPaths):
                 self?.collectionView.insertItems(at: indexPaths)
+                self?.activityIndicator.stopAnimating()
+            case .refresh:
+                self?.collectionView.reloadData()
+                self?.collectionView.refreshControl?.endRefreshing()
                 self?.activityIndicator.stopAnimating()
             case .error(let error):
                 self?.alertErrorMessage(error)
@@ -109,6 +113,8 @@ final class ItemListViewController: UIViewController {
     private func configureCollectionView() {
         collectionView.delegate = self
         collectionView.dataSource = self
+        collectionView.refreshControl = UIRefreshControl()
+        collectionView.refreshControl?.addTarget(self, action: #selector(refreshItemList), for: .valueChanged)
     }
 
     private func configureCollectionViewConstraints() {
@@ -138,13 +144,14 @@ final class ItemListViewController: UIViewController {
         collectionView.scrollToItem(at: currentPosition, at: .centeredVertically, animated: false)
     }
 
-    @objc private func touchAddBarButtonItem(_ sender: UIBarButtonItem) {
+    @objc private func touchAddBarButtonItem() {
         let itemEditViewController = ItemEditViewController(mode: .register)
         itemEditViewController.delegate = self
         self.navigationController?.pushViewController(itemEditViewController, animated: true)
     }
 
-    @objc private func refreshItemList(_ sender: UIBarButtonItem) {
+    @objc private func refreshItemList() {
+        collectionView.refreshControl?.beginRefreshing()
         activityIndicator.startAnimating()
         viewModel.reset()
     }
@@ -271,7 +278,7 @@ extension ItemListViewController {
             static let gridItem = "GRID"
         }
         enum CollectionView {
-            static let listLayoutMinimumLineSpacing: CGFloat = 10
+            static let listLayoutMinimumLineSpacing: CGFloat = 0
             static let gridLayoutMinimumLineSpacing: CGFloat = 10
             static let listLayoutInsets: UIEdgeInsets = .zero
             static let gridLayoutInsets: UIEdgeInsets = .init(top: 10, left: 10, bottom: 10, right: 10)

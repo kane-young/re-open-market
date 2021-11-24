@@ -8,7 +8,6 @@
 import UIKit
 
 protocol ImageNetworkUseCaseProtocol {
-    @discardableResult
     func retrieveImage(with urlString: String,
-                       completionHandler: @escaping (Result<UIImage, ImageNetworkUseCaseError>) -> Void) -> URLSessionDataTask?
+                       completionHandler: @escaping (Result<UIImage, ImageNetworkUseCaseError>) -> Void)
 }

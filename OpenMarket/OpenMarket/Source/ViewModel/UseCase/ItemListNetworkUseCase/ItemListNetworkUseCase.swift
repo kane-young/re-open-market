@@ -29,20 +29,19 @@ final class ItemListNetworkUseCase: ItemListNetworkUseCaseProtocol {
         }
         isLoading = true
         networkManager.request(urlString: urlString, with: nil, httpMethod: .get) { [weak self] result in
-            let result = result.flatMapError { .failure(ItemListNetworkUseCaseError.networkError($0)) }
-                .flatMap { data -> Result<[Item], ItemListNetworkUseCaseError> in
-                    do {
-                        guard let itemList = try self?.decoder.decode(ItemList.self, from: data) else {
-                            return .failure(ItemListNetworkUseCaseError.referenceCountingZero)
-                        }
-                        self?.page = itemList.page + 1
-                        return .success(itemList.items)
-                    } catch {
-                        return .failure(ItemListNetworkUseCaseError.decodingError)
-                    }
+            guard let self = self else { return }
+            switch result {
+            case .success(let data):
+                guard let itemList = try? self.decoder.decode(ItemList.self, from: data) else {
+                    completionHandler(.failure(.decodingError))
+                    return
                 }
-            completionHandler(result)
-            self?.isLoading = false
+                self.page = itemList.page + 1
+                completionHandler(.success(itemList.items))
+            case .failure(let error):
+                completionHandler(.failure(.networkError(error)))
+            }
+            self.isLoading = false
         }
     }
 }

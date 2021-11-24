@@ -23,7 +23,7 @@ final class ItemEditViewModel {
     }
 
     // MARK: Properties
-    private(set) var currencies: [String] = ["KRW", "JPY", "USD", "EUR", "CNY"]
+    private(set) var currencies: [String] = ["KRW", "JPY", "USD", "EUR", "CNY", "BTC"].sorted()
     private(set) var images: [UIImage] = []
     private let id: Int?
     private var title: String?
@@ -115,7 +115,6 @@ final class ItemEditViewModel {
     }
 
     func loadItem() {
-        state = .loading
         guard let id = id else { return }
         let path = OpenMarketAPI.loadProduct(id: id).urlString
         itemEditNetworkUseCase.request(path: path, with: nil, for: .get) { [weak self] result in
@@ -130,12 +129,13 @@ final class ItemEditViewModel {
     }
 
     private func loadImages(item: Item) {
+        let queue = DispatchQueue(label: "ImagesLoadQueue", attributes: .concurrent)
         let dispatchGroup = DispatchGroup()
         guard let imagePaths = item.images else { return }
         var images: [UIImage] = Array(repeating: UIImage(), count: imagePaths.count)
         for index in .zero..<imagePaths.count {
             dispatchGroup.enter()
-            DispatchQueue(label: "ImageLoadQueue", attributes: .concurrent).async(group: dispatchGroup) { [weak self] in
+            queue.async(group: dispatchGroup) { [weak self] in
                 self?.imageNetworkUseCase.retrieveImage(with: imagePaths[index]) { result in
                     switch result {
                     case .success(let image):
